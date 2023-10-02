@@ -6,6 +6,11 @@ export default {
       fontFamily: {
         karla: ["Karla", "sans-serif"],
       },
+      colors: {
+        "dark-blue": "#000928",
+        "soft-pink": "#F45E84",
+        pink: "",
+      },
     },
   },
   plugins: [],
