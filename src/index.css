@@ -3,18 +3,22 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  background-color: white;
+body {
+  background-color: #fdfdfd;
 }
 
 .page-padding-x {
-  @apply px-4 md:px-10 lg:px-12 xl:px-20;
+  @apply px-4 md:px-10 lg:px-16 xl:px-20;
+}
+
+.button-rounded {
+  @apply bg-orange text-white font-semibold px-5 py-1 rounded-full;
 }
 
 .button-filled {
-  @apply bg-soft-pink text-white px-5 py-1 rounded-sm;
+  @apply bg-orange text-white font-semibold px-5 py-1 rounded-sm;
 }
 
 .button-outlined {
-  @apply border border-soft-pink text-black px-5 py-1 rounded-sm hover:bg-soft-pink hover:text-white duration-150 ease-in-out;
+  @apply border border-orange text-black px-5 py-1 rounded-sm hover:bg-orange hover:text-white duration-150 ease-in-out;
 }

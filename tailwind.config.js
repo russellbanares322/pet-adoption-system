@@ -8,8 +8,9 @@ export default {
       },
       colors: {
         "dark-blue": "#000928",
-        "soft-pink": "#F45E84",
-        pink: "",
+        orange: "#FE6F45",
+        "soft-orange": "#FBDBA2",
+        maroon: "#41272C",
       },
     },
   },
