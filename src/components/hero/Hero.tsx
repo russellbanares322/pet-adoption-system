@@ -1,6 +1,11 @@
 import heroImg from "../../assets/pet-adoption.svg";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
+//* Todos
+
+//* Make this hero section responsive
+//* Try to find new hero image banner with cat
+
 const Hero = () => {
   return (
     <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 text-maroon">
