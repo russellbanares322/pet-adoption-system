@@ -1,21 +1,16 @@
-import heroImg from "../../assets/pet-adoption.svg";
+import heroImg from "../../assets/hero.svg";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-
-//* Todos
-
-//* Make this hero section responsive
-//* Try to find new hero image banner with dog
 
 const Hero = () => {
   return (
-    <div className="container grid grid-cols md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 text-maroon">
-      <div className=" pt-10 md:pt-32 w-auto md:w-96">
-        <p className="text-4xl font-extrabold">
+    <div className="container grid grid-cols md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 text-maroon gap-10">
+      <div className="pt-20 md:pt-32 max-w-[600px]">
+        <p className="text-2xl md:text-5xl font-extrabold">
           You can't buy love but you can{" "}
           <span className="text-orange">adopt</span> it{" "}
           <span className="text-orange">.</span>
         </p>
-        <p className="mt-2">
+        <p className="mt-2 text-sm md:text-lg">
           When you adopt, you save loving animals by making them part of your
           family and open up shelter space for another animal who might
           desperately need it.

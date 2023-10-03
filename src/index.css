@@ -7,18 +7,25 @@ body {
   background-color: #fdfdfd;
 }
 
+/* Page layout */
 .container {
-  @apply w-full max-w-[1170px] mx-auto;
+  @apply w-full max-w-[1170px] mx-auto px-5;
 }
 
+/* Button styles */
 .button-rounded {
-  @apply bg-orange text-white font-semibold px-5 py-1 rounded-full;
+  @apply bg-orange text-white font-semibold px-5 py-2 rounded-full;
 }
 
 .button-filled {
-  @apply bg-orange text-white font-semibold px-5 py-1 rounded-sm;
+  @apply bg-orange text-white font-semibold px-5 py-2 rounded-sm text-sm md:text-base;
 }
 
 .button-outlined {
-  @apply border border-orange text-black px-5 py-1 rounded-sm hover:bg-orange hover:text-white duration-150 ease-in-out;
+  @apply border border-orange text-black px-5 py-2 rounded-sm hover:bg-orange hover:text-white duration-150 ease-in-out;
+}
+
+/* Section title style */
+.section-title {
+  @apply text-2xl md:text-4xl text-center font-semibold relative before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-4px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto my-8;
 }

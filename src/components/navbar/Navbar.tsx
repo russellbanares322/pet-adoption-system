@@ -11,8 +11,8 @@ const Navbar = () => {
 
   return (
     <nav className="w-full">
-      <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
-        <div className="flex items-center justify-between mr-0 md:mr-6 text-lg">
+      <div className="container py-8 text-maroon md:flex md:items-center md:justify-start">
+        <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1 className="font-bold flex items-center gap-2 mr-0 md:mr-5">
             AdoptAPet <FaPaw />
           </h1>
@@ -24,7 +24,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop menu items */}
-        <ul className="hidden md:flex md:justify-start md:items-center md:w-full text-sm gap-5 font-semibold">
+        <ul className="hidden md:flex md:justify-start md:items-center md:w-full text-md gap-5 font-semibold">
           <li className="cursor-pointer">Home</li>
           <li className="cursor-pointer">What We Do</li>
           <li className="cursor-pointer">FAQ</li>
@@ -51,7 +51,7 @@ const Navbar = () => {
           </ul>
           <HiOutlineX
             onClick={handleToggleNavbar}
-            className="absolute top-6 right-6 text-dark-blue cursor-pointer"
+            className="absolute top-8 right-5 text-dark-blue cursor-pointer"
             size={25}
           />
         </div>

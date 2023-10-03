@@ -11,6 +11,7 @@ export default {
         orange: "#FE6F45",
         "soft-orange": "#FBDBA2",
         maroon: "#41272C",
+        whitesmoke: "#F2F2F2",
       },
     },
   },
