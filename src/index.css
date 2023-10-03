@@ -7,8 +7,8 @@ body {
   background-color: #fdfdfd;
 }
 
-.page-padding-x {
-  @apply px-4 md:px-10 lg:px-16 xl:px-20;
+.container {
+  @apply w-full max-w-[1170px] mx-auto;
 }
 
 .button-rounded {

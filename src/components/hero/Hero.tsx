@@ -4,11 +4,11 @@ import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 //* Todos
 
 //* Make this hero section responsive
-//* Try to find new hero image banner with cat
+//* Try to find new hero image banner with dog
 
 const Hero = () => {
   return (
-    <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 text-maroon">
+    <div className="container grid grid-cols md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 text-maroon">
       <div className=" pt-10 md:pt-32 w-auto md:w-96">
         <p className="text-4xl font-extrabold">
           You can't buy love but you can{" "}

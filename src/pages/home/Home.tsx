@@ -2,7 +2,7 @@ import Hero from "../../components/hero/Hero";
 
 const Home = () => {
   return (
-    <div className="page-padding-x">
+    <div className="w-full">
       <Hero />
     </div>
   );
