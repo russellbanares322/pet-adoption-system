@@ -13,12 +13,16 @@ body {
 }
 
 /* Button styles */
+.google-signin-button {
+  @apply border border-dark-blue font-semibold px-5 py-2 rounded-sm w-full hover:bg-dark-blue hover:text-white duration-150 ease-in-out;
+}
+
 .button-rounded {
-  @apply bg-orange text-white font-semibold px-5 py-2 rounded-full;
+  @apply bg-orange text-white font-semibold px-5 py-2 rounded-full hover:bg-orange/90 duration-150 ease-in-out;
 }
 
 .button-filled {
-  @apply bg-orange text-white font-semibold px-5 py-2 rounded-sm text-sm md:text-base;
+  @apply bg-orange text-white font-semibold px-5 py-2 rounded-sm text-sm md:text-base hover:bg-orange/90 duration-150 ease-in-out;
 }
 
 .button-outlined {

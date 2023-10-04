@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { HiOutlineX, HiMenu } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState(false);
+  const navigate = useNavigate();
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
   };
 
   return (
-    <nav className="w-full">
-      <div className="container py-8 text-maroon md:flex md:items-center md:justify-start">
+    <nav className="w-full shadow-md">
+      <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
-          <h1 className="font-bold flex items-center gap-2 mr-0 md:mr-5">
+          <h1
+            onClick={() => navigate("/")}
+            className="font-bold justify-center flex items-center gap-2 mr-0 md:mr-5 cursor-pointer"
+          >
             AdoptAPet <FaPaw />
           </h1>
           <HiMenu
@@ -25,11 +30,16 @@ const Navbar = () => {
 
         {/* Desktop menu items */}
         <ul className="hidden md:flex md:justify-start md:items-center md:w-full text-md gap-5 font-semibold">
-          <li className="cursor-pointer">Home</li>
+          <li onClick={() => navigate("/")} className="cursor-pointer">
+            Home
+          </li>
           <li className="cursor-pointer">What We Do</li>
           <li className="cursor-pointer">FAQ</li>
           <li className="cursor-pointer">Find Us</li>
-          <li className="cursor-pointer ml-auto pr-2">
+          <li
+            onClick={() => navigate("/sign-up")}
+            className="cursor-pointer ml-auto pr-2"
+          >
             <button className="button-rounded">Sign up</button>
           </li>
         </ul>
@@ -41,11 +51,13 @@ const Navbar = () => {
           } md:hidden duration-300 ease-in-out`}
         >
           <ul className=" flex flex-col justify-center items-center w-full text-sm gap-5 font-semibold">
-            <li className="cursor-pointer">Home</li>
+            <li onClick={() => navigate("/")} className="cursor-pointer">
+              Home
+            </li>
             <li className="cursor-pointer">What We Do</li>
             <li className="cursor-pointer">FAQ</li>
             <li className="cursor-pointer">Find Us</li>
-            <li className="cursor-pointer">
+            <li onClick={() => navigate("/sign-up")} className="cursor-pointer">
               <button className="button-rounded">Sign up</button>
             </li>
           </ul>
