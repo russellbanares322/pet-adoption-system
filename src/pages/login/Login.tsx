@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,15 @@ import GoogleSignin from "../../components/google-signin/GoogleSignin";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   return (
     <form className="shadow-md rounded-md bg-white py-5 px-10">
@@ -17,6 +27,8 @@ const Login = () => {
         <div className="flex items-center gap-3 border-b-2 border-b-gray-800 w-full py-1">
           <HiOutlineMail size={25} />
           <input
+            onChange={onChange}
+            name="email"
             className="appearance-none w-full outline-none"
             type="email"
             placeholder="Email Address"
@@ -25,6 +37,8 @@ const Login = () => {
         <div className="flex items-center gap-3 border-b-2 border-b-gray-800 w-full py-1">
           <MdOutlinePassword size={25} />
           <input
+            onChange={onChange}
+            name="password"
             className="appearance-none w-full outline-none"
             type="password"
             placeholder="Password"
