@@ -1,12 +1,20 @@
 import { useState } from "react";
-import { HiOutlineX, HiMenu } from "react-icons/hi";
+import {
+  HiOutlineX,
+  HiMenu,
+  HiOutlineChevronDown,
+  HiOutlineLogout,
+} from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
+import { signOut } from "firebase/auth";
+import Dropdown from "../dropdown/Dropdown";
 
 const Navbar = () => {
-  const [openNav, setOpenNav] = useState(false);
+  const [openNav, setOpenNav] = useState<boolean>(false);
+  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -14,6 +22,26 @@ const Navbar = () => {
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
   };
+
+  const handleLogout = () => {
+    signOut(auth);
+    navigate("/");
+  };
+
+  const handleToggleDropdown = () => {
+    setOpenDropdown(!openDropdown);
+  };
+  const handleCloseDropdown = () => {
+    setOpenDropdown(false);
+  };
+
+  const dropdownItems = [
+    {
+      name: "Logout",
+      action: handleLogout,
+      icon: <HiOutlineLogout />,
+    },
+  ];
 
   return (
     <nav className="w-full shadow-md">
@@ -40,13 +68,29 @@ const Navbar = () => {
           <li className="cursor-pointer">What We Do</li>
           <li className="cursor-pointer">FAQ</li>
           <li className="cursor-pointer">Find Us</li>
-          <li
-            onClick={() => navigate("/sign-up")}
-            className="cursor-pointer ml-auto pr-2"
-          >
-            {!isLoggedIn && <button className="button-rounded">Sign up</button>}
-            {isLoggedIn && `Hi, ${user?.displayName}`}
-          </li>
+          {!isLoggedIn && (
+            <li
+              onClick={() => navigate("/sign-up")}
+              className="cursor-pointer ml-auto"
+            >
+              <button className="button-rounded">Sign up</button>
+            </li>
+          )}
+          {isLoggedIn && (
+            <li className="ml-auto pr-2 flex items-center gap-2 relative">
+              Hi, {user?.displayName}
+              <HiOutlineChevronDown
+                onClick={handleToggleDropdown}
+                className="cursor-pointer"
+                size={23}
+              />
+              <Dropdown
+                onClose={handleCloseDropdown}
+                dropdownItems={dropdownItems}
+                open={openDropdown}
+              />
+            </li>
+          )}
         </ul>
 
         {/* Mobile menu items */}
@@ -62,9 +106,29 @@ const Navbar = () => {
             <li className="cursor-pointer">What We Do</li>
             <li className="cursor-pointer">FAQ</li>
             <li className="cursor-pointer">Find Us</li>
-            <li onClick={() => navigate("/sign-up")} className="cursor-pointer">
-              <button className="button-rounded">Sign up</button>
-            </li>
+            {!isLoggedIn && (
+              <li
+                onClick={() => navigate("/sign-up")}
+                className="cursor-pointer"
+              >
+                <button className="button-rounded">Sign up</button>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="flex items-center gap-2 relative">
+                Hi, {user?.displayName}
+                <HiOutlineChevronDown
+                  onClick={handleToggleDropdown}
+                  className="cursor-pointer"
+                  size={23}
+                />
+                <Dropdown
+                  onClose={handleCloseDropdown}
+                  dropdownItems={dropdownItems}
+                  open={openDropdown}
+                />
+              </li>
+            )}
           </ul>
           <HiOutlineX
             onClick={handleToggleNavbar}

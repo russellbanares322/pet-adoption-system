@@ -6,7 +6,7 @@ import AuthDivider from "../../components/auth-layout/AuthDivider";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import { updateProfile, User } from "firebase/auth";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
 
@@ -20,6 +20,7 @@ const Signup = () => {
     confirmPassword: "",
   });
   const passwordsDontMatch = formData.confirmPassword !== formData.password;
+  const registeredUsersRef = collection(db, "registered-users");
   const [createUserWithEmailAndPassword, loading] =
     useCreateUserWithEmailAndPassword(auth);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +48,18 @@ const Signup = () => {
         updateProfile(auth?.currentUser as User, {
           displayName: formData.fullName,
         });
+        addDoc(registeredUsersRef, {
+          email: formData.email,
+          dateCreated: Timestamp.now().toDate(),
+          displayName: formData.fullName,
+        });
         setFormData({
           fullName: "",
           email: "",
           password: "",
           confirmPassword: "",
         });
+        window.location.reload();
         navigate("/");
         toast.success("Login successful");
       } catch (err) {}

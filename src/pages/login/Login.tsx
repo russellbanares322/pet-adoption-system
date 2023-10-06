@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +11,17 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [isFormDirty, setIsFormDirty] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const onSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    if (!formData.email || !formData.password) {
+      setIsFormDirty(true);
+    }
   };
 
   return (
