@@ -70,10 +70,10 @@ const Navbar = () => {
           <li className="cursor-pointer">Find Us</li>
           {!isLoggedIn && (
             <li
-              onClick={() => navigate("/sign-up")}
+              onClick={() => navigate("/login")}
               className="cursor-pointer ml-auto"
             >
-              <button className="button-rounded">Sign up</button>
+              <button className="button-rounded">Login</button>
             </li>
           )}
           {isLoggedIn && (
@@ -107,11 +107,8 @@ const Navbar = () => {
             <li className="cursor-pointer">FAQ</li>
             <li className="cursor-pointer">Find Us</li>
             {!isLoggedIn && (
-              <li
-                onClick={() => navigate("/sign-up")}
-                className="cursor-pointer"
-              >
-                <button className="button-rounded">Sign up</button>
+              <li onClick={() => navigate("/login")} className="cursor-pointer">
+                <button className="button-rounded">Login</button>
               </li>
             )}
             {isLoggedIn && (

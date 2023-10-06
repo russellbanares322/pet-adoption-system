@@ -17,4 +17,9 @@ export const routes = [
     element: <AuthLayout />,
     isProtected: false,
   },
+  {
+    path: "/forgot-password",
+    element: <AuthLayout />,
+    isProtected: false,
+  },
 ];
