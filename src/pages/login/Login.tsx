@@ -137,7 +137,7 @@ const Login = () => {
       <button
         disabled={isLoading}
         type="submit"
-        className="button-filled w-full mb-2"
+        className="button-filled w-full mb-2 flex justify-center items-center gap-1"
       >
         {isLoading ? "Logging in..." : "Login"}
         {isLoading && <ClipLoader color="white" size={18} />}
