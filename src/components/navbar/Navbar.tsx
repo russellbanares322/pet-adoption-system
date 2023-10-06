@@ -2,10 +2,14 @@ import { useState } from "react";
 import { HiOutlineX, HiMenu } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/firebase-config";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState(false);
   const navigate = useNavigate();
+  const [user] = useAuthState(auth);
+  const isLoggedIn = user;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -40,7 +44,8 @@ const Navbar = () => {
             onClick={() => navigate("/sign-up")}
             className="cursor-pointer ml-auto pr-2"
           >
-            <button className="button-rounded">Sign up</button>
+            {!isLoggedIn && <button className="button-rounded">Sign up</button>}
+            {isLoggedIn && `Hi, ${user?.displayName}`}
           </li>
         </ul>
 

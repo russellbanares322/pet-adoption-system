@@ -37,19 +37,26 @@ const Signup = () => {
       !formData.confirmPassword ||
       passwordsDontMatch
     ) {
-      setIsFormDirty(true);
+      return setIsFormDirty(true);
+    } else {
+      try {
+        await createUserWithEmailAndPassword(formData.email, formData.password);
+        setDoc(doc(db, "users", formData.email), {
+          savedFavoritePets: [],
+        });
+        updateProfile(auth?.currentUser as User, {
+          displayName: formData.fullName,
+        });
+        setFormData({
+          fullName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        navigate("/");
+        toast.success("Login successful");
+      } catch (err) {}
     }
-
-    try {
-      await createUserWithEmailAndPassword(formData.email, formData.password);
-      setDoc(doc(db, "users", formData.email), {
-        savedFavoritePets: [],
-      });
-      updateProfile(auth?.currentUser as User, {
-        displayName: formData.fullName,
-      });
-      navigate("/");
-    } catch (err) {}
   };
 
   const renderInputWarningMessage = (
@@ -57,7 +64,7 @@ const Signup = () => {
     displayName: string
   ) => {
     if (!inputName && isFormDirty) {
-      return <p className="text-red-600">{displayName} is required</p>;
+      return <p className="text-red-600 text-sm">{displayName} is required</p>;
     }
   };
 
@@ -72,72 +79,88 @@ const Signup = () => {
         <p className="text-sm md:text-md">Together, let's save pets' lives.</p>
       </div>
       <div className="mt-10 flex flex-col gap-6">
-        <div
-          className={`flex items-center gap-3 border-b-2 ${
-            isFormDirty && !formData.fullName
-              ? "border-b-red-600"
-              : "border-b-gray-800"
-          }  w-full py-1`}
-        >
-          <HiOutlineUser size={25} />
-          <input
-            onChange={onChange}
-            name="fullName"
-            className="appearance-none w-full outline-none"
-            type="text"
-            placeholder="Full Name"
-          />
+        <div>
+          <div
+            className={`flex items-center gap-3 border-b-2 ${
+              isFormDirty && !formData.fullName
+                ? "border-b-red-600"
+                : "border-b-gray-800"
+            }  w-full py-1`}
+          >
+            <HiOutlineUser size={25} />
+            <input
+              onChange={onChange}
+              name="fullName"
+              className="appearance-none w-full outline-none"
+              type="text"
+              placeholder="Full Name"
+            />
+          </div>
+          {renderInputWarningMessage(formData.fullName, "Full Name")}
         </div>
-        {renderInputWarningMessage(formData.fullName, "Full Name")}
-        <div
-          className={`flex items-center gap-3 border-b-2 ${
-            isFormDirty && !formData.email
-              ? "border-b-red-600"
-              : "border-b-gray-800"
-          }  w-full py-1`}
-        >
-          <HiOutlineMail size={25} />
-          <input
-            onChange={onChange}
-            name="email"
-            className="appearance-none w-full outline-none"
-            type="email"
-            placeholder="Email Address"
-          />
+        <div>
+          <div
+            className={`flex items-center gap-3 border-b-2 ${
+              isFormDirty && !formData.email
+                ? "border-b-red-600"
+                : "border-b-gray-800"
+            }  w-full py-1`}
+          >
+            <HiOutlineMail size={25} />
+            <input
+              onChange={onChange}
+              name="email"
+              className="appearance-none w-full outline-none"
+              type="email"
+              placeholder="Email Address"
+            />
+          </div>
+          {renderInputWarningMessage(formData.email, "Email Address")}
         </div>
-        {renderInputWarningMessage(formData.email, "Email Address")}
-        <div
-          className={`flex items-center gap-3 border-b-2 ${
-            isFormDirty && (!formData.password || passwordsDontMatch)
-              ? "border-b-red-600"
-              : "border-b-gray-800"
-          }  w-full py-1`}
-        >
-          <MdOutlinePassword size={25} />
-          <input
-            onChange={onChange}
-            name="password"
-            className="appearance-none w-full outline-none"
-            type="password"
-            placeholder="Password"
-          />
+        <div>
+          <div
+            className={`flex items-center gap-3 border-b-2 ${
+              isFormDirty && (!formData.password || passwordsDontMatch)
+                ? "border-b-red-600"
+                : "border-b-gray-800"
+            }  w-full py-1`}
+          >
+            <MdOutlinePassword size={25} />
+            <input
+              onChange={onChange}
+              name="password"
+              className="appearance-none w-full outline-none"
+              type="password"
+              placeholder="Password"
+            />
+          </div>
+          {renderInputWarningMessage(formData.password, "Password")}
         </div>
-        {renderInputWarningMessage(formData.password, "Password")}
-        <div
-          className={`flex items-center gap-3 border-b-2 ${
-            isFormDirty && (!formData.confirmPassword || passwordsDontMatch)
-              ? "border-b-red-600"
-              : "border-b-gray-800"
-          }  w-full py-1`}
-        >
-          <MdOutlinePassword size={25} />
-          <input
-            onChange={onChange}
-            name="confirmPassword"
-            className="appearance-none w-full outline-none"
-            type="password"
-            placeholder="Confirm Password"
-          />
+        <div>
+          <div
+            className={`flex items-center gap-3 border-b-2 ${
+              isFormDirty && (!formData.confirmPassword || passwordsDontMatch)
+                ? "border-b-red-600"
+                : "border-b-gray-800"
+            }  w-full py-1`}
+          >
+            <MdOutlinePassword size={25} />
+            <input
+              onChange={onChange}
+              name="confirmPassword"
+              className="appearance-none w-full outline-none"
+              type="password"
+              placeholder="Confirm Password"
+            />
+          </div>
+          {!passwordsDontMatch &&
+            renderInputWarningMessage(
+              formData.confirmPassword,
+              "Confirm Password"
+            )}
+          {passwordsDontMatch && (
+            <p className="text-red-600 text-sm">Passwords don't match</p>
+          )}
         </div>
       </div>
       <p className="my-5 text-sm text-dark-blue font-semibold cursor-pointer">
