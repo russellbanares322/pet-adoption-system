@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   HiOutlineX,
   HiMenu,
@@ -6,7 +6,7 @@ import {
   HiOutlineLogout,
 } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
@@ -16,6 +16,10 @@ const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [activeNavLink, setActiveNavLink] = useState("");
+  const location = useLocation();
+  const isInLoginPage = location.pathname === "/login";
+  const isInSignupPage = location.pathname === "/sign-up";
+  const isInPetsPage = location.pathname === "/pets";
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -44,19 +48,24 @@ const Navbar = () => {
     },
   ];
 
-  const changeActiveNavLink = (navLink: string) => {
-    setActiveNavLink(navLink);
-  };
+  useEffect(() => {
+    if (isInLoginPage) {
+      setActiveNavLink("Login");
+    } else if (isInSignupPage) {
+      setActiveNavLink("Signup");
+    } else if (isInPetsPage) {
+      setActiveNavLink("Pets");
+    } else {
+      setActiveNavLink("Home");
+    }
+  }, [location]);
 
   return (
     <nav className="w-screen shadow-md">
       <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1
-            onClick={() => {
-              navigate("/");
-              changeActiveNavLink("Home");
-            }}
+            onClick={() => navigate("/")}
             className="font-bold justify-center flex items-center gap-2 mr-0 md:mr-5 cursor-pointer"
           >
             AdoptAPet <FaPaw />
@@ -71,10 +80,7 @@ const Navbar = () => {
         {/* Desktop navbar */}
         <ul className="hidden md:flex md:justify-start md:items-center md:w-full text-md gap-5 font-semibold">
           <li
-            onClick={() => {
-              navigate("/");
-              changeActiveNavLink("Home");
-            }}
+            onClick={() => navigate("/")}
             className={`cursor-pointer relative ${
               activeNavLink === "Home" && "active-nav-link"
             }`}
@@ -82,10 +88,7 @@ const Navbar = () => {
             Home
           </li>
           <li
-            onClick={() => {
-              navigate("/pets");
-              changeActiveNavLink("Pets");
-            }}
+            onClick={() => navigate("/pets")}
             className={`cursor-pointer relative ${
               activeNavLink === "Pets" && "active-nav-link"
             }`}
@@ -97,10 +100,7 @@ const Navbar = () => {
           <li className="cursor-pointer">Find Us</li>
           {!isLoggedIn && (
             <li
-              onClick={() => {
-                navigate("/login");
-                changeActiveNavLink("Login");
-              }}
+              onClick={() => navigate("/login")}
               className="cursor-pointer ml-auto"
             >
               <button className="button-rounded">Login</button>
@@ -134,10 +134,7 @@ const Navbar = () => {
         >
           <ul className="flex flex-col justify-start items-start w-full text-sm gap-5 font-semibold px-5">
             <li
-              onClick={() => {
-                navigate("/");
-                changeActiveNavLink("Home");
-              }}
+              onClick={() => navigate("/")}
               className={`cursor-pointer relative ${
                 activeNavLink === "Home" && "mobile-active-nav-link"
               }`}
@@ -145,10 +142,7 @@ const Navbar = () => {
               Home
             </li>
             <li
-              onClick={() => {
-                navigate("/pets");
-                changeActiveNavLink("Pets");
-              }}
+              onClick={() => navigate("/pets")}
               className={`cursor-pointer relative ${
                 activeNavLink === "Pets" && "mobile-active-nav-link"
               }`}
@@ -159,13 +153,7 @@ const Navbar = () => {
             <li className="cursor-pointer">FAQ</li>
             <li className="cursor-pointer">Find Us</li>
             {!isLoggedIn && (
-              <li
-                onClick={() => {
-                  navigate("/login");
-                  changeActiveNavLink("Login");
-                }}
-                className="cursor-pointer"
-              >
+              <li onClick={() => navigate("/login")} className="cursor-pointer">
                 <button className="button-rounded">Login</button>
               </li>
             )}
