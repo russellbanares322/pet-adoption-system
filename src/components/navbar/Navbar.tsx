@@ -96,8 +96,7 @@ const Navbar = () => {
             Pets
           </li>
           <li className="cursor-pointer">What We Do</li>
-          <li className="cursor-pointer">FAQ</li>
-          <li className="cursor-pointer">Find Us</li>
+          <li className="cursor-pointer">Dashboard</li>
           {!isLoggedIn && (
             <li
               onClick={() => navigate("/login")}
@@ -150,8 +149,7 @@ const Navbar = () => {
               Pets
             </li>
             <li className="cursor-pointer">What We Do</li>
-            <li className="cursor-pointer">FAQ</li>
-            <li className="cursor-pointer">Find Us</li>
+            <li className="cursor-pointer">Dashboard</li>
             {!isLoggedIn && (
               <li onClick={() => navigate("/login")} className="cursor-pointer">
                 <button className="button-rounded">Login</button>
