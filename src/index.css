@@ -33,3 +33,10 @@ body {
 .section-title {
   @apply text-2xl md:text-4xl text-center font-semibold relative before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-4px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto my-8;
 }
+
+.active-nav-link {
+  @apply before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-32px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto;
+}
+.mobile-active-nav-link {
+  @apply before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-10px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto;
+}

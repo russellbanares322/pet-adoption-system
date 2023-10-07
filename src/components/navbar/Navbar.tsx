@@ -15,6 +15,7 @@ import Dropdown from "../dropdown/Dropdown";
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [activeNavLink, setActiveNavLink] = useState("");
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -43,12 +44,19 @@ const Navbar = () => {
     },
   ];
 
+  const changeActiveNavLink = (navLink: string) => {
+    setActiveNavLink(navLink);
+  };
+
   return (
-    <nav className="w-full shadow-md">
+    <nav className="w-full h-full shadow-md">
       <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/");
+              changeActiveNavLink("Home");
+            }}
             className="font-bold justify-center flex items-center gap-2 mr-0 md:mr-5 cursor-pointer"
           >
             AdoptAPet <FaPaw />
@@ -60,9 +68,17 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Desktop menu items */}
+        {/* Desktop navbar */}
         <ul className="hidden md:flex md:justify-start md:items-center md:w-full text-md gap-5 font-semibold">
-          <li onClick={() => navigate("/")} className="cursor-pointer">
+          <li
+            onClick={() => {
+              navigate("/");
+              changeActiveNavLink("Home");
+            }}
+            className={`cursor-pointer relative ${
+              activeNavLink === "Home" && "active-nav-link"
+            }`}
+          >
             Home
           </li>
           <li className="cursor-pointer">What We Do</li>
@@ -70,14 +86,17 @@ const Navbar = () => {
           <li className="cursor-pointer">Find Us</li>
           {!isLoggedIn && (
             <li
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                navigate("/login");
+                changeActiveNavLink("Login");
+              }}
               className="cursor-pointer ml-auto"
             >
               <button className="button-rounded">Login</button>
             </li>
           )}
           {isLoggedIn && (
-            <li className="ml-auto pr-2 flex items-center gap-2 relative">
+            <li className="ml-auto pr-2 flex items-center gap-2 relative py-2">
               Hi, {user?.displayName}
               <HiOutlineChevronDown
                 onClick={handleToggleDropdown}
@@ -93,26 +112,43 @@ const Navbar = () => {
           )}
         </ul>
 
-        {/* Mobile menu items */}
+        {/* Mobile navbar */}
+        {openNav && (
+          <div className="md:hidden bg-black/80 fixed w-full left-0 h-screen top-0" />
+        )}
         <div
-          className={`bg-white left-0 top-0 h-screen fixed flex items-center justify-center z-30 w-full  ${
-            openNav ? "translate-y-[-0.1rem]" : "translate-y-[-100vh]"
+          className={`bg-white right-0 top-0 h-screen fixed flex items-center justify-center z-30 w-[16rem]  ${
+            openNav ? "-translate-x-[-0.1rem]" : "-translate-x-[-100vh]"
           } md:hidden duration-300 ease-in-out`}
         >
-          <ul className=" flex flex-col justify-center items-center w-full text-sm gap-5 font-semibold">
-            <li onClick={() => navigate("/")} className="cursor-pointer">
+          <ul className="flex flex-col justify-center items-center w-full text-sm gap-5 font-semibold">
+            <li
+              onClick={() => {
+                navigate("/");
+                changeActiveNavLink("Home");
+              }}
+              className={`cursor-pointer relative ${
+                activeNavLink === "Home" && "mobile-active-nav-link"
+              }`}
+            >
               Home
             </li>
             <li className="cursor-pointer">What We Do</li>
             <li className="cursor-pointer">FAQ</li>
             <li className="cursor-pointer">Find Us</li>
             {!isLoggedIn && (
-              <li onClick={() => navigate("/login")} className="cursor-pointer">
+              <li
+                onClick={() => {
+                  navigate("/login");
+                  changeActiveNavLink("Login");
+                }}
+                className="cursor-pointer"
+              >
                 <button className="button-rounded">Login</button>
               </li>
             )}
             {isLoggedIn && (
-              <li className="flex items-center gap-2 relative">
+              <li className="flex items-center gap-2 relative py-2">
                 Hi, {user?.displayName}
                 <HiOutlineChevronDown
                   onClick={handleToggleDropdown}
