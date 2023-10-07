@@ -106,7 +106,7 @@ const Login = () => {
             <input
               onChange={onChange}
               name="password"
-              className="appearance-none w-full outline-none"
+              className="appearance-none w-full outline-none "
               type={showPassword ? "text" : "password"}
               placeholder="Password*"
             />

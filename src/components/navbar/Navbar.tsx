@@ -125,14 +125,14 @@ const Navbar = () => {
 
         {/* Mobile navbar */}
         {openNav && (
-          <div className="md:hidden bg-black/80 fixed w-full left-0 h-screen top-0" />
+          <div className="md:hidden bg-black/80 fixed w-full left-0 h-screen top-0 z-10" />
         )}
         <div
           className={`bg-white right-0 top-0 h-screen fixed flex items-center justify-center z-30 w-[16rem]  ${
             openNav ? "-translate-x-[-0.1rem]" : "-translate-x-[-100vh]"
           } md:hidden duration-300 ease-in-out`}
         >
-          <ul className="flex flex-col justify-start items-start w-full text-sm gap-5 font-semibold px-5">
+          <ul className="flex flex-col justify-start items-start w-full text-md gap-5 font-semibold px-5">
             <li
               onClick={() => navigate("/")}
               className={`cursor-pointer relative ${
