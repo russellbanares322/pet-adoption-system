@@ -5,6 +5,7 @@
 
 body {
   background-color: #fdfdfd;
+  overflow-x: hidden;
 }
 
 /* Page layout */
@@ -38,5 +39,5 @@ body {
   @apply before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-32px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto;
 }
 .mobile-active-nav-link {
-  @apply before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-10px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto;
+  @apply before:absolute before:content-[""] before:left-0 before:h-[4px] before:bottom-[-10px] before:w-full before:bg-orange before:rounded-md;
 }

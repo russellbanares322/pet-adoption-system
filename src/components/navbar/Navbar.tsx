@@ -49,7 +49,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full h-full shadow-md">
+    <nav className="w-screen shadow-md">
       <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1
@@ -80,6 +80,17 @@ const Navbar = () => {
             }`}
           >
             Home
+          </li>
+          <li
+            onClick={() => {
+              navigate("/pets");
+              changeActiveNavLink("Pets");
+            }}
+            className={`cursor-pointer relative ${
+              activeNavLink === "Pets" && "active-nav-link"
+            }`}
+          >
+            Pets
           </li>
           <li className="cursor-pointer">What We Do</li>
           <li className="cursor-pointer">FAQ</li>
@@ -121,7 +132,7 @@ const Navbar = () => {
             openNav ? "-translate-x-[-0.1rem]" : "-translate-x-[-100vh]"
           } md:hidden duration-300 ease-in-out`}
         >
-          <ul className="flex flex-col justify-center items-center w-full text-sm gap-5 font-semibold">
+          <ul className="flex flex-col justify-start items-start w-full text-sm gap-5 font-semibold px-5">
             <li
               onClick={() => {
                 navigate("/");
@@ -132,6 +143,17 @@ const Navbar = () => {
               }`}
             >
               Home
+            </li>
+            <li
+              onClick={() => {
+                navigate("/pets");
+                changeActiveNavLink("Pets");
+              }}
+              className={`cursor-pointer relative ${
+                activeNavLink === "Pets" && "mobile-active-nav-link"
+              }`}
+            >
+              Pets
             </li>
             <li className="cursor-pointer">What We Do</li>
             <li className="cursor-pointer">FAQ</li>

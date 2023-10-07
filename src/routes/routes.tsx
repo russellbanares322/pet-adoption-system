@@ -1,5 +1,6 @@
 import AuthLayout from "../components/auth-layout/AuthLayout";
 import Home from "../pages/home/Home";
+import Pets from "../pages/pets/Pets";
 
 export const routes = [
   {
@@ -20,6 +21,11 @@ export const routes = [
   {
     path: "/forgot-password",
     element: <AuthLayout />,
+    isProtected: false,
+  },
+  {
+    path: "/pets",
+    element: <Pets />,
     isProtected: false,
   },
 ];
