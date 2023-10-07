@@ -20,9 +20,11 @@ const Navbar = () => {
   const isInLoginPage = location.pathname === "/login";
   const isInSignupPage = location.pathname === "/sign-up";
   const isInPetsPage = location.pathname === "/pets";
+  const isInDashboardPage = location.pathname === "/dashboard";
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
+  const isAdmin = user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -55,6 +57,8 @@ const Navbar = () => {
       setActiveNavLink("Signup");
     } else if (isInPetsPage) {
       setActiveNavLink("Pets");
+    } else if (isInDashboardPage) {
+      setActiveNavLink("Dashboard");
     } else {
       setActiveNavLink("Home");
     }
@@ -96,7 +100,16 @@ const Navbar = () => {
             Pets
           </li>
           <li className="cursor-pointer">What We Do</li>
-          <li className="cursor-pointer">Dashboard</li>
+          {isAdmin && (
+            <li
+              onClick={() => navigate("/dashboard")}
+              className={`cursor-pointer relative ${
+                activeNavLink === "Dashboard" && "active-nav-link"
+              }`}
+            >
+              Dashboard
+            </li>
+          )}
           {!isLoggedIn && (
             <li
               onClick={() => navigate("/login")}
@@ -149,7 +162,16 @@ const Navbar = () => {
               Pets
             </li>
             <li className="cursor-pointer">What We Do</li>
-            <li className="cursor-pointer">Dashboard</li>
+            {isAdmin && (
+              <li
+                onClick={() => navigate("/dashboard")}
+                className={`cursor-pointer relative ${
+                  activeNavLink === "Dashboard" && "mobile-active-nav-link"
+                }`}
+              >
+                Dashboard
+              </li>
+            )}
             {!isLoggedIn && (
               <li onClick={() => navigate("/login")} className="cursor-pointer">
                 <button className="button-rounded">Login</button>

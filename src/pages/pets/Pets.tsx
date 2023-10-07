@@ -33,7 +33,9 @@ const Pets = () => {
   return (
     <div className="py-24 w-full bg-whitesmoke">
       <div className="container flex items-start justify-start gap-10">
-        <SidebarFilters />
+        <div className="w-72 hidden md:block">
+          <SidebarFilters />
+        </div>
         <div className="w-full">
           <div className="flex justify-between items-center mb-2">
             <p>{dummyPets.length} ITEMS</p>

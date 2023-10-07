@@ -1,4 +1,5 @@
 import AuthLayout from "../components/auth-layout/AuthLayout";
+import Dashboard from "../pages/dashboard/Dashboard";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 
@@ -27,5 +28,10 @@ export const routes = [
     path: "/pets",
     element: <Pets />,
     isProtected: false,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+    isProtected: true,
   },
 ];

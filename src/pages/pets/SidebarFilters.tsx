@@ -3,7 +3,7 @@ const gender = ["Male", "Female"];
 
 const SidebarFilters = () => {
   return (
-    <div className="w-72">
+    <div>
       <p className="text-xl font-semibold border-b pb-4 border-b-gray-600">
         FILTERS
       </p>
