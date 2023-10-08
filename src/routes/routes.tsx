@@ -3,7 +3,9 @@ import ErrorPage from "../components/error-page/ErrorPage";
 import AboutUs from "../pages/about-us/AboutUs";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
+import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
 import Profile from "../pages/dashboard/profile/Profile";
+import Settings from "../pages/dashboard/settings/Settings";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 
@@ -56,8 +58,14 @@ export const routes = [
         isProtected: true,
       },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "pending-posts",
+        element: <PendingPosts />,
+        child: [],
+        isProtected: true,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
         child: [],
         isProtected: true,
       },

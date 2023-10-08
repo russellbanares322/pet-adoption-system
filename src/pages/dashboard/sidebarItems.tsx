@@ -3,6 +3,8 @@ import {
   UserOutlined,
   PieChartOutlined,
   OrderedListOutlined,
+  FileSyncOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 type SidebarItems = {
@@ -26,5 +28,15 @@ export const sidebarItems: SidebarItems[] = [
     key: "listed-pets",
     icon: <OrderedListOutlined />,
     label: "Listed Pets",
+  },
+  {
+    key: "pending-posts",
+    icon: <FileSyncOutlined />,
+    label: "Pending Posts",
+  },
+  {
+    key: "settings",
+    icon: <SettingOutlined />,
+    label: "Settings",
   },
 ];
