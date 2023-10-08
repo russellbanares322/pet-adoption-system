@@ -41,3 +41,7 @@ body {
 .mobile-active-nav-link {
   @apply before:absolute before:content-[""] before:left-0 before:h-[4px] before:bottom-[-10px] before:w-full before:bg-orange before:rounded-md;
 }
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected {
+  @apply bg-orange;
+}

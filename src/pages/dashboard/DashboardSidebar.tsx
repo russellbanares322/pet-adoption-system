@@ -22,7 +22,7 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
 
   return (
     <Sider
-      className="overflow-auto fixed left-0 top-0 bottom-0 "
+      className="overflow-auto fixed left-0 top-0 bottom-0"
       trigger={null}
       collapsible
       collapsed={collapsed}
