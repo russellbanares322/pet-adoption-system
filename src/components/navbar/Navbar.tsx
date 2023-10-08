@@ -11,6 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import Dropdown from "../dropdown/Dropdown";
+import { routes } from "../../routes/routes";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -21,10 +22,14 @@ const Navbar = () => {
   const isInSignupPage = location.pathname === "/sign-up";
   const isInPetsPage = location.pathname === "/pets";
   const isInDashboardPage = location.pathname === "/dashboard";
+  const isInAboutPage = location.pathname === "/about-us";
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
   const isAdmin = user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const isInErrorPage = !routes.some((route) =>
+    route.path.includes(location.pathname)
+  );
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -59,13 +64,15 @@ const Navbar = () => {
       setActiveNavLink("Pets");
     } else if (isInDashboardPage) {
       setActiveNavLink("Dashboard");
+    } else if (isInAboutPage) {
+      setActiveNavLink("About");
     } else {
       setActiveNavLink("Home");
     }
   }, [location]);
 
   return (
-    <nav className="w-screen shadow-md">
+    <nav className={`w-screen shadow-md ${isInErrorPage ? "hidden" : "block"}`}>
       <div className="container py-6 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1
@@ -99,7 +106,14 @@ const Navbar = () => {
           >
             Pets
           </li>
-          <li className="cursor-pointer">What We Do</li>
+          <li
+            onClick={() => navigate("/about-us")}
+            className={`cursor-pointer relative ${
+              activeNavLink === "About" && "active-nav-link"
+            }`}
+          >
+            What We Do
+          </li>
           {isAdmin && (
             <li
               onClick={() => navigate("/dashboard")}
@@ -161,7 +175,14 @@ const Navbar = () => {
             >
               Pets
             </li>
-            <li className="cursor-pointer">What We Do</li>
+            <li
+              onClick={() => navigate("/about-us")}
+              className={`cursor-pointer relative ${
+                activeNavLink === "About" && "mobile-active-nav-link"
+              }`}
+            >
+              What We Do
+            </li>
             {isAdmin && (
               <li
                 onClick={() => navigate("/dashboard")}

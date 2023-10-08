@@ -1,5 +1,5 @@
-const colors = ["Brown", "White", "Black", "Gray"];
-const gender = ["Male", "Female"];
+import FilterByColor from "./FilterByColor";
+import FilterByGender from "./FilterByGender";
 
 const SidebarFilters = () => {
   return (
@@ -8,29 +8,9 @@ const SidebarFilters = () => {
         FILTERS
       </p>
       {/* Filter by color */}
-      <div className="border-b border-b-gray-600 pb-4">
-        <p className="text-md py-3">COLORS</p>
-        <div className="flex flex-col gap-1">
-          {colors.map((color) => (
-            <div className="flex items-center gap-2" key={color}>
-              <input type="checkbox" />
-              <p>{color}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <FilterByColor />
       {/* Filter by gender */}
-      <div className="border-b border-b-gray-600 pb-4">
-        <p className="text-md py-3">Gender</p>
-        <div className="flex flex-col gap-1">
-          {gender.map((item) => (
-            <div className="flex items-center gap-2" key={item}>
-              <input type="checkbox" />
-              <p>{item}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <FilterByGender />
     </div>
   );
 };

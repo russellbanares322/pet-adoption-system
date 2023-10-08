@@ -1,4 +1,6 @@
 import AuthLayout from "../components/auth-layout/AuthLayout";
+import ErrorPage from "../components/error-page/ErrorPage";
+import AboutUs from "../pages/about-us/AboutUs";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
@@ -33,5 +35,15 @@ export const routes = [
     path: "/dashboard",
     element: <Dashboard />,
     isProtected: true,
+  },
+  {
+    path: "/about-us",
+    element: <AboutUs />,
+    isProtected: false,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
+    isProtected: false,
   },
 ];
