@@ -30,6 +30,10 @@ body {
   @apply border border-orange text-black px-5 py-2 rounded-sm hover:bg-orange hover:text-white duration-150 ease-in-out;
 }
 
+.primary-btn {
+  @apply bg-blue;
+}
+
 /* Section title style */
 .section-title {
   @apply text-2xl md:text-4xl text-center font-semibold relative before:absolute before:content-[""] before:left-0 before:right-0 before:h-[4px] before:bottom-[-4px] before:w-[40px] before:bg-orange before:rounded-md before:mx-auto my-8;

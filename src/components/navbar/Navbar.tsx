@@ -11,6 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import Dropdown from "../dropdown/Dropdown";
+import getLoggedUserInfo from "../../utils/getLoggedUserInfo";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -25,7 +26,10 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
-  const isAdmin = user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const displayName = getLoggedUserInfo()?.displayName || user?.displayName;
+  const isAdminLoggedIn =
+    (getLoggedUserInfo()?.email || user?.email) ===
+    import.meta.env.VITE_APP_ADMIN_ACCOUNT;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -34,6 +38,7 @@ const Navbar = () => {
   const handleLogout = () => {
     signOut(auth);
     navigate("/");
+    localStorage.removeItem("user-info");
   };
 
   const handleToggleDropdown = () => {
@@ -110,7 +115,7 @@ const Navbar = () => {
           >
             What We Do
           </li>
-          {isAdmin && (
+          {isAdminLoggedIn && (
             <li
               onClick={() => navigate("/dashboard")}
               className={`cursor-pointer relative ${
@@ -130,7 +135,7 @@ const Navbar = () => {
           )}
           {isLoggedIn && (
             <li className="ml-auto pr-2 flex items-center gap-2 relative py-2">
-              Hi, {user?.displayName}
+              Hi, {displayName}
               <HiOutlineChevronDown
                 onClick={handleToggleDropdown}
                 className="cursor-pointer"
@@ -179,7 +184,7 @@ const Navbar = () => {
             >
               What We Do
             </li>
-            {isAdmin && (
+            {isAdminLoggedIn && (
               <li
                 onClick={() => navigate("/dashboard")}
                 className={`cursor-pointer relative ${
@@ -196,7 +201,7 @@ const Navbar = () => {
             )}
             {isLoggedIn && (
               <li className="flex items-center gap-2 relative py-2">
-                Hi, {user?.displayName}
+                Hi, {displayName}
                 <HiOutlineChevronDown
                   onClick={handleToggleDropdown}
                   className="cursor-pointer"

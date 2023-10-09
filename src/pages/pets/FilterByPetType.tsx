@@ -1,17 +1,17 @@
-import { petColors } from "../../data/pet-filter-options";
+import { petTypes } from "../../data/pet-filter-options";
 
-const FilterByColor = () => {
+const FilterByPetType = () => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
-      <p className="text-md py-3">COLORS</p>
+      <p className="text-md py-3">PET TYPE</p>
       <div className="flex flex-col gap-1">
-        {petColors.map((color) => (
-          <div className="flex items-center gap-2" key={color}>
+        {petTypes.map((type) => (
+          <div className="flex items-center gap-2" key={type}>
             <input
               className="accent-maroon border border-black rounded-sm"
               type="checkbox"
             />
-            <p>{color}</p>
+            <p>{type}</p>
           </div>
         ))}
       </div>
@@ -19,4 +19,4 @@ const FilterByColor = () => {
   );
 };
 
-export default FilterByColor;
+export default FilterByPetType;

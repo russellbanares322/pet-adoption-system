@@ -1,17 +1,12 @@
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
-import { auth } from "./firebase/firebase-config";
 import { routes } from "./routes/routes";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
-  const [user] = useAuthState(auth);
-  const isLoggedIn = user ? true : false;
-
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
-      return <ProtectedRoute isLoggedIn={isLoggedIn}>{element}</ProtectedRoute>;
+      return <ProtectedRoute>{element}</ProtectedRoute>;
     } else {
       return element;
     }

@@ -65,11 +65,17 @@ const Signup = () => {
     } else {
       if (!isEmailAlreadyUsed) {
         try {
-          await createUserWithEmailAndPassword(
+          const signUpResponse = await createUserWithEmailAndPassword(
             auth,
             formData.email,
             formData.password
           );
+          const userInfo = {
+            email: signUpResponse?.user.email,
+            displayName: signUpResponse.user.displayName,
+            token: signUpResponse.user.getIdToken(),
+          };
+          localStorage.setItem("user-info", JSON.stringify(userInfo));
           setDoc(doc(db, "users", formData.email), {
             savedFavoritePets: [],
           });
@@ -87,7 +93,6 @@ const Signup = () => {
             password: "",
             confirmPassword: "",
           });
-          window.location.reload();
           navigate("/");
           setIsLoading(false);
           toast.success("Successfully created account");

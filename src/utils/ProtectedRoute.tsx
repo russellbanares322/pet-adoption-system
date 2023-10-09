@@ -2,15 +2,16 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 type ProtectedRouteProps = {
-  isLoggedIn: boolean;
   children: React.ReactElement;
 };
 
-const ProtectedRoute = ({ isLoggedIn, children }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const isLoggedIn = JSON.parse(localStorage.getItem("user-info") || "{}");
+
   if (isLoggedIn) {
     return children;
   } else {
-    return <Navigate to="/" replace={true} />;
+    return <Navigate to="/login" replace={true} />;
   }
 };
 

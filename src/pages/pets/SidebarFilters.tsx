@@ -1,5 +1,6 @@
 import FilterByColor from "./FilterByColor";
 import FilterByGender from "./FilterByGender";
+import FilterByPetType from "./FilterByPetType";
 
 const SidebarFilters = () => {
   return (
@@ -11,6 +12,8 @@ const SidebarFilters = () => {
       <FilterByColor />
       {/* Filter by gender */}
       <FilterByGender />
+      {/* Filter by pet type */}
+      <FilterByPetType />
     </div>
   );
 };

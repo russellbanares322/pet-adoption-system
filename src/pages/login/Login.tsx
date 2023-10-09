@@ -33,11 +33,18 @@ const Login = () => {
       setIsLoading(false);
     } else {
       try {
-        await signInWithEmailAndPassword(
+        const signInResponse = await signInWithEmailAndPassword(
           auth,
           formData.email,
           formData.password
         );
+        const userInfo = {
+          email: signInResponse?.user.email,
+          displayName: signInResponse.user.displayName,
+          token: await signInResponse.user.getIdToken(true),
+        };
+        localStorage.setItem("user-info", JSON.stringify(userInfo));
+
         navigate("/");
         toast.success("Login Succcessful");
         setFormData({
