@@ -12,6 +12,7 @@ type PetsDisplayProps = {
   petColor: string;
   petDescription: string;
   petImage: string;
+  handleOpenEditModal: (petId: string) => void;
 };
 
 const PetDisplay = ({
@@ -22,6 +23,7 @@ const PetDisplay = ({
   petColor,
   petDescription,
   petImage,
+  handleOpenEditModal,
 }: PetsDisplayProps) => {
   return (
     <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200">
@@ -48,7 +50,10 @@ const PetDisplay = ({
           Gender: <span className="text-[1rem] font-bold">{petGender}</span>
         </p>
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
-          <button className="bg-dark-blue text-base px-2 py-1 rounded-sm hover:bg-dark-blue/90 flex items-center gap-2">
+          <button
+            onClick={() => handleOpenEditModal(id)}
+            className="bg-dark-blue text-base px-2 py-1 rounded-sm hover:bg-dark-blue/90 flex items-center gap-2"
+          >
             Update <HiOutlinePencilAlt size={20} />
           </button>
           <button className="bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2">

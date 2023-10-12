@@ -4,12 +4,12 @@ type TSize = "small" | "large" | "default";
 
 type LoadingSpinnerProps = {
   size: TSize;
-  title: string;
+  title?: string;
 };
 
 const LoadingSpinner = ({ title, size }: LoadingSpinnerProps) => {
   return (
-    <div className="flex justify-center items-center">
+    <div className="w-full mt-10">
       <Spin tip={title} size={size}>
         <div className="content" />
       </Spin>

@@ -1,18 +1,40 @@
 import { useState } from "react";
+import { useFetchPets } from "../../../api/pets/pets";
 import LoadingSpinner from "../../../global/LoadingSpinner";
-import useFetchPets from "../../../hooks/useFetchPets";
 import AddEditPetFormModal from "./AddEditPetFormModal";
 import PetDisplay from "./PetDisplay";
+
+type DataForUpdate = {
+  openEditModal: boolean;
+  selectedId: null | string;
+};
 
 const ListedPets = () => {
   const [openModal, setOpenModal] = useState(false);
   const { data: petsData, isLoading } = useFetchPets();
+  const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
+    openEditModal: false,
+    selectedId: null,
+  });
   const handleOpenModal = () => {
     setOpenModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseAddPetModal = () => {
     setOpenModal(false);
+  };
+  const handleCloseEditPetModal = () => {
+    setDataForUpdate({
+      openEditModal: false,
+      selectedId: null,
+    });
+  };
+
+  const handleOpenEditModal = (petId: string) => {
+    setDataForUpdate({
+      openEditModal: true,
+      selectedId: petId,
+    });
   };
 
   return (
@@ -25,17 +47,21 @@ const ListedPets = () => {
       {!isLoading && (
         <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
           {petsData.length > 0 &&
-            petsData.map((pet) => <PetDisplay {...pet} />)}
+            petsData.map((pet) => (
+              <PetDisplay handleOpenEditModal={handleOpenEditModal} {...pet} />
+            ))}
         </div>
       )}
       {isLoading && <LoadingSpinner title="Loading..." size="large" />}
-      {petsData.length === 0 && (
+      {!isLoading && petsData.length === 0 && (
         <h1 className="text-center text-lg font-bold">No pet added yet...</h1>
       )}
       <AddEditPetFormModal
-        isForUpdate={false}
+        selectedId={dataForUpdate.selectedId}
+        openEditModal={dataForUpdate.openEditModal}
         openModal={openModal}
-        onCancel={handleCloseModal}
+        handleCloseAddPetModal={handleCloseAddPetModal}
+        handleCloseEditPetModal={handleCloseEditPetModal}
       />
     </div>
   );

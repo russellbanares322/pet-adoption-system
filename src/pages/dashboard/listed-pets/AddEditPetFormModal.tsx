@@ -9,9 +9,11 @@ import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 type AddEditPetFormModalProps = {
+  selectedId: string | null;
+  openEditModal: boolean;
   openModal: boolean;
-  onCancel: () => void;
-  isForUpdate: boolean;
+  handleCloseAddPetModal: () => void;
+  handleCloseEditPetModal: () => void;
 };
 
 type FormInputs = {
@@ -30,9 +32,11 @@ type FormInputs = {
 };
 
 const AddEditPetFormModal = ({
+  selectedId,
+  openEditModal,
   openModal,
-  onCancel,
-  isForUpdate,
+  handleCloseAddPetModal,
+  handleCloseEditPetModal,
 }: AddEditPetFormModalProps) => {
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -42,7 +46,8 @@ const AddEditPetFormModal = ({
 
   const handleCloseModal = () => {
     form.resetFields();
-    onCancel();
+    handleCloseEditPetModal();
+    handleCloseAddPetModal();
   };
 
   const onFinish = async (values: FormInputs) => {
@@ -56,7 +61,7 @@ const AddEditPetFormModal = ({
       await uploadBytes(imageRef, values.petImage.file.originFileObj).then(
         (res) => {
           getDownloadURL(res.ref).then((url) => {
-            if (!isForUpdate && url) {
+            if (!selectedId && url) {
               addDoc(listedPetsRef, {
                 userId: user?.uid,
                 petName: values.petName,
@@ -67,9 +72,8 @@ const AddEditPetFormModal = ({
                 petImage: url,
               });
               setIsLoading(false);
-              form.resetFields();
+              handleCloseModal();
               toast.success("Successfully added pet");
-              onCancel();
             }
           });
         }
@@ -87,7 +91,7 @@ const AddEditPetFormModal = ({
       }}
       width={500}
       title="ADD PET"
-      open={openModal}
+      open={openModal || openEditModal}
       onCancel={handleCloseModal}
       footer={[
         <Button

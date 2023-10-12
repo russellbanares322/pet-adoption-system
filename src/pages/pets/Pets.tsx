@@ -1,8 +1,8 @@
 import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
 import { HiOutlineChevronDown } from "react-icons/hi";
-import useFetchPets from "../../hooks/useFetchPets";
 import LoadingSpinner from "../../global/LoadingSpinner";
+import { useFetchPets } from "../../api/pets/pets";
 
 const Pets = () => {
   const { data: petsData, isLoading } = useFetchPets();
@@ -30,7 +30,11 @@ const Pets = () => {
           {isLoading && (
             <LoadingSpinner title="Fetching pets..." size="large" />
           )}
-          {petsData.length === 0 && <h1>No added pets yet...</h1>}
+          {!isLoading && petsData.length === 0 && (
+            <h1 className="text-center font-bold text-lg">
+              No added pets yet...
+            </h1>
+          )}
         </div>
       </div>
     </div>
