@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
@@ -16,7 +16,7 @@ const useFetchPets = () => {
   const [data, setData] = useState<PetsData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  const getPets = () => {
     setIsLoading(true);
     const listedPetsRef = collection(db, "listed-pets");
     onSnapshot(listedPetsRef, (snapshot) => {
@@ -27,9 +27,34 @@ const useFetchPets = () => {
       setData(petsData);
       setIsLoading(false);
     });
+  };
+
+  useEffect(() => {
+    getPets();
   }, []);
 
   return { data, isLoading };
 };
 
-export { useFetchPets };
+const useFetchPet = (id: string) => {
+  const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getSinglePet = async () => {
+    setIsLoading(true);
+    const listedPetsRef = doc(db, "listed-pets", id);
+    const snapshot = await getDoc(listedPetsRef);
+    if (snapshot.exists()) {
+      setData({ ...snapshot.data() });
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getSinglePet();
+  }, []);
+
+  return { data, isLoading };
+};
+
+export { useFetchPets, useFetchPet };

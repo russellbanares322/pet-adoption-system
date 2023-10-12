@@ -1,3 +1,4 @@
+import { Tooltip } from "antd";
 import { HiOutlineHeart, HiHeart, HiOutlineEye } from "react-icons/hi";
 
 type PetsCardProps = {
@@ -33,7 +34,9 @@ const PetsCard = ({
       </div>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
-        <HiOutlineHeart className="cursor-pointer" size={24} />
+        <Tooltip title="Add to favorites">
+          <HiOutlineHeart className="cursor-pointer" size={24} />
+        </Tooltip>
       </div>
       <div className="px-2 my-3 text-dark-blue text-center">
         <p className="text-md text-center mb-2 text-[1rem]">{petDescription}</p>

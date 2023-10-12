@@ -4,9 +4,10 @@ import { UploadOutlined } from "@ant-design/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firebase/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useFetchPet } from "../../../api/pets/pets";
 
 type AddEditPetFormModalProps = {
   selectedId: string | null;
@@ -43,6 +44,20 @@ const AddEditPetFormModal = ({
   const { TextArea } = Input;
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
+  const { data: petDataForUpdate } = useFetchPet(selectedId as string);
+
+  useEffect(() => {
+    if (selectedId) {
+      form.setFieldsValue({
+        petName: petDataForUpdate?.petName,
+        petAge: petDataForUpdate?.petAge,
+        petGender: petDataForUpdate?.petGender,
+        petColor: petDataForUpdate?.petColor,
+        petDescription: petDataForUpdate?.petDescription,
+        petImage: petDataForUpdate?.petImage,
+      });
+    }
+  }, [selectedId]);
 
   const handleCloseModal = () => {
     form.resetFields();
@@ -90,7 +105,7 @@ const AddEditPetFormModal = ({
         className: "primary-btn",
       }}
       width={500}
-      title="ADD PET"
+      title={selectedId ? "EDIT PET" : "ADD PET"}
       open={openModal || openEditModal}
       onCancel={handleCloseModal}
       footer={[
@@ -110,7 +125,7 @@ const AddEditPetFormModal = ({
           type="primary"
           htmlType="submit"
         >
-          {isLoading ? "Submitting..." : "Submit"}
+          {isLoading ? "Submitting..." : selectedId ? "Save" : "Submit"}
         </Button>,
       ]}
       okText="Submit"
