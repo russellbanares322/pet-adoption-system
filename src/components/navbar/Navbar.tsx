@@ -130,7 +130,7 @@ const Navbar = () => {
               onClick={() => navigate("/login")}
               className="cursor-pointer ml-auto"
             >
-              <button className="button-rounded">Login</button>
+              <button className="button-filled">Login</button>
             </li>
           )}
           {isLoggedIn && (
@@ -196,7 +196,7 @@ const Navbar = () => {
             )}
             {!isLoggedIn && (
               <li onClick={() => navigate("/login")} className="cursor-pointer">
-                <button className="button-rounded">Login</button>
+                <button className="button-filled">Login</button>
               </li>
             )}
             {isLoggedIn && (
