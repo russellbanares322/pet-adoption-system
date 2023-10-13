@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase/firebase-config";
-import getLoggedUserInfo from "../../utils/getLoggedUserInfo";
 import DashboardLandingPage from "./DashboardLandingPage";
 import DashboardLayout from "./DashboardLayout";
 
@@ -14,8 +13,7 @@ const AdminDashboard = () => {
   const [user] = useAuthState(auth);
   const isInDashboardPage = location.pathname === "/dashboard";
   const isAdminLoggedIn =
-    (getLoggedUserInfo()?.email || user?.email) ===
-    import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+    user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
 
   const contentStyle = {
     margin: "18px 16px",

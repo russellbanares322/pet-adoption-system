@@ -65,28 +65,26 @@ const Signup = () => {
     } else {
       if (!isEmailAlreadyUsed) {
         try {
-          const signUpResponse = await createUserWithEmailAndPassword(
+          await createUserWithEmailAndPassword(
             auth,
             formData.email,
             formData.password
           );
-          const userInfo = {
-            email: signUpResponse?.user.email,
-            displayName: signUpResponse.user.displayName,
-            token: signUpResponse.user.getIdToken(),
-          };
-          localStorage.setItem("user-info", JSON.stringify(userInfo));
+
           setDoc(doc(db, "users", formData.email), {
             savedFavoritePets: [],
           });
+
           updateProfile(auth?.currentUser as User, {
             displayName: formData.fullName,
           });
+
           addDoc(registeredUsersRef, {
             email: formData.email,
             dateCreated: Timestamp.now().toDate(),
             displayName: formData.fullName,
           });
+
           setFormData({
             fullName: "",
             email: "",

@@ -63,7 +63,7 @@ const PetDisplay = ({
             okText="Yes"
             cancelText="No"
             okButtonProps={{
-              className: "primaryBtn",
+              className: "primary-btn",
             }}
           >
             <button className="bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2">

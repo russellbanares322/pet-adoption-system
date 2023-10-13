@@ -11,7 +11,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import Dropdown from "../dropdown/Dropdown";
-import getLoggedUserInfo from "../../utils/getLoggedUserInfo";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -26,10 +25,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
-  const displayName = getLoggedUserInfo()?.displayName || user?.displayName;
+  const displayName = user?.displayName;
   const isAdminLoggedIn =
-    (getLoggedUserInfo()?.email || user?.email) ===
-    import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+    user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -38,7 +36,6 @@ const Navbar = () => {
   const handleLogout = () => {
     signOut(auth);
     navigate("/");
-    localStorage.removeItem("user-info");
   };
 
   const handleToggleDropdown = () => {
