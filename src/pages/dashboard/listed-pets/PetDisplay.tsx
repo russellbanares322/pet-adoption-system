@@ -1,9 +1,12 @@
 import { Popconfirm } from "antd";
+import { deleteDoc, doc } from "firebase/firestore";
 import {
   HiOutlineEye,
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from "react-icons/hi";
+import { toast } from "react-toastify";
+import { db } from "../../../firebase/firebase-config";
 
 type PetsDisplayProps = {
   id: string;
@@ -26,6 +29,14 @@ const PetDisplay = ({
   petImage,
   handleOpenEditModal,
 }: PetsDisplayProps) => {
+  const deletePost = async () => {
+    try {
+      await deleteDoc(doc(db, "listed-pets", id));
+      toast.success("Successfully deleted post");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
   return (
     <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200">
       <div className="relative group">
@@ -62,6 +73,7 @@ const PetDisplay = ({
             description="Are you sure to delete this data?"
             okText="Yes"
             cancelText="No"
+            onConfirm={deletePost}
             okButtonProps={{
               className: "primary-btn",
             }}
