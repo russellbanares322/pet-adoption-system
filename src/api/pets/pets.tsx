@@ -37,22 +37,24 @@ const useFetchPets = () => {
 };
 
 const useFetchPet = (id: string) => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const getSinglePet = async () => {
-    setIsLoading(true);
-    const listedPetsRef = doc(db, "listed-pets", id);
-    const snapshot = await getDoc(listedPetsRef);
-    if (snapshot.exists()) {
-      setData({ ...snapshot.data() });
-      setIsLoading(false);
+    if (id !== null) {
+      setIsLoading(true);
+      const listedPetsRef = doc(db, "listed-pets", id);
+      const snapshot = await getDoc(listedPetsRef);
+      if (snapshot.exists()) {
+        setData({ ...snapshot.data() });
+        setIsLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     getSinglePet();
-  }, []);
+  }, [id]);
 
   return { data, isLoading };
 };

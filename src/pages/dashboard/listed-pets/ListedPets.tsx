@@ -16,6 +16,7 @@ const ListedPets = () => {
     openEditModal: false,
     selectedId: null,
   });
+
   const handleOpenModal = () => {
     setOpenModal(true);
   };

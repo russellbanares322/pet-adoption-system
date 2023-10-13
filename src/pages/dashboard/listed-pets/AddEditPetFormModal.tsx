@@ -9,14 +9,6 @@ import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchPet } from "../../../api/pets/pets";
 
-type AddEditPetFormModalProps = {
-  selectedId: string | null;
-  openEditModal: boolean;
-  openModal: boolean;
-  handleCloseAddPetModal: () => void;
-  handleCloseEditPetModal: () => void;
-};
-
 type FormInputs = {
   petName: string;
   petAge: string;
@@ -30,6 +22,14 @@ type FormInputs = {
       originFileObj: File;
     };
   };
+};
+
+type AddEditPetFormModalProps = {
+  selectedId: string | null;
+  openEditModal: boolean;
+  openModal: boolean;
+  handleCloseAddPetModal: () => void;
+  handleCloseEditPetModal: () => void;
 };
 
 const AddEditPetFormModal = ({
@@ -47,7 +47,7 @@ const AddEditPetFormModal = ({
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
 
   useEffect(() => {
-    if (selectedId) {
+    if (selectedId !== null) {
       form.setFieldsValue({
         petName: petDataForUpdate?.petName,
         petAge: petDataForUpdate?.petAge,
@@ -57,7 +57,7 @@ const AddEditPetFormModal = ({
         petImage: petDataForUpdate?.petImage,
       });
     }
-  }, [selectedId]);
+  }, [selectedId, petDataForUpdate]);
 
   const handleCloseModal = () => {
     form.resetFields();
