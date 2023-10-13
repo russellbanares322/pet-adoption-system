@@ -1,3 +1,4 @@
+import { Popconfirm } from "antd";
 import {
   HiOutlineEye,
   HiOutlinePencilAlt,
@@ -56,9 +57,19 @@ const PetDisplay = ({
           >
             Update <HiOutlinePencilAlt size={20} />
           </button>
-          <button className="bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2">
-            Delete <HiOutlineTrash size={20} />
-          </button>
+          <Popconfirm
+            title="Remove pet from list"
+            description="Are you sure to delete this data?"
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{
+              className: "primaryBtn",
+            }}
+          >
+            <button className="bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2">
+              Delete <HiOutlineTrash size={20} />
+            </button>
+          </Popconfirm>
         </div>
       </div>
     </div>
