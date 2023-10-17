@@ -73,6 +73,7 @@ const AddEditPetFormModal = ({
         storage,
         `/images/${values.petImage.file.uid}/${values.petImage.file.name}`
       );
+      console.log(values);
       await uploadBytes(imageRef, values.petImage.file.originFileObj).then(
         (res) => {
           getDownloadURL(res.ref).then((url) => {

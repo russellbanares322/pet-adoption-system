@@ -11,11 +11,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
 
-  if (isLoggedIn) {
-    return children;
-  } else {
+  if (!isLoggedIn) {
     return <Navigate to="/login" replace={true} />;
   }
+  return children;
 };
 
 export default ProtectedRoute;

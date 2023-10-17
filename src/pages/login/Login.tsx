@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { PiEyeClosed, PiEye } from "react-icons/pi";
@@ -9,6 +9,7 @@ import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import { auth } from "../../firebase/firebase-config";
 import { ClipLoader } from "react-spinners";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [user] = useAuthState(auth);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -64,6 +66,12 @@ const Login = () => {
       return <p className="text-red-600 text-sm">{displayName} is required</p>;
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate(-1);
+    }
+  }, [user]);
 
   return (
     <form
