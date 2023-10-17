@@ -45,9 +45,10 @@ const AddEditPetFormModal = ({
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
+  const isDataForUpdate = selectedId !== null;
 
   useEffect(() => {
-    if (selectedId !== null) {
+    if (isDataForUpdate) {
       form.setFieldsValue({
         petName: petDataForUpdate?.petName,
         petAge: petDataForUpdate?.petAge,
@@ -73,7 +74,6 @@ const AddEditPetFormModal = ({
         storage,
         `/images/${values.petImage.file.uid}/${values.petImage.file.name}`
       );
-      console.log(values);
       await uploadBytes(imageRef, values.petImage.file.originFileObj).then(
         (res) => {
           getDownloadURL(res.ref).then((url) => {
@@ -89,7 +89,7 @@ const AddEditPetFormModal = ({
               });
               setIsLoading(false);
               handleCloseModal();
-              toast.success("Successfully added pet");
+              toast.success("Successfully created post");
             }
           });
         }
@@ -126,7 +126,7 @@ const AddEditPetFormModal = ({
           type="primary"
           htmlType="submit"
         >
-          {isLoading ? "Submitting..." : selectedId ? "Save" : "Submit"}
+          {isLoading ? "Creating post..." : selectedId ? "Save" : "Submit"}
         </Button>,
       ]}
       okText="Submit"
@@ -196,10 +196,28 @@ const AddEditPetFormModal = ({
             { required: true, message: "Please upload your pet's image..." },
           ]}
         >
-          <Upload maxCount={1} name="petImage" listType="picture">
+          <Upload
+            maxCount={1}
+            name="petImage"
+            listType="picture"
+            customRequest={({ onSuccess }) => {
+              if (!onSuccess) return;
+              setTimeout(() => {
+                onSuccess("ok");
+              }, 0);
+            }}
+          >
             <Button icon={<UploadOutlined />}>Click to upload</Button>
           </Upload>
         </Form.Item>
+        {isDataForUpdate && (
+          <div className="ml-28 border rounded-md p-2 flex items-center">
+            <img
+              className="w-[50px] h-[50px] object-cover"
+              src={form.getFieldValue("petImage")}
+            />
+          </div>
+        )}
       </Form>
     </Modal>
   );

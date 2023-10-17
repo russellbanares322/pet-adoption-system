@@ -1,12 +1,13 @@
 import { Popconfirm } from "antd";
 import { deleteDoc, doc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import {
   HiOutlineEye,
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from "react-icons/hi";
 import { toast } from "react-toastify";
-import { db } from "../../../firebase/firebase-config";
+import { db, storage } from "../../../firebase/firebase-config";
 
 type PetsDisplayProps = {
   id: string;
@@ -31,7 +32,9 @@ const PetDisplay = ({
 }: PetsDisplayProps) => {
   const deletePost = async () => {
     try {
+      const imgToBeDeleted = ref(storage, petImage);
       await deleteDoc(doc(db, "listed-pets", id));
+      await deleteObject(imgToBeDeleted);
       toast.success("Successfully deleted post");
     } catch (err: any) {
       toast.error(err.message);
