@@ -24,7 +24,7 @@ const PetsCard = ({
     <div className="border-l-4 border-b-4 border-b-maroon border-l-maroon rounded-lg bg-white">
       <div className="relative group">
         <img
-          className="object-cover h-60 w-full bg-center rounded-lg"
+          className="object-cover h-60 w-full bg-center rounded-tr-lg rounded-tl-lg"
           src={petImage}
         />
         <div className="rounded-lg cursor-pointer bg-black/50 absolute text-white top-0 left-0 w-full flex-col h-full flex justify-center items-center opacity-0 group-hover:opacity-100">
