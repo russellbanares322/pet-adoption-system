@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Select, Upload } from "antd";
 import { petColors } from "../../../data/pet-filter-options";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firebase/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
@@ -211,11 +211,12 @@ const AddEditPetFormModal = ({
           </Upload>
         </Form.Item>
         {isDataForUpdate && (
-          <div className="ml-28 border rounded-md p-2 flex items-center">
+          <div className="ml-32 border rounded-md p-2 flex items-center justify-between">
             <img
               className="w-[50px] h-[50px] object-cover"
               src={form.getFieldValue("petImage")}
             />
+            <DeleteOutlined className="pr-1" />
           </div>
         )}
       </Form>
