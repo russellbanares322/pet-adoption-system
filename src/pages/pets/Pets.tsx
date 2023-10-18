@@ -1,6 +1,5 @@
 import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
-import { HiOutlineChevronDown } from "react-icons/hi";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import { useFetchPets } from "../../api/pets/pets";
 
@@ -9,21 +8,15 @@ const Pets = () => {
 
   return (
     <div className="py-24 w-full bg-whitesmoke">
-      <div className="container flex items-start justify-start gap-10">
+      <div className="container flex items-start justify-start gap-10 mt-10">
         <div className="w-72 hidden md:block">
           <SidebarFilters />
         </div>
         <div className="w-full">
-          <div className="flex justify-between items-center mb-2">
+          <div className="text-center mb-2">
             <p className="font-semibold">{petsData.length} ITEMS</p>
-            <p className="flex items-center gap-2">
-              <span className="text-gray-600">SORT BY:</span>{" "}
-              <span className="flex items-center gap-2 cursor-pointer">
-                PRICE - LOW TO HIGH <HiOutlineChevronDown />
-              </span>
-            </p>
           </div>
-          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
             {petsData.length > 0 &&
               petsData.map((pet) => <PetsCard key={pet.id} {...pet} />)}
           </div>
@@ -31,7 +24,7 @@ const Pets = () => {
             <LoadingSpinner title="Fetching pets..." size="large" />
           )}
           {!isLoading && petsData.length === 0 && (
-            <h1 className="text-center font-bold text-lg">
+            <h1 className="flex justify-center items-center h-96 font-bold text-lg">
               No added pets yet...
             </h1>
           )}

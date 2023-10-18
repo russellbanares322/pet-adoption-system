@@ -1,9 +1,13 @@
 import { Button, Form, Input, Modal, Select, Upload } from "antd";
-import { petColors } from "../../../data/pet-filter-options";
+import {
+  petColors,
+  petGender,
+  petTypes,
+} from "../../../data/pet-filter-options";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firebase/firebase-config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -14,6 +18,7 @@ type FormInputs = {
   petAge: string;
   petGender: string;
   petColor: string;
+  petType: string;
   petDescription: string;
   petImage: {
     file: {
@@ -45,7 +50,8 @@ const AddEditPetFormModal = ({
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
-  const isDataForUpdate = selectedId !== null;
+  const petImageValue = form.getFieldValue("petImage");
+  const isDataForUpdate = selectedId;
 
   useEffect(() => {
     if (isDataForUpdate) {
@@ -54,6 +60,7 @@ const AddEditPetFormModal = ({
         petAge: petDataForUpdate?.petAge,
         petGender: petDataForUpdate?.petGender,
         petColor: petDataForUpdate?.petColor,
+        petType: petDataForUpdate?.petType,
         petDescription: petDataForUpdate?.petDescription,
         petImage: petDataForUpdate?.petImage,
       });
@@ -66,37 +73,70 @@ const AddEditPetFormModal = ({
     handleCloseAddPetModal();
   };
 
+  const removeImg = () => {
+    form.setFieldValue("petImage", undefined);
+  };
+
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
       const listedPetsRef = collection(db, "listed-pets");
-      const imageRef = ref(
-        storage,
-        `/images/${values.petImage.file.uid}/${values.petImage.file.name}`
-      );
-      await uploadBytes(imageRef, values.petImage.file.originFileObj).then(
-        (res) => {
-          getDownloadURL(res.ref).then((url) => {
-            if (!selectedId && url) {
-              addDoc(listedPetsRef, {
-                userId: user?.uid,
-                petName: values.petName,
-                petAge: values.petAge,
-                petGender: values.petGender,
-                petColor: values.petColor,
-                petDescription: values.petDescription,
-                petImage: url,
-              });
-              setIsLoading(false);
-              handleCloseModal();
-              toast.success("Successfully created post");
-            }
+      const imgUrl = await uploadImgToStorage(values);
+
+      if (!isDataForUpdate) {
+        if (imgUrl !== undefined) {
+          addDoc(listedPetsRef, {
+            userId: user?.uid,
+            petName: values.petName,
+            petAge: values.petAge,
+            petGender: values.petGender,
+            petColor: values.petColor,
+            petType: values.petType,
+            petDescription: values.petDescription,
+            petImage: imgUrl,
           });
+          setIsLoading(false);
+          handleCloseModal();
+          toast.success("Successfully created post");
         }
-      );
+      } else {
+        updateDoc(doc(db, "listed-pets", selectedId as string), {
+          userId: user?.uid,
+          petName: values.petName,
+          petAge: values.petAge,
+          petGender: values.petGender,
+          petColor: values.petColor,
+          petType: values.petType,
+          petDescription: values.petDescription,
+          petImage: petImageValue === undefined ? imgUrl : petImageValue,
+        });
+        setIsLoading(false);
+        handleCloseModal();
+        toast.success("Successfully updated post");
+      }
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);
+    }
+  };
+
+  const uploadImgToStorage = async (values: FormInputs): Promise<string> => {
+    const imageRef = ref(
+      storage,
+      `/images/${values?.petImage?.file?.uid}/${values?.petImage?.file?.name}`
+    );
+
+    try {
+      const uploadTaskSnapshot = await uploadBytes(
+        imageRef,
+        values?.petImage?.file?.originFileObj
+      );
+
+      const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
+      return downloadURL;
+    } catch (error: any) {
+      toast.error(error.message);
+      throw error;
     }
   };
 
@@ -106,7 +146,7 @@ const AddEditPetFormModal = ({
         className: "primary-btn",
       }}
       width={500}
-      title={selectedId ? "EDIT PET" : "ADD PET"}
+      title={isDataForUpdate ? "EDIT PET" : "ADD PET"}
       open={openModal || openEditModal}
       onCancel={handleCloseModal}
       footer={[
@@ -126,7 +166,9 @@ const AddEditPetFormModal = ({
           type="primary"
           htmlType="submit"
         >
-          {isLoading ? "Creating post..." : selectedId ? "Save" : "Submit"}
+          {isLoading && "Creating post..."}
+          {!isLoading && isDataForUpdate && "Save"}
+          {!isLoading && !isDataForUpdate && "Submit"}
         </Button>,
       ]}
       okText="Submit"
@@ -164,8 +206,11 @@ const AddEditPetFormModal = ({
           ]}
         >
           <Select placeholder="Enter your pet's gender..." allowClear>
-            <Option value="Male">Male</Option>
-            <Option value="Female">Female</Option>
+            {petGender.map((gender) => (
+              <Option key={gender} value={gender}>
+                {gender}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         {/* Pet's Color */}
@@ -184,6 +229,22 @@ const AddEditPetFormModal = ({
             ))}
           </Select>
         </Form.Item>
+        {/* Pet Type */}
+        <Form.Item
+          label="Type"
+          name="petType"
+          rules={[
+            { required: true, message: "Please specify your pet's type." },
+          ]}
+        >
+          <Select placeholder="Enter your pet's type..." allowClear>
+            {petTypes.map((type) => (
+              <Option key={type} value={type}>
+                {type}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
         {/* Pet's Description */}
         <Form.Item name="petDescription" label="Description">
           <TextArea placeholder="Enter your pet's description..." rows={4} />
@@ -193,7 +254,11 @@ const AddEditPetFormModal = ({
           name="petImage"
           label="Thumbnail Image"
           rules={[
-            { required: true, message: "Please upload your pet's image..." },
+            {
+              required:
+                form.getFieldValue("petImage") === undefined ? true : false,
+              message: "Please upload your pet's image...",
+            },
           ]}
         >
           <Upload
@@ -214,9 +279,12 @@ const AddEditPetFormModal = ({
           <div className="ml-32 border rounded-md p-2 flex items-center justify-between">
             <img
               className="w-[50px] h-[50px] object-cover"
-              src={form.getFieldValue("petImage")}
+              src={petImageValue}
             />
-            <DeleteOutlined className="pr-1" />
+            <DeleteOutlined
+              onClick={removeImg}
+              className="pr-1 cursor-pointer hover:text-red-500"
+            />
           </div>
         )}
       </Form>

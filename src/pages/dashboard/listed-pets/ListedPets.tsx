@@ -55,7 +55,9 @@ const ListedPets = () => {
       )}
       {isLoading && <LoadingSpinner title="Loading..." size="large" />}
       {!isLoading && petsData.length === 0 && (
-        <h1 className="text-center text-lg font-bold">No pet added yet...</h1>
+        <h1 className="flex justify-center items-center h-96 font-bold text-lg">
+          No pet added yet...
+        </h1>
       )}
       <AddEditPetFormModal
         selectedId={dataForUpdate.selectedId}
