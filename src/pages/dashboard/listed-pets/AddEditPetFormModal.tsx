@@ -100,7 +100,7 @@ const AddEditPetFormModal = ({
           toast.success("Successfully created post");
         }
       } else {
-        updateDoc(doc(db, "listed-pets", selectedId as string), {
+        updateDoc(doc(db, "listed-pets", selectedId), {
           userId: user?.uid,
           petName: values.petName,
           petAge: values.petAge,
@@ -108,7 +108,10 @@ const AddEditPetFormModal = ({
           petColor: values.petColor,
           petType: values.petType,
           petDescription: values.petDescription,
-          petImage: petImageValue === undefined ? imgUrl : petImageValue,
+          petImage:
+            petImageValue === undefined || petImageValue === ""
+              ? imgUrl
+              : petImageValue,
         });
         setIsLoading(false);
         handleCloseModal();
