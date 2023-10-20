@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select, Upload } from "antd";
+import { Button, Form, Input, Modal, Select } from "antd";
 import {
   petColors,
   petGender,
@@ -8,7 +8,7 @@ import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { auth, db, storage } from "../../../firebase/firebase-config";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import React, { Key, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchPet } from "../../../api/pets/pets";
@@ -20,13 +20,6 @@ type FormInputs = {
   petColor: string;
   petType: string;
   petDescription: string;
-  petImage: {
-    file: {
-      uid: string;
-      name: string;
-      originFileObj: File;
-    };
-  };
 };
 
 type AddEditPetFormModalProps = {
@@ -49,8 +42,8 @@ const AddEditPetFormModal = ({
   const { TextArea } = Input;
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
+  const [imgFile, setImgFile] = useState<File | null | string>(null);
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
-  const petImageValue = form.getFieldValue("petImage");
   const isDataForUpdate = selectedId;
 
   useEffect(() => {
@@ -62,8 +55,8 @@ const AddEditPetFormModal = ({
         petColor: petDataForUpdate?.petColor,
         petType: petDataForUpdate?.petType,
         petDescription: petDataForUpdate?.petDescription,
-        petImage: petDataForUpdate?.petImage,
       });
+      setImgFile(petDataForUpdate?.petImage);
     }
   }, [selectedId, petDataForUpdate]);
 
@@ -74,14 +67,21 @@ const AddEditPetFormModal = ({
   };
 
   const removeImg = () => {
-    form.setFieldValue("petImage", undefined);
+    setImgFile(null);
+  };
+
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files) {
+      setImgFile(files[0]);
+    }
   };
 
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
       const listedPetsRef = collection(db, "listed-pets");
-      const imgUrl = await uploadImgToStorage(values);
+      const imgUrl = await uploadImgToStorage();
 
       if (!isDataForUpdate) {
         if (imgUrl !== undefined) {
@@ -93,7 +93,7 @@ const AddEditPetFormModal = ({
             petColor: values.petColor,
             petType: values.petType,
             petDescription: values.petDescription,
-            petImage: imgUrl,
+            petImage: typeof imgFile === "object" ? imgUrl : imgFile,
           });
           setIsLoading(false);
           handleCloseModal();
@@ -108,10 +108,7 @@ const AddEditPetFormModal = ({
           petColor: values.petColor,
           petType: values.petType,
           petDescription: values.petDescription,
-          petImage:
-            petImageValue === undefined || petImageValue === ""
-              ? imgUrl
-              : petImageValue,
+          petImage: typeof imgFile === "object" ? imgUrl : imgFile,
         });
         setIsLoading(false);
         handleCloseModal();
@@ -123,17 +120,11 @@ const AddEditPetFormModal = ({
     }
   };
 
-  const uploadImgToStorage = async (values: FormInputs): Promise<string> => {
-    const imageRef = ref(
-      storage,
-      `/images/${values?.petImage?.file?.uid}/${values?.petImage?.file?.name}`
-    );
+  const uploadImgToStorage = async () => {
+    const imageRef = ref(storage, `/images/${Date.now()}/${imgFile?.name}`);
 
     try {
-      const uploadTaskSnapshot = await uploadBytes(
-        imageRef,
-        values?.petImage?.file?.originFileObj
-      );
+      const uploadTaskSnapshot = await uploadBytes(imageRef, imgFile as Blob);
 
       const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
       return downloadURL;
@@ -170,6 +161,7 @@ const AddEditPetFormModal = ({
           htmlType="submit"
         >
           {isLoading && "Creating post..."}
+          {isLoading && isDataForUpdate && "Updating post..."}
           {!isLoading && isDataForUpdate && "Save"}
           {!isLoading && !isDataForUpdate && "Submit"}
         </Button>,
@@ -254,35 +246,35 @@ const AddEditPetFormModal = ({
         </Form.Item>
         {/* Pet's Thumbnail */}
         <Form.Item
-          name="petImage"
           label="Thumbnail Image"
           rules={[
             {
-              required:
-                form.getFieldValue("petImage") === undefined ? true : false,
-              message: "Please upload your pet's image...",
+              required: true,
             },
           ]}
         >
-          <Upload
-            maxCount={1}
-            name="petImage"
-            listType="picture"
-            customRequest={({ onSuccess }) => {
-              if (!onSuccess) return;
-              setTimeout(() => {
-                onSuccess("ok");
-              }, 0);
-            }}
-          >
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
+          <label className="flex ml-2 border duration-150 hover:border-blue hover:text-blue border-gray-300 rounded-md p-2 cursor-pointer justify-start items-center gap-2">
+            <input
+              key={imgFile as Key}
+              id="img-upload"
+              accept="image/png, image/jpeg"
+              onChange={handleChangeImage}
+              className="absolute left-[-99999rem]"
+              type="file"
+            />
+            <UploadOutlined />
+            Click to Upload
+          </label>
         </Form.Item>
-        {isDataForUpdate && (
-          <div className="ml-32 border rounded-md p-2 flex items-center justify-between">
+        {imgFile !== null && (
+          <div className="border rounded-md p-2 flex items-center justify-between">
             <img
               className="w-[50px] h-[50px] object-cover"
-              src={petImageValue}
+              src={
+                typeof imgFile === "object"
+                  ? URL.createObjectURL(imgFile as Blob)
+                  : (imgFile as string)
+              }
             />
             <DeleteOutlined
               onClick={removeImg}
