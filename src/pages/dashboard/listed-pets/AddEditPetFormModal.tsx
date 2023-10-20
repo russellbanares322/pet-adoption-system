@@ -62,6 +62,7 @@ const AddEditPetFormModal = ({
 
   const handleCloseModal = () => {
     form.resetFields();
+    setImgFile(null);
     handleCloseEditPetModal();
     handleCloseAddPetModal();
   };
