@@ -2,15 +2,42 @@ import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import { useFetchPets } from "../../api/pets/pets";
+import { useSearchParams } from "react-router-dom";
 
 const Pets = () => {
   const { data: petsData, isLoading } = useFetchPets();
+  const [searchParams, setSearchParams] = useSearchParams({
+    color: "",
+    gender: "",
+    type: "",
+  });
+
+  const queryColor = searchParams.get("color");
+  const queryGender = searchParams.get("gender");
+  const queryType = searchParams.get("type");
+
+  const handleChangeUrlParams = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    paramName: string
+  ) => {
+    const { value } = e.target;
+
+    setSearchParams((prev) => {
+      prev.set(paramName, value);
+      return prev;
+    });
+  };
 
   return (
     <div className="py-24 w-full bg-whitesmoke">
       <div className="container flex items-start justify-start gap-10 mt-10">
         <div className="w-72 hidden md:block">
-          <SidebarFilters />
+          <SidebarFilters
+            handleChangeUrlParams={handleChangeUrlParams}
+            queryColor={queryColor as string}
+            queryGender={queryGender as string}
+            queryType={queryType as string}
+          />
         </div>
         <div className="w-full">
           <div className="text-center mb-2">
