@@ -5,7 +5,12 @@ import {
   petTypes,
 } from "../../../data/pet-filter-options";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { auth, db, storage } from "../../../firebase/firebase-config";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import React, { Key, useEffect, useState } from "react";
@@ -43,6 +48,7 @@ const AddEditPetFormModal = ({
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
   const [imgFile, setImgFile] = useState<File | null | string>(null);
+  const [removedImg, setRemovedImg] = useState<File | null | string>("");
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
   const isDataForUpdate = selectedId;
 
@@ -68,7 +74,15 @@ const AddEditPetFormModal = ({
   };
 
   const removeImg = () => {
+    setRemovedImg(imgFile);
     setImgFile(null);
+  };
+
+  const deletePrevSelectedImgInStorage = async () => {
+    if (typeof removedImg === "string") {
+      const imgUrl = ref(storage, removedImg);
+      await deleteObject(imgUrl);
+    }
   };
 
   const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +125,7 @@ const AddEditPetFormModal = ({
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
         });
+        deletePrevSelectedImgInStorage();
         setIsLoading(false);
         handleCloseModal();
         toast.success("Successfully updated post");
