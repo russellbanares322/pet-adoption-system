@@ -66,9 +66,14 @@ const PetDisplay = ({
         </div>
       </div>
       <div className="px-2 mt-2 text-dark-blue text-center">
-        <Tag className="mt-3" color={isPostStatusPending ? "orange" : "green"}>
-          {postStatus}
-        </Tag>
+        {isPostCreatedByGuest && (
+          <Tag
+            className="mt-3"
+            color={isPostStatusPending ? "orange" : "green"}
+          >
+            {postStatus}
+          </Tag>
+        )}
         <p className="uppercase font-bold text-lg">{petName}</p>
         <p className="text-md text-center mb-2 text-[1rem]">{petDescription}</p>
         <p className="text-md italic">
