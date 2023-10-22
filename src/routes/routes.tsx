@@ -8,6 +8,7 @@ import Profile from "../pages/dashboard/profile/Profile";
 import Settings from "../pages/dashboard/settings/Settings";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
+import MyPost from "../pages/post/MyPost";
 
 export const routes = [
   {
@@ -38,6 +39,12 @@ export const routes = [
     path: "/pets",
     element: <Pets />,
     isProtected: false,
+    child: [],
+  },
+  {
+    path: "/my-post",
+    element: <MyPost />,
+    isProtected: true,
     child: [],
   },
   {

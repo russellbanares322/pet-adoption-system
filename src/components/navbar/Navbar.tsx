@@ -104,6 +104,16 @@ const Navbar = () => {
           >
             Pets
           </li>
+          {!isAdminLoggedIn && (
+            <li
+              onClick={() => navigate("/my-post")}
+              className={`cursor-pointer relative ${
+                activeNavLink === "My Post" && "active-nav-link"
+              }`}
+            >
+              My Post
+            </li>
+          )}
           <li
             onClick={() => navigate("/about-us")}
             className={`cursor-pointer relative ${
@@ -172,6 +182,14 @@ const Navbar = () => {
               }`}
             >
               Pets
+            </li>
+            <li
+              onClick={() => navigate("/my-post")}
+              className={`cursor-pointer relative ${
+                activeNavLink === "My Post" && "mobile-active-nav-link"
+              }`}
+            >
+              My Post
             </li>
             <li
               onClick={() => navigate("/about-us")}
