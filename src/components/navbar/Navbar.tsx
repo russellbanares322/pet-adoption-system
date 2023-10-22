@@ -22,6 +22,7 @@ const Navbar = () => {
   const isInPetsPage = location.pathname === "/pets";
   const isInDashboardPage = location.pathname.includes("/dashboard");
   const isInAboutPage = location.pathname === "/about-us";
+  const isInMyPostPage = location.pathname === "/my-post";
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -64,6 +65,8 @@ const Navbar = () => {
       setActiveNavLink("Dashboard");
     } else if (isInAboutPage) {
       setActiveNavLink("About");
+    } else if (isInMyPostPage) {
+      setActiveNavLink("MyPost");
     } else {
       setActiveNavLink("Home");
     }
@@ -104,11 +107,11 @@ const Navbar = () => {
           >
             Pets
           </li>
-          {!isAdminLoggedIn && (
+          {!isAdminLoggedIn && isLoggedIn && (
             <li
               onClick={() => navigate("/my-post")}
               className={`cursor-pointer relative ${
-                activeNavLink === "My Post" && "active-nav-link"
+                activeNavLink === "MyPost" && "active-nav-link"
               }`}
             >
               My Post
@@ -183,14 +186,16 @@ const Navbar = () => {
             >
               Pets
             </li>
-            <li
-              onClick={() => navigate("/my-post")}
-              className={`cursor-pointer relative ${
-                activeNavLink === "My Post" && "mobile-active-nav-link"
-              }`}
-            >
-              My Post
-            </li>
+            {!isAdminLoggedIn && isLoggedIn && (
+              <li
+                onClick={() => navigate("/my-post")}
+                className={`cursor-pointer relative ${
+                  activeNavLink === "MyPost" && "mobile-active-nav-link"
+                }`}
+              >
+                My Post
+              </li>
+            )}
             <li
               onClick={() => navigate("/about-us")}
               className={`cursor-pointer relative ${

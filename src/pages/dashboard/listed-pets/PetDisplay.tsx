@@ -1,4 +1,4 @@
-import { Popconfirm } from "antd";
+import { Popconfirm, Tag } from "antd";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {
@@ -6,8 +6,11 @@ import {
   HiOutlinePencilAlt,
   HiOutlineTrash,
 } from "react-icons/hi";
+import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/firebase-config";
+
+type PostStatus = "Approved" | "Pending";
 
 type PetsDisplayProps = {
   id: string;
@@ -17,6 +20,7 @@ type PetsDisplayProps = {
   petColor: string;
   petDescription: string;
   petImage: string;
+  status?: PostStatus | string;
   handleOpenEditModal: (petId: string) => void;
 };
 
@@ -28,8 +32,17 @@ const PetDisplay = ({
   petColor,
   petDescription,
   petImage,
+  status,
   handleOpenEditModal,
 }: PetsDisplayProps) => {
+  const location = useLocation();
+  const isPostCreatedByGuest = location.pathname === "/my-post";
+  const isPostStatusPending = status === "Pending";
+  const disableUpdateAndDeleteBtn = isPostStatusPending && isPostCreatedByGuest;
+  const postStatus = isPostStatusPending
+    ? "Waiting to be approved by the admin"
+    : "Approved";
+
   const deletePost = async () => {
     try {
       const imgToBeDeleted = ref(storage, petImage);
@@ -53,7 +66,10 @@ const PetDisplay = ({
         </div>
       </div>
       <div className="px-2 mt-2 text-dark-blue text-center">
-        <p className="mt-3 uppercase font-bold text-lg">{petName}</p>
+        <Tag className="mt-3" color={isPostStatusPending ? "orange" : "green"}>
+          {postStatus}
+        </Tag>
+        <p className="uppercase font-bold text-lg">{petName}</p>
         <p className="text-md text-center mb-2 text-[1rem]">{petDescription}</p>
         <p className="text-md italic">
           Age: <span className="text-[1rem] font-bold">{petAge}</span>
@@ -66,8 +82,13 @@ const PetDisplay = ({
         </p>
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
           <button
+            disabled={disableUpdateAndDeleteBtn}
             onClick={() => handleOpenEditModal(id)}
-            className="bg-dark-blue text-base px-2 py-1 rounded-sm hover:bg-dark-blue/90 flex items-center gap-2"
+            className={`bg-dark-blue text-base px-2 py-1 rounded-sm hover:bg-dark-blue/90 flex items-center gap-2 disabled:bg-dark-blue/75 ${
+              disableUpdateAndDeleteBtn
+                ? "cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
           >
             Update <HiOutlinePencilAlt size={20} />
           </button>
@@ -81,7 +102,14 @@ const PetDisplay = ({
               className: "primary-btn",
             }}
           >
-            <button className="bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2">
+            <button
+              disabled={disableUpdateAndDeleteBtn}
+              className={`bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2 disabled:bg-red-400 ${
+                disableUpdateAndDeleteBtn
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
+            >
               Delete <HiOutlineTrash size={20} />
             </button>
           </Popconfirm>

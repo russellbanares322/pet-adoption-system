@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useFetchPets } from "../../../api/pets/pets";
 import LoadingSpinner from "../../../global/LoadingSpinner";
-import AddEditPetFormModal from "./AddEditPetFormModal";
+import AddEditPetFormModal from "../../../global/AddEditPetFormModal";
 import PetDisplay from "./PetDisplay";
 
 type DataForUpdate = {
@@ -60,6 +60,7 @@ const ListedPets = () => {
         </h1>
       )}
       <AddEditPetFormModal
+        dbName="listed-pets"
         selectedId={dataForUpdate.selectedId}
         openEditModal={dataForUpdate.openEditModal}
         openModal={openModal}

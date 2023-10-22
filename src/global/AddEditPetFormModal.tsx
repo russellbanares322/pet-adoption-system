@@ -1,9 +1,4 @@
 import { Button, Form, Input, Modal, Select } from "antd";
-import {
-  petColors,
-  petGender,
-  petTypes,
-} from "../../../data/pet-filter-options";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   deleteObject,
@@ -11,12 +6,13 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { auth, db, storage } from "../../../firebase/firebase-config";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import React, { Key, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useFetchPet } from "../../../api/pets/pets";
+import { useFetchPet } from "../api/pets/pets";
+import { auth, db, storage } from "../firebase/firebase-config";
+import { petColors, petGender, petTypes } from "../data/pet-filter-options";
 
 type FormInputs = {
   petName: string;
@@ -33,6 +29,7 @@ type AddEditPetFormModalProps = {
   openModal: boolean;
   handleCloseAddPetModal: () => void;
   handleCloseEditPetModal: () => void;
+  dbName: string;
 };
 
 const AddEditPetFormModal = ({
@@ -41,6 +38,7 @@ const AddEditPetFormModal = ({
   openModal,
   handleCloseAddPetModal,
   handleCloseEditPetModal,
+  dbName,
 }: AddEditPetFormModalProps) => {
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -51,6 +49,7 @@ const AddEditPetFormModal = ({
   const [removedImg, setRemovedImg] = useState<File | null | string>("");
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
   const isDataForUpdate = selectedId;
+  const isAdminPosted = dbName === "listed-pets";
 
   useEffect(() => {
     if (isDataForUpdate) {
@@ -95,7 +94,7 @@ const AddEditPetFormModal = ({
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
-      const listedPetsRef = collection(db, "listed-pets");
+      const listedPetsRef = collection(db, dbName);
       const imgUrl = await uploadImgToStorage();
 
       if (!isDataForUpdate) {
@@ -109,6 +108,7 @@ const AddEditPetFormModal = ({
             petType: values.petType,
             petDescription: values.petDescription,
             petImage: typeof imgFile === "object" ? imgUrl : imgFile,
+            status: isAdminPosted ? "Approved" : "Pending",
           });
           setIsLoading(false);
           handleCloseModal();
@@ -124,6 +124,7 @@ const AddEditPetFormModal = ({
           petType: values.petType,
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
+          status: isAdminPosted ? "Approved" : "Pending",
         });
         deletePrevSelectedImgInStorage();
         setIsLoading(false);

@@ -1,4 +1,11 @@
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
@@ -10,6 +17,7 @@ type PetsData = {
   petColor: string;
   petDescription: string;
   petImage: string;
+  status?: string;
 };
 
 const useFetchPets = () => {
@@ -59,4 +67,30 @@ const useFetchPet = (id: string) => {
   return { data, isLoading };
 };
 
-export { useFetchPets, useFetchPet };
+const useFetchGuestPostedPet = (id: string | undefined) => {
+  const [data, setData] = useState<PetsData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getPets = () => {
+    setIsLoading(true);
+    const listedPetsRef = collection(db, "pending-pets");
+    const q = query(listedPetsRef, where("userId", "==", id));
+
+    onSnapshot(q, (snapshot) => {
+      const petsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as PetsData[];
+      setData(petsData);
+      setIsLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    getPets();
+  }, [id]);
+
+  return { data, isLoading };
+};
+
+export { useFetchPets, useFetchPet, useFetchGuestPostedPet };

@@ -94,6 +94,7 @@ const Signup = () => {
           navigate("/");
           setIsLoading(false);
           toast.success("Successfully created account");
+          window.location.reload();
         } catch (err: any) {
           toast.error(err.message);
           setIsLoading(false);
