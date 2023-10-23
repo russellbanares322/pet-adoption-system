@@ -29,7 +29,7 @@ const PetsCard = ({
         </div>
       </div>
       <p className="my-2 italic text-center">
-        {moment(dateCreated.toDate()).fromNow()}
+        {moment(dateCreated?.toDate()).fromNow()}
       </p>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>

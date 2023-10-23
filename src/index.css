@@ -23,7 +23,7 @@ body {
 }
 
 .button-filled {
-  @apply bg-orange text-white font-semibold px-5 py-2 rounded-sm text-sm md:text-base hover:bg-orange/90 duration-150 ease-in-out;
+  @apply bg-orange text-white font-semibold px-5 py-2 rounded-sm text-sm md:text-base disabled:bg-orange/80 hover:bg-orange/90 duration-150 ease-in-out;
 }
 
 .button-outlined {

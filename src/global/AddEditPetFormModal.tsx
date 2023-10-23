@@ -191,7 +191,7 @@ const AddEditPetFormModal = ({
           type="primary"
           htmlType="submit"
         >
-          {isLoading && "Creating post..."}
+          {isLoading && !isDataForUpdate && "Creating post..."}
           {isLoading && isDataForUpdate && "Updating post..."}
           {!isLoading && isDataForUpdate && "Save"}
           {!isLoading && !isDataForUpdate && "Submit"}

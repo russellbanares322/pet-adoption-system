@@ -62,7 +62,7 @@ const PetDisplay = ({
         </div>
       </div>
       <p className="text-center my-1 italic">
-        {moment(dateCreated.toDate()).fromNow()}
+        {moment(dateCreated?.toDate()).fromNow()}
       </p>
       <div className="px-2 mt-2 text-dark-blue text-center">
         {isPostCreatedByGuest && (
