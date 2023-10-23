@@ -15,6 +15,7 @@ const Pets = () => {
   const queryColor = searchParams.get("color");
   const queryGender = searchParams.get("gender");
   const queryType = searchParams.get("type");
+  const totalPostedPetCount = petsData.length;
 
   const handleChangeUrlParams = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -29,7 +30,7 @@ const Pets = () => {
   };
 
   return (
-    <div className="py-24 w-full bg-whitesmoke">
+    <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
       <div className="container flex items-start justify-start gap-10 mt-10">
         <div className="w-72 hidden md:block">
           <SidebarFilters
@@ -41,7 +42,9 @@ const Pets = () => {
         </div>
         <div className="w-full">
           <div className="text-center mb-2">
-            <p className="font-semibold">{petsData.length} ITEMS</p>
+            <p className="font-semibold">
+              {totalPostedPetCount} {totalPostedPetCount > 1 ? "ITEMS" : "ITEM"}
+            </p>
           </div>
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
             {petsData.length > 0 &&

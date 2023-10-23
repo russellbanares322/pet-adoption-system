@@ -1,15 +1,7 @@
 import { Tooltip } from "antd";
 import { HiOutlineHeart, HiHeart, HiOutlineEye } from "react-icons/hi";
-
-type PetsCardProps = {
-  id: string;
-  petName: string;
-  petAge: string;
-  petGender: string;
-  petColor: string;
-  petDescription: string;
-  petImage: string;
-};
+import moment from "moment";
+import { PetsData } from "../../api/pets/pets";
 
 const PetsCard = ({
   id,
@@ -19,7 +11,11 @@ const PetsCard = ({
   petColor,
   petDescription,
   petImage,
-}: PetsCardProps) => {
+  createdBy,
+  dateCreated,
+  likes,
+  comments,
+}: PetsData) => {
   return (
     <div className="border-l-4 border-b-4 border-b-maroon border-l-maroon rounded-lg bg-white">
       <div className="relative group">
@@ -32,6 +28,9 @@ const PetsCard = ({
           <p>View Details</p>
         </div>
       </div>
+      <p className="my-2 italic text-center">
+        {moment(dateCreated.toDate()).fromNow()}
+      </p>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
         <Tooltip title="Add to favorites">

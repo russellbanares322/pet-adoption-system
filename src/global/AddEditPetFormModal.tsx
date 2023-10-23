@@ -6,7 +6,13 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import React, { Key, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -109,6 +115,10 @@ const AddEditPetFormModal = ({
             petDescription: values.petDescription,
             petImage: typeof imgFile === "object" ? imgUrl : imgFile,
             status: isAdminPosted ? "Approved" : "Pending",
+            createdBy: user?.displayName,
+            dateCreated: serverTimestamp(),
+            likes: [],
+            comments: [],
           });
           setIsLoading(false);
           handleCloseModal();
@@ -125,6 +135,10 @@ const AddEditPetFormModal = ({
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
           status: isAdminPosted ? "Approved" : "Pending",
+          createdBy: user?.displayName,
+          dateCreated: serverTimestamp(),
+          likes: petDataForUpdate.likes,
+          comments: petDataForUpdate.comments,
         });
         deletePrevSelectedImgInStorage();
         setIsLoading(false);

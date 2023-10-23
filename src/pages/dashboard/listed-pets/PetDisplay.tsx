@@ -1,5 +1,5 @@
 import { Popconfirm, Tag } from "antd";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {
   HiOutlineEye,
@@ -9,20 +9,12 @@ import {
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/firebase-config";
-
-type PostStatus = "Approved" | "Pending";
+import moment from "moment";
+import { PetsData } from "../../../api/pets/pets";
 
 type PetsDisplayProps = {
-  id: string;
-  petName: string;
-  petAge: string;
-  petGender: string;
-  petColor: string;
-  petDescription: string;
-  petImage: string;
-  status?: PostStatus | string;
   handleOpenEditModal: (petId: string) => void;
-};
+} & PetsData;
 
 const PetDisplay = ({
   id,
@@ -33,6 +25,10 @@ const PetDisplay = ({
   petDescription,
   petImage,
   status,
+  createdBy,
+  dateCreated,
+  likes,
+  comments,
   handleOpenEditModal,
 }: PetsDisplayProps) => {
   const location = useLocation();
@@ -65,6 +61,9 @@ const PetDisplay = ({
           <p>View Details</p>
         </div>
       </div>
+      <p className="text-center my-1 italic">
+        {moment(dateCreated.toDate()).fromNow()}
+      </p>
       <div className="px-2 mt-2 text-dark-blue text-center">
         {isPostCreatedByGuest && (
           <Tag
@@ -85,6 +84,12 @@ const PetDisplay = ({
         <p className="text-md italic">
           Gender: <span className="text-[1rem] font-bold">{petGender}</span>
         </p>
+        {createdBy !== "Admin Account" && (
+          <p className="text-md italic">
+            Posted By:{" "}
+            <span className="text-[1rem] font-bold">{createdBy}</span>
+          </p>
+        )}
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
           <button
             disabled={disableUpdateAndDeleteBtn}

@@ -4,12 +4,20 @@ import {
   getDoc,
   onSnapshot,
   query,
+  Timestamp,
   where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
-type PetsData = {
+type Comments = {
+  comment: string;
+  commentId: string;
+  user: string;
+  displayName: string;
+};
+
+export type PetsData = {
   id: string;
   petName: string;
   petAge: string;
@@ -18,6 +26,10 @@ type PetsData = {
   petDescription: string;
   petImage: string;
   status?: string;
+  createdBy: string;
+  dateCreated: Timestamp;
+  likes: string[];
+  comments: Comments[];
 };
 
 const useFetchPets = () => {
@@ -93,4 +105,33 @@ const useFetchGuestPostedPet = (id: string | undefined) => {
   return { data, isLoading };
 };
 
-export { useFetchPets, useFetchPet, useFetchGuestPostedPet };
+const useFetchPendingPostedPets = () => {
+  const [data, setData] = useState<PetsData[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getPets = () => {
+    setIsLoading(true);
+    const listedPetsRef = collection(db, "pending-pets");
+    onSnapshot(listedPetsRef, (snapshot) => {
+      const petsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as PetsData[];
+      setData(petsData);
+      setIsLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    getPets();
+  }, []);
+
+  return { data, isLoading };
+};
+
+export {
+  useFetchPets,
+  useFetchPet,
+  useFetchGuestPostedPet,
+  useFetchPendingPostedPets,
+};
