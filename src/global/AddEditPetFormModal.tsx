@@ -55,7 +55,7 @@ const AddEditPetFormModal = ({
   const [removedImg, setRemovedImg] = useState<File | null | string>("");
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
   const isDataForUpdate = selectedId;
-  const isAdminPosted = dbName === "listed-pets";
+  const isUserPosted = user?.email !== import.meta.env.VITE_APP_ADMIN_ACCOUNT;
 
   useEffect(() => {
     if (isDataForUpdate) {
@@ -114,7 +114,7 @@ const AddEditPetFormModal = ({
             petType: values.petType,
             petDescription: values.petDescription,
             petImage: typeof imgFile === "object" ? imgUrl : imgFile,
-            status: isAdminPosted ? "Approved" : "Pending",
+            status: isUserPosted ? "Pending" : "Approved",
             createdBy: user?.displayName,
             dateCreated: serverTimestamp(),
             likes: [],
@@ -134,7 +134,7 @@ const AddEditPetFormModal = ({
           petType: values.petType,
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
-          status: isAdminPosted ? "Approved" : "Pending",
+          status: isUserPosted ? "Pending" : "Approved",
           createdBy: user?.displayName,
           dateCreated: serverTimestamp(),
           likes: petDataForUpdate.likes,

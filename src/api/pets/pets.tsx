@@ -21,6 +21,7 @@ export type PetsData = {
   id: string;
   petName: string;
   petAge: string;
+  petType: string;
   petGender: string;
   petColor: string;
   petDescription: string;
@@ -39,7 +40,8 @@ const useFetchPets = () => {
   const getPets = () => {
     setIsLoading(true);
     const listedPetsRef = collection(db, "listed-pets");
-    onSnapshot(listedPetsRef, (snapshot) => {
+    const q = query(listedPetsRef, where("status", "==", "Approved"));
+    onSnapshot(q, (snapshot) => {
       const petsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -79,13 +81,13 @@ const useFetchPet = (id: string) => {
   return { data, isLoading };
 };
 
-const useFetchGuestPostedPet = (id: string | undefined) => {
+const useFetchPostedPet = (id: string | undefined) => {
   const [data, setData] = useState<PetsData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getPets = () => {
     setIsLoading(true);
-    const listedPetsRef = collection(db, "pending-pets");
+    const listedPetsRef = collection(db, "listed-pets");
     const q = query(listedPetsRef, where("userId", "==", id));
 
     onSnapshot(q, (snapshot) => {
@@ -105,14 +107,15 @@ const useFetchGuestPostedPet = (id: string | undefined) => {
   return { data, isLoading };
 };
 
-const useFetchPendingPostedPets = () => {
+const useFetchPendingPets = () => {
   const [data, setData] = useState<PetsData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getPets = () => {
     setIsLoading(true);
-    const listedPetsRef = collection(db, "pending-pets");
-    onSnapshot(listedPetsRef, (snapshot) => {
+    const listedPetsRef = collection(db, "listed-pets");
+    const q = query(listedPetsRef, where("status", "==", "Pending"));
+    onSnapshot(q, (snapshot) => {
       const petsData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -129,9 +132,4 @@ const useFetchPendingPostedPets = () => {
   return { data, isLoading };
 };
 
-export {
-  useFetchPets,
-  useFetchPet,
-  useFetchGuestPostedPet,
-  useFetchPendingPostedPets,
-};
+export { useFetchPets, useFetchPet, useFetchPostedPet, useFetchPendingPets };

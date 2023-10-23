@@ -1,22 +1,53 @@
-import { Tag } from "antd";
+import { Popconfirm, Tag } from "antd";
 import { HiCheckCircle } from "react-icons/hi";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../../firebase/firebase-config";
+import { toast } from "react-toastify";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const PendingPostsCard = ({
   id,
   petName,
   petAge,
+  petType,
   petGender,
   petColor,
   petDescription,
   petImage,
   status,
-  dateCreated,
   createdBy,
+  dateCreated,
+  likes,
+  comments,
 }: PetsData) => {
   const isPostStatusPending = status === "Pending";
   const postStatus = isPostStatusPending ? "Pending" : "Approved";
+  const [user] = useAuthState(auth);
+
+  const approvePost = async () => {
+    try {
+      await updateDoc(doc(db, "listed-pets", id), {
+        userId: user?.uid,
+        petName: petName,
+        petAge: petAge,
+        petGender: petGender,
+        petColor: petColor,
+        petType: petType,
+        petDescription: petDescription,
+        petImage: petImage,
+        status: "Approved",
+        createdBy: createdBy,
+        dateCreated: serverTimestamp(),
+        likes: likes,
+        comments: comments,
+      });
+      toast.success("Successfully approved post");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
 
   return (
     <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200">
@@ -26,8 +57,10 @@ const PendingPostsCard = ({
           src={petImage}
         />
       </div>
+      <p className="italic text-center my-2">
+        {moment(dateCreated?.toDate()).fromNow()}
+      </p>
       <div className="flex items-center justify-center gap-2">
-        <p className="italic">{moment(dateCreated).fromNow()}</p>
         <Tag className="mt-3" color={isPostStatusPending ? "orange" : "green"}>
           {postStatus}
         </Tag>
@@ -48,9 +81,20 @@ const PendingPostsCard = ({
           Posted By: <span className="text-[1rem] font-bold">{createdBy}</span>
         </p>
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
-          <button className=" bg-green-600 text-base px-2 py-1 rounded-sm hover:bg-green-500 flex items-center gap-2 disabled:bg-dark-blue/75">
-            Approve Post <HiCheckCircle size={20} />
-          </button>
+          <Popconfirm
+            title="Approve post"
+            description="Are you sure want to approve this post?"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={approvePost}
+            okButtonProps={{
+              className: "primary-btn",
+            }}
+          >
+            <button className=" bg-green-600 text-base px-2 py-1 rounded-sm hover:bg-green-500 flex items-center gap-2 disabled:bg-dark-blue/75">
+              Approve Post <HiCheckCircle size={20} />
+            </button>
+          </Popconfirm>
         </div>
       </div>
     </div>

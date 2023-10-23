@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useFetchPets } from "../../../api/pets/pets";
+import { useFetchPostedPet } from "../../../api/pets/pets";
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import AddEditPetFormModal from "../../../global/AddEditPetFormModal";
 import PetDisplay from "./PetDisplay";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase/firebase-config";
 
 type DataForUpdate = {
   openEditModal: boolean;
@@ -10,8 +12,9 @@ type DataForUpdate = {
 };
 
 const ListedPets = () => {
+  const [user] = useAuthState(auth);
   const [openModal, setOpenModal] = useState(false);
-  const { data: petsData, isLoading } = useFetchPets();
+  const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
   const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
     openEditModal: false,
     selectedId: null,

@@ -1,9 +1,9 @@
-import { useFetchPendingPostedPets } from "../../../api/pets/pets";
+import { useFetchPendingPets } from "../../../api/pets/pets";
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import PendingPostsCard from "./PendingPostsCard";
 
 const PendingPost = () => {
-  const { data: petsData, isLoading } = useFetchPendingPostedPets();
+  const { data: petsData, isLoading } = useFetchPendingPets();
 
   return (
     <div>

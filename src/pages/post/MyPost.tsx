@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useFetchGuestPostedPet } from "../../api/pets/pets";
+import { useFetchPostedPet } from "../../api/pets/pets";
 import { auth } from "../../firebase/firebase-config";
 import AddEditPetFormModal from "../../global/AddEditPetFormModal";
 import LoadingSpinner from "../../global/LoadingSpinner";
@@ -14,7 +14,7 @@ type DataForUpdate = {
 const MyPost = () => {
   const [openModal, setOpenModal] = useState(false);
   const [user] = useAuthState(auth);
-  const { data: petsData, isLoading } = useFetchGuestPostedPet(user?.uid);
+  const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
   const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
     openEditModal: false,
     selectedId: null,
@@ -63,7 +63,7 @@ const MyPost = () => {
         )}
         {isLoading && <LoadingSpinner title="Loading..." size="large" />}
         <AddEditPetFormModal
-          dbName="pending-pets"
+          dbName="listed-pets"
           selectedId={dataForUpdate.selectedId}
           openEditModal={dataForUpdate.openEditModal}
           openModal={openModal}
