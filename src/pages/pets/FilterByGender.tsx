@@ -1,17 +1,11 @@
 import { petGender } from "../../data/pet-filter-options";
+import { FilterOptionKey } from "./Pets";
 
 type FilterByGenderProps = {
-  handleChangeUrlParams: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    paramName: string
-  ) => void;
-  queryGender: string | number | readonly string[] | undefined;
+  filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const FilterByGender = ({
-  handleChangeUrlParams,
-  queryGender,
-}: FilterByGenderProps) => {
+const FilterByGender = ({ filterData }: FilterByGenderProps) => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
       <p className="text-md py-3">Gender</p>
@@ -19,8 +13,8 @@ const FilterByGender = ({
         {petGender.map((gender) => (
           <div className="flex items-center gap-2" key={gender}>
             <input
-              value={queryGender}
-              onChange={(e) => handleChangeUrlParams(e, "gender")}
+              onClick={() => filterData("gender", gender)}
+              value={gender}
               className="accent-maroon border border-black rounded-sm"
               type="checkbox"
             />

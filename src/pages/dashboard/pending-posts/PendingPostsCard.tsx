@@ -3,9 +3,8 @@ import { HiCheckCircle } from "react-icons/hi";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { auth, db } from "../../../firebase/firebase-config";
+import { db } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const PendingPostsCard = ({
   id,
@@ -21,15 +20,15 @@ const PendingPostsCard = ({
   dateCreated,
   likes,
   comments,
+  userId,
 }: PetsData) => {
   const isPostStatusPending = status === "Pending";
   const postStatus = isPostStatusPending ? "Pending" : "Approved";
-  const [user] = useAuthState(auth);
 
   const approvePost = async () => {
     try {
       await updateDoc(doc(db, "listed-pets", id), {
-        userId: user?.uid,
+        userId: userId,
         petName: petName,
         petAge: petAge,
         petGender: petGender,

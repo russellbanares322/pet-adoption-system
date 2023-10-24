@@ -1,17 +1,11 @@
 import { petColors } from "../../data/pet-filter-options";
+import { FilterOptionKey } from "./Pets";
 
 type FilterByColorProps = {
-  handleChangeUrlParams: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    paramName: string
-  ) => void;
-  queryColor: string | number | readonly string[] | undefined;
+  filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const FilterByColor = ({
-  handleChangeUrlParams,
-  queryColor,
-}: FilterByColorProps) => {
+const FilterByColor = ({ filterData }: FilterByColorProps) => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
       <p className="text-md py-3">Color</p>
@@ -19,8 +13,8 @@ const FilterByColor = ({
         {petColors.map((color) => (
           <div className="flex items-center gap-2" key={color}>
             <input
-              value={queryColor}
-              onChange={(e) => handleChangeUrlParams(e, "color")}
+              onClick={() => filterData("color", color)}
+              value={color}
               className="accent-maroon border border-black rounded-sm"
               type="checkbox"
             />

@@ -1,47 +1,26 @@
 import FilterByColor from "./FilterByColor";
 import FilterByGender from "./FilterByGender";
 import FilterByPetType from "./FilterByPetType";
-
-type QueryString = string | number | readonly string[] | undefined;
+import { FilterOptionKey } from "./Pets";
 
 type SidebarFilterProps = {
-  handleChangeUrlParams: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    paramName: string
-  ) => void;
-  queryColor: QueryString;
-  queryGender: QueryString;
-  queryType: QueryString;
+  filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const SidebarFilters = ({
-  handleChangeUrlParams,
-  queryColor,
-  queryGender,
-  queryType,
-}: SidebarFilterProps) => {
+const SidebarFilter = ({ filterData }: SidebarFilterProps) => {
   return (
     <div>
       <p className="text-xl font-semibold border-b pb-4 border-b-gray-600">
         FILTERS
       </p>
       {/* Filter by color */}
-      <FilterByColor
-        handleChangeUrlParams={handleChangeUrlParams}
-        queryColor={queryColor}
-      />
+      <FilterByColor filterData={filterData} />
       {/* Filter by gender */}
-      <FilterByGender
-        handleChangeUrlParams={handleChangeUrlParams}
-        queryGender={queryGender}
-      />
+      <FilterByGender filterData={filterData} />
       {/* Filter by pet type */}
-      <FilterByPetType
-        handleChangeUrlParams={handleChangeUrlParams}
-        queryType={queryType}
-      />
+      <FilterByPetType filterData={filterData} />
     </div>
   );
 };
 
-export default SidebarFilters;
+export default SidebarFilter;

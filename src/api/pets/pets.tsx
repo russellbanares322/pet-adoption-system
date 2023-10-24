@@ -31,6 +31,7 @@ export type PetsData = {
   dateCreated: Timestamp;
   likes: string[];
   comments: Comments[];
+  userId: string;
 };
 
 const useFetchPets = () => {

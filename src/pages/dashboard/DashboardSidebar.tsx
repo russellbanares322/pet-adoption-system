@@ -1,5 +1,6 @@
-import { Layout, Menu } from "antd";
+import { Badge, Layout, Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useFetchPendingPets } from "../../api/pets/pets";
 import { sidebarItems } from "./sidebarItems";
 
 type DashboardSidebarProps = {
@@ -8,6 +9,9 @@ type DashboardSidebarProps = {
 
 const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
   const { Sider } = Layout;
+  const { Item } = Menu;
+  const { data: petsData } = useFetchPendingPets();
+  const pendingPetsCount = petsData.length;
   const navigate = useNavigate();
   const location = useLocation();
   const convertedLocation = location.pathname.split("/");
@@ -33,9 +37,24 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
         mode="inline"
         defaultSelectedKeys={["/dashboard"]}
         selectedKeys={[currentLocation]}
-        items={sidebarItems}
-        onClick={(menu) => navigatePath(menu.key)}
-      />
+      >
+        {sidebarItems.map((item) => (
+          <Item
+            className="flex gap-2 items-center relative"
+            onClick={() => navigatePath(item.key)}
+            key={item.key}
+          >
+            {item.icon} {item.label}
+            {item.key === "pending-posts" && pendingPetsCount > 0 && (
+              <Badge
+                className="absolute top-2 right-2"
+                color="blue"
+                count={pendingPetsCount}
+              />
+            )}
+          </Item>
+        ))}
+      </Menu>
     </Sider>
   );
 };

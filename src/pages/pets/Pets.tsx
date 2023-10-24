@@ -2,43 +2,62 @@ import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import { useFetchPets } from "../../api/pets/pets";
-import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+type FilterOptions = {
+  color: string[];
+  gender: string[];
+  type: string[];
+};
+
+export type FilterOptionKey = keyof FilterOptions;
 
 const Pets = () => {
   const { data: petsData, isLoading } = useFetchPets();
-  const [searchParams, setSearchParams] = useSearchParams({
-    color: "",
-    gender: "",
-    type: "",
+  const totalPostedPetCount = petsData.length;
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>({
+    color: [],
+    gender: [],
+    type: [],
   });
 
-  const queryColor = searchParams.get("color");
-  const queryGender = searchParams.get("gender");
-  const queryType = searchParams.get("type");
-  const totalPostedPetCount = petsData.length;
-
-  const handleChangeUrlParams = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    paramName: string
-  ) => {
-    const { value } = e.target;
-
-    setSearchParams((prev) => {
-      prev.set(paramName, value);
-      return prev;
-    });
+  const filterData = (filterOptionKey: FilterOptionKey, filterItem: string) => {
+    if (filterOptions[filterOptionKey].includes(filterItem)) {
+      const filteredOptions = filterOptions[filterOptionKey].filter(
+        (option) => option !== filterItem
+      );
+      setFilterOptions({
+        ...filterOptions,
+        [filterOptionKey]: filteredOptions,
+      });
+    } else {
+      setFilterOptions({
+        ...filterOptions,
+        [filterOptionKey]: [...filterOptions[filterOptionKey], filterItem],
+      });
+    }
   };
+
+  useEffect(() => {
+    if (
+      filterOptions.color.length > 0 ||
+      filterOptions.gender.length > 0 ||
+      filterOptions.type.length > 0
+    ) {
+      petsData.filter(
+        (data) =>
+          filterOptions.color.includes(data.petColor) ||
+          filterOptions.gender.includes(data.petGender) ||
+          filterOptions.type.includes(data.petType)
+      );
+    }
+  }, [filterOptions]);
 
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
       <div className="container flex items-start justify-start gap-10 mt-10">
         <div className="w-72 hidden md:block">
-          <SidebarFilters
-            handleChangeUrlParams={handleChangeUrlParams}
-            queryColor={queryColor as string}
-            queryGender={queryGender as string}
-            queryType={queryType as string}
-          />
+          <SidebarFilters filterData={filterData} />
         </div>
         <div className="w-full">
           <div className="text-center mb-2">
@@ -48,7 +67,22 @@ const Pets = () => {
           </div>
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
             {petsData.length > 0 &&
-              petsData.map((pet) => <PetsCard key={pet.id} {...pet} />)}
+              petsData
+                .filter((data) => {
+                  if (
+                    filterOptions.color.length > 0 ||
+                    filterOptions.gender.length > 0 ||
+                    filterOptions.type.length > 0
+                  ) {
+                    return (
+                      filterOptions.color.includes(data.petColor) ||
+                      filterOptions.gender.includes(data.petGender) ||
+                      filterOptions.type.includes(data.petType)
+                    );
+                  }
+                  return data;
+                })
+                .map((pet) => <PetsCard key={pet.id} {...pet} />)}
           </div>
           {isLoading && (
             <LoadingSpinner title="Fetching pets..." size="large" />
