@@ -44,7 +44,7 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
             onClick={() => navigatePath(item.key)}
             key={item.key}
           >
-            {item.icon} {item.label}
+            {item.icon} <span>{item.label}</span>
             {item.key === "pending-posts" && pendingPetsCount > 0 && (
               <Badge
                 className="absolute top-2 right-2"
