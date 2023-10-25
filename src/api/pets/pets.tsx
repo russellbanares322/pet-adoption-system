@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
-type Comments = {
+export type Comments = {
   comment: string;
   commentId: string;
   user: string;
