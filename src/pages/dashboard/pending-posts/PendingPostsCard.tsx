@@ -1,5 +1,5 @@
 import { Popconfirm, Tag } from "antd";
-import { HiCheckCircle } from "react-icons/hi";
+import { HiCheckCircle, HiTrash } from "react-icons/hi";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -92,6 +92,16 @@ const PendingPostsCard = ({
           >
             <button className=" bg-green-600 text-base px-2 py-1 rounded-sm hover:bg-green-500 flex items-center gap-2 disabled:bg-dark-blue/75">
               Approve Post <HiCheckCircle size={20} />
+            </button>
+          </Popconfirm>
+          <Popconfirm
+            title="Reject post"
+            description="Are you sure want to reject this post?"
+            okText="Yes"
+            cancelText="No"
+          >
+            <button className=" bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2 disabled:bg-dark-blue/75">
+              Reject Post <HiTrash size={20} />
             </button>
           </Popconfirm>
         </div>

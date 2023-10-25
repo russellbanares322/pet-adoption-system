@@ -104,14 +104,14 @@ const PetDetailsModal = ({
         <div className="flex items-center justify-start gap-2 mt-4 mb-4">
           <div className="flex items-center gap-1">
             <HiChatAlt
-              className="cursor-pointer bg-blue text-white rounded-full p-2"
+              className="bg-blue text-white rounded-full p-2"
               size={30}
             />
             <span className="font-bold text-md">0</span>
           </div>
           <div className="flex items-center gap-1">
             <HiThumbUp
-              className="cursor-pointer bg-orange text-white rounded-full p-2"
+              className="bg-orange text-white rounded-full p-2"
               size={30}
             />
             <span className="font-bold text-md">{likesCount}</span>
