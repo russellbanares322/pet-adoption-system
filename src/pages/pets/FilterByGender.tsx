@@ -2,10 +2,14 @@ import { petGender } from "../../data/pet-filter-options";
 import { FilterOptionKey } from "./Pets";
 
 type FilterByGenderProps = {
+  expandFilterOptions: boolean;
   filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const FilterByGender = ({ filterData }: FilterByGenderProps) => {
+const FilterByGender = ({
+  expandFilterOptions,
+  filterData,
+}: FilterByGenderProps) => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
       <p className="text-md py-3">Gender</p>

@@ -55,12 +55,12 @@ const Pets = () => {
 
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
-      <div className="container flex items-start justify-start gap-10 mt-10">
-        <div className="w-72 hidden md:block">
+      <div className="container flex-1 md:flex items-start justify-start gap-10 mt-1 md:mt-10">
+        <div className="w-full md:w-72">
           <SidebarFilters filterData={filterData} />
         </div>
         <div className="w-full">
-          <div className="text-center mb-2">
+          <div className="text-center mt-3 md:mt-0 mb-2">
             <p className="font-semibold">
               {totalPostedPetCount} {totalPostedPetCount > 1 ? "ITEMS" : "ITEM"}
             </p>
