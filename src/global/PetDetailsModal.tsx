@@ -16,7 +16,7 @@ import {
   HiTrash,
 } from "react-icons/hi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import React, { useRef, useState } from "react";
+import React, {  useState } from "react";
 import useLikePost from "../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/firebase-config";
@@ -64,7 +64,6 @@ const PetDetailsModal = ({
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
   const commentsRef = doc(db, "listed-pets", id);
-  const modalContentRef = useRef<HTMLDivElement>(null);
 
   const handleChangeCommentInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -156,7 +155,7 @@ const PetDetailsModal = ({
       width={700}
     >
       <hr />
-      <div ref={modalContentRef} className="h-[34rem] overflow-y-scroll px-2">
+      <div  className="h-[34rem] overflow-y-scroll px-2">
         <p className="text-xs my-2">
           {moment(dateCreated.toDate()).format("LLL")}
         </p>
