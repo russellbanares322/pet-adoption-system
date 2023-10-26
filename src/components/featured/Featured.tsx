@@ -1,5 +1,5 @@
 import { dummyFeatured } from "./dummy-featured";
-import { HiOutlineEye, HiOutlineArrowNarrowRight } from "react-icons/hi";
+import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
 const Featured = () => {
   return (
@@ -11,15 +11,11 @@ const Featured = () => {
         </p>
         <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-10 mt-4">
           {dummyFeatured.map((pet) => (
-            <div className="relative group" key={pet.id}>
+            <div className="relative" key={pet.id}>
               <img
                 className="object-cover rounded-lg border-l-4 border-b-4 border-b-maroon border-l-maroon"
                 src={pet.img}
               />
-              <div className="rounded-lg cursor-pointer bg-black/50 absolute text-white top-0 left-0 w-full flex-col h-full flex justify-center items-center opacity-0 group-hover:opacity-100">
-                <HiOutlineEye size={45} />
-                <p>View Details</p>
-              </div>
             </div>
           ))}
         </div>
