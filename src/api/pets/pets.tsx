@@ -11,10 +11,11 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
 export type Comments = {
+  userId: string;
   comment: string;
   commentId: string;
-  user: string;
   displayName: string;
+  dateCreated: Timestamp;
 };
 
 export type PetsData = {
@@ -24,6 +25,7 @@ export type PetsData = {
   petType: string;
   petGender: string;
   petColor: string;
+  petLocation: string;
   petDescription: string;
   petImage: string;
   status?: string;

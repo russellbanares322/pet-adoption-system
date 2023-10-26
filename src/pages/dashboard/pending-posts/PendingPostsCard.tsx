@@ -2,9 +2,10 @@ import { Popconfirm, Tag } from "antd";
 import { HiCheckCircle, HiTrash } from "react-icons/hi";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebase/firebase-config";
+import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { db, storage } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
+import { deleteObject, ref } from "firebase/storage";
 
 const PendingPostsCard = ({
   id,
@@ -43,6 +44,17 @@ const PendingPostsCard = ({
         comments: comments,
       });
       toast.success("Successfully approved post");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const rejectPost = async () => {
+    try {
+      const imgToBeDeleted = ref(storage, petImage);
+      await deleteDoc(doc(db, "listed-pets", id));
+      await deleteObject(imgToBeDeleted);
+      toast.success("Successfully rejected post");
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -99,6 +111,10 @@ const PendingPostsCard = ({
             description="Are you sure want to reject this post?"
             okText="Yes"
             cancelText="No"
+            onConfirm={rejectPost}
+            okButtonProps={{
+              className: "primary-btn",
+            }}
           >
             <button className=" bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2 disabled:bg-dark-blue/75">
               Reject Post <HiTrash size={20} />

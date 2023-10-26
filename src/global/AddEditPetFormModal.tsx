@@ -26,6 +26,7 @@ type FormInputs = {
   petGender: string;
   petColor: string;
   petType: string;
+  petLocation: string;
   petDescription: string;
 };
 
@@ -65,6 +66,7 @@ const AddEditPetFormModal = ({
         petGender: petDataForUpdate?.petGender,
         petColor: petDataForUpdate?.petColor,
         petType: petDataForUpdate?.petType,
+        petLocation: petDataForUpdate?.petLocation,
         petDescription: petDataForUpdate?.petDescription,
       });
       setImgFile(petDataForUpdate?.petImage);
@@ -112,6 +114,7 @@ const AddEditPetFormModal = ({
             petGender: values.petGender,
             petColor: values.petColor,
             petType: values.petType,
+            petLocation: values.petLocation,
             petDescription: values.petDescription,
             petImage: typeof imgFile === "object" ? imgUrl : imgFile,
             status: isUserPosted ? "Pending" : "Approved",
@@ -132,6 +135,7 @@ const AddEditPetFormModal = ({
           petGender: values.petGender,
           petColor: values.petColor,
           petType: values.petType,
+          petLocation: values.petLocation,
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
           status: isUserPosted ? "Pending" : "Approved",
@@ -270,6 +274,10 @@ const AddEditPetFormModal = ({
               </Option>
             ))}
           </Select>
+        </Form.Item>
+        {/* Pet's Location */}
+        <Form.Item label="Location" name="petLocation">
+          <Input placeholder="Enter where your pet is located..." />
         </Form.Item>
         {/* Pet's Description */}
         <Form.Item name="petDescription" label="Description">

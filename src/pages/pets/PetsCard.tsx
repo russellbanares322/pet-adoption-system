@@ -18,7 +18,6 @@ import { auth } from "../../firebase/firebase-config";
 
 const PetsCard = ({
   id,
-  userId,
   petName,
   petAge,
   petGender,
@@ -34,6 +33,7 @@ const PetsCard = ({
   const [user] = useAuthState(auth);
   const { likePost } = useLikePost();
   const likesCount = likes?.length;
+  const commentsCount = comments?.length;
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
   const handleOpenDetailsModal = () => {
     setOpenPetDetailsModal(true);
@@ -60,9 +60,13 @@ const PetsCard = ({
       <div className="flex items-center justify-start gap-2 ml-4 mt-2">
         <div className="flex items-center gap-1">
           <Tooltip title="Add a comment">
-            <HiOutlineChatAlt className="cursor-pointer" size={20} />
+            <HiOutlineChatAlt
+              onClick={handleOpenDetailsModal}
+              className="cursor-pointer"
+              size={20}
+            />
           </Tooltip>
-          <span className="font-bold text-md">0</span>
+          <span className="font-bold text-md">{commentsCount}</span>
         </div>
         <div className="flex items-center gap-1">
           <Tooltip title="Like post">
@@ -103,7 +107,6 @@ const PetsCard = ({
         open={openPetDetailsModal}
         onCancel={handleCloseDetailsModal}
         id={id}
-        userId={userId}
         petName={petName}
         petAge={petAge}
         petGender={petGender}

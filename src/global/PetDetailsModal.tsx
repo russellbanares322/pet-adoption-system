@@ -1,5 +1,11 @@
-import { Input, Modal, Tooltip } from "antd";
-import { Timestamp } from "firebase/firestore";
+import { Input, Modal, Popconfirm, Tooltip } from "antd";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import moment from "moment";
 import { Comments } from "../api/pets/pets";
 import {
@@ -7,18 +13,19 @@ import {
   HiThumbUp,
   HiChatAlt,
   HiOutlineChatAlt,
-  HiOutlineUser,
+  HiTrash,
 } from "react-icons/hi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import { useState } from "react";
+import React, { useState } from "react";
 import useLikePost from "../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/firebase-config";
+import { auth, db } from "../firebase/firebase-config";
+import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 type PetDetailsModalProps = {
   open: boolean;
   onCancel: () => void;
-  userId: string;
   id: string;
   petName: string;
   petAge: string;
@@ -35,7 +42,6 @@ type PetDetailsModalProps = {
 const PetDetailsModal = ({
   open,
   onCancel,
-  userId,
   id,
   petName,
   petAge,
@@ -55,6 +61,8 @@ const PetDetailsModal = ({
   const [user] = useAuthState(auth);
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
   const likesCount = likes?.length;
+  const commentsCount = comments?.length;
+  const commentsRef = doc(db, "listed-pets", id);
 
   const handleChangeCommentInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -62,16 +70,61 @@ const PetDetailsModal = ({
     setCommentInput(e.target.value);
   };
 
+  const handleSendComment = async () => {
+    try {
+      await updateDoc(commentsRef, {
+        comments: arrayUnion({
+          userId: user?.uid,
+          comment: commentInput,
+          commentId: uuidv4(),
+          displayName: user?.displayName,
+          dateCreated: new Date(),
+        }),
+      });
+      setCommentInput("");
+      toast.success("Added comment");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleClickSendIcon = () => {
+    handleSendComment();
+  };
+
+  const handleEnterComment = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const isEnterKeyPressed = e.key === "Enter";
+    if (isCommentInputEmpty && isEnterKeyPressed) return;
+
+    if (isEnterKeyPressed) {
+      handleSendComment();
+    }
+  };
+
+  const deleteComment = async (commentsData: Comments) => {
+    try {
+      await updateDoc(commentsRef, {
+        comments: arrayRemove(commentsData),
+      });
+      toast.success("Deleted comment successfully");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
   const commentInputElement = (
     <div className="w-full relative">
       <TextArea
         value={commentInput}
         onChange={handleChangeCommentInput}
+        className="resize-none"
+        onKeyUp={(e) => handleEnterComment(e)}
         placeholder="Write a comment..."
         rows={3}
       />
       <Tooltip title="Comment">
         <PiPaperPlaneTiltFill
+          onClick={handleClickSendIcon}
           className={`absolute bottom-3 right-3 ${
             isCommentInputEmpty
               ? "text-gray-400 cursor-not-allowed"
@@ -97,17 +150,35 @@ const PetDetailsModal = ({
           {moment(dateCreated.toDate()).format("LLL")}
         </p>
         <img
-          className="h-[20rem] w-full object-cover rounded-md border"
+          className="h-[20rem] w-full object-cover rounded-md border mb-5"
           src={petImage}
           alt="Pet"
         />
+        <div className="mb-5 text-[1rem] grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <p>
+            Pet Name: <span className="font-bold">{petName}</span>
+          </p>
+          <p>
+            Pet Age: <span className="font-bold">{petAge}</span>
+          </p>
+          <p>
+            Pet Gender: <span className="font-bold">{petGender}</span>
+          </p>
+          <p>
+            Pet Color: <span className="font-bold">{petColor}</span>
+          </p>
+          <p className="w-max">
+            Pet Description: <span className="font-bold">{petDescription}</span>
+          </p>
+        </div>
+        <hr />
         <div className="flex items-center justify-start gap-2 mt-4 mb-4">
           <div className="flex items-center gap-1">
             <HiChatAlt
               className="bg-blue text-white rounded-full p-2"
               size={30}
             />
-            <span className="font-bold text-md">0</span>
+            <span className="font-bold text-md">{commentsCount}</span>
           </div>
           <div className="flex items-center gap-1">
             <HiThumbUp
@@ -136,11 +207,36 @@ const PetDetailsModal = ({
         </div>
         <hr />
         <div className="mt-5 w-full">
-          <div className="flex flex-col bg-slate-100 rounded-md p-2 w-full my-2">
-            <p className="text-[0.8rem] font-semibold">{createdBy}</p>
-            <p className="text-[1rem]">Test comment!</p>
-            <span className="text-xs font-light">2 hours ago</span>
-          </div>
+          {comments?.map((comment) => (
+            <div
+              key={comment?.commentId}
+              className="flex flex-col bg-slate-100 rounded-md p-2 w-full my-2"
+            >
+              <div className="flex justify-between items-center">
+                <p className="text-[0.8rem] font-semibold">
+                  {comment?.displayName}
+                </p>
+                <Tooltip title="Delete comment">
+                  <Popconfirm
+                    title="Delete post"
+                    description="Are you sure want to delete this post?"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => deleteComment(comment)}
+                    okButtonProps={{
+                      className: "primary-btn",
+                    }}
+                  >
+                    <HiTrash className="cursor-pointer" size={20} />
+                  </Popconfirm>
+                </Tooltip>
+              </div>
+              <p className="text-[1rem]">{comment.comment}</p>
+              <span className="text-xs font-light">
+                {moment(comment?.dateCreated.toDate()).fromNow()}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </Modal>
