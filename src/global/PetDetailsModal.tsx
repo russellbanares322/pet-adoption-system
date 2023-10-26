@@ -16,7 +16,7 @@ import {
   HiTrash,
 } from "react-icons/hi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import useLikePost from "../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/firebase-config";
@@ -59,10 +59,12 @@ const PetDetailsModal = ({
   const isCommentInputEmpty = commentInput.trim().length === 0;
   const { likePost } = useLikePost();
   const [user] = useAuthState(auth);
+  const isUserLoggedIn = user;
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
   const commentsRef = doc(db, "listed-pets", id);
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
   const handleChangeCommentInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -114,14 +116,23 @@ const PetDetailsModal = ({
 
   const commentInputElement = (
     <div className="w-full relative">
-      <TextArea
-        value={commentInput}
-        onChange={handleChangeCommentInput}
-        className="resize-none"
-        onKeyUp={(e) => handleEnterComment(e)}
-        placeholder="Write a comment..."
-        rows={3}
-      />
+      <Tooltip
+        title={
+          !isUserLoggedIn
+            ? "You need to login first, before adding a comment"
+            : ""
+        }
+      >
+        <TextArea
+          disabled={!isUserLoggedIn}
+          value={commentInput}
+          onChange={handleChangeCommentInput}
+          className="resize-none"
+          onKeyUp={(e) => handleEnterComment(e)}
+          placeholder="Write a comment..."
+          rows={3}
+        />
+      </Tooltip>
       <Tooltip title="Comment">
         <PiPaperPlaneTiltFill
           onClick={handleClickSendIcon}
@@ -145,7 +156,7 @@ const PetDetailsModal = ({
       width={700}
     >
       <hr />
-      <div className="h-[34rem] overflow-y-scroll px-2">
+      <div ref={modalContentRef} className="h-[34rem] overflow-y-scroll px-2">
         <p className="text-xs my-2">
           {moment(dateCreated.toDate()).format("LLL")}
         </p>

@@ -8,6 +8,8 @@ const useLikePost = () => {
 
     const likePost = (id: string, likes: string[]) => {
         const likesRef = doc(db, "listed-pets", id);
+        if(!loggedInUserId) return;
+        
         if(likes?.includes(loggedInUserId as string)){
            return updateDoc(likesRef, {
                 likes: arrayRemove(loggedInUserId)
