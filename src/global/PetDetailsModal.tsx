@@ -1,4 +1,4 @@
-import { Input, Modal, Popconfirm, Tooltip } from "antd";
+import { Input, Modal, Popconfirm, Tag, Tooltip } from "antd";
 import {
   arrayRemove,
   arrayUnion,
@@ -15,8 +15,9 @@ import {
   HiOutlineChatAlt,
   HiTrash,
 } from "react-icons/hi";
+import { PiHandHeart } from "react-icons/pi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import React, {  useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useLikePost from "../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/firebase-config";
@@ -31,6 +32,7 @@ type PetDetailsModalProps = {
   petAge: string;
   petGender: string;
   petColor: string;
+  petLocation: string;
   petDescription: string;
   likes: string[];
   comments: Comments[];
@@ -47,6 +49,7 @@ const PetDetailsModal = ({
   petAge,
   petGender,
   petColor,
+  petLocation,
   petDescription,
   likes,
   comments,
@@ -56,6 +59,7 @@ const PetDetailsModal = ({
 }: PetDetailsModalProps) => {
   const { TextArea } = Input;
   const [commentInput, setCommentInput] = useState("");
+  const commentInputRef = useRef<HTMLTextAreaElement>(null);
   const isCommentInputEmpty = commentInput.trim().length === 0;
   const { likePost } = useLikePost();
   const [user] = useAuthState(auth);
@@ -69,6 +73,13 @@ const PetDetailsModal = ({
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setCommentInput(e.target.value);
+  };
+
+  const showDeleteIcon = (userId: string) => {
+    if (isUserLoggedIn && user?.uid === userId) {
+      return true;
+    }
+    return false;
   };
 
   const handleSendComment = async () => {
@@ -113,6 +124,10 @@ const PetDetailsModal = ({
     }
   };
 
+  const focusCommentInput = () => {
+    commentInputRef?.current?.focus();
+  };
+
   const commentInputElement = (
     <div className="w-full relative">
       <Tooltip
@@ -123,6 +138,7 @@ const PetDetailsModal = ({
         }
       >
         <TextArea
+          ref={commentInputRef}
           disabled={!isUserLoggedIn}
           value={commentInput}
           onChange={handleChangeCommentInput}
@@ -146,6 +162,9 @@ const PetDetailsModal = ({
     </div>
   );
 
+  useEffect(() => {
+    focusCommentInput();
+  }, []);
   return (
     <Modal
       title={`${createdBy}'s post`}
@@ -155,7 +174,7 @@ const PetDetailsModal = ({
       width={700}
     >
       <hr />
-      <div  className="h-[34rem] overflow-y-scroll px-2">
+      <div className="h-[34rem] overflow-y-scroll px-2">
         <p className="text-xs my-2">
           {moment(dateCreated.toDate()).format("LLL")}
         </p>
@@ -164,7 +183,7 @@ const PetDetailsModal = ({
           src={petImage}
           alt="Pet"
         />
-        <div className="mb-5 text-[1rem] grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="mb-5 text-[1rem] grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <p>
             Pet Name: <span className="font-bold">{petName}</span>
           </p>
@@ -176,6 +195,9 @@ const PetDetailsModal = ({
           </p>
           <p>
             Pet Color: <span className="font-bold">{petColor}</span>
+          </p>
+          <p>
+            Pet Location: <span className="font-bold">{petLocation}</span>
           </p>
           <p className="w-max">
             Pet Description: <span className="font-bold">{petDescription}</span>
@@ -211,6 +233,13 @@ const PetDetailsModal = ({
             <p>Like</p>
           </div>
           <div className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1">
+            <PiHandHeart className="mt-1" size={22} />
+            <p>Adopt</p>
+          </div>
+          <div
+            onClick={focusCommentInput}
+            className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1"
+          >
             <HiOutlineChatAlt className="mt-1" size={20} />
             <p>Comment</p>
           </div>
@@ -223,9 +252,9 @@ const PetDetailsModal = ({
               className="flex flex-col bg-slate-100 rounded-md p-2 w-full my-2"
             >
               <div className="flex justify-between items-center">
-                <p className="text-[0.8rem] font-semibold">
+                <Tag className="bg-blue text-white font-semibold text-[0.8rem]">
                   {comment?.displayName}
-                </p>
+                </Tag>
                 <Tooltip title="Delete comment">
                   <Popconfirm
                     title="Delete post"
@@ -237,7 +266,12 @@ const PetDetailsModal = ({
                       className: "primary-btn",
                     }}
                   >
-                    <HiTrash className="cursor-pointer" size={20} />
+                    {showDeleteIcon(comment?.userId) && (
+                      <HiTrash
+                        className="cursor-pointer hover:text-red-600 duration-100 ease-in-out"
+                        size={20}
+                      />
+                    )}
                   </Popconfirm>
                 </Tooltip>
               </div>

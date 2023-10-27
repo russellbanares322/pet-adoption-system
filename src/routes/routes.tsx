@@ -4,8 +4,6 @@ import AboutUs from "../pages/about-us/AboutUs";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
-import Profile from "../pages/dashboard/profile/Profile";
-import Settings from "../pages/dashboard/settings/Settings";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 import MyPost from "../pages/post/MyPost";
@@ -53,12 +51,6 @@ export const routes = [
     isProtected: true,
     child: [
       {
-        path: "profile",
-        element: <Profile />,
-        child: [],
-        isProtected: true,
-      },
-      {
         path: "listed-pets",
         element: <ListedPets />,
         child: [],
@@ -67,12 +59,6 @@ export const routes = [
       {
         path: "pending-posts",
         element: <PendingPosts />,
-        child: [],
-        isProtected: true,
-      },
-      {
-        path: "settings",
-        element: <Settings />,
         child: [],
         isProtected: true,
       },

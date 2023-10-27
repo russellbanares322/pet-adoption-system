@@ -22,6 +22,7 @@ const PetsCard = ({
   petAge,
   petGender,
   petColor,
+  petLocation,
   petDescription,
   petImage,
   createdBy,
@@ -111,6 +112,7 @@ const PetsCard = ({
         petAge={petAge}
         petGender={petGender}
         petColor={petColor}
+        petLocation={petLocation}
         petDescription={petDescription}
         likes={likes}
         comments={comments}

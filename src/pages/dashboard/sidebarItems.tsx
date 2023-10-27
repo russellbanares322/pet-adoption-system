@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  UserOutlined,
   PieChartOutlined,
   OrderedListOutlined,
   FileSyncOutlined,
@@ -20,11 +19,6 @@ export const sidebarItems: SidebarItems[] = [
     label: "Dashboard",
   },
   {
-    key: "profile",
-    icon: <UserOutlined />,
-    label: "Profile",
-  },
-  {
     key: "listed-pets",
     icon: <OrderedListOutlined />,
     label: "Listed Pets",
@@ -33,10 +27,5 @@ export const sidebarItems: SidebarItems[] = [
     key: "pending-posts",
     icon: <FileSyncOutlined />,
     label: "Pending Posts",
-  },
-  {
-    key: "settings",
-    icon: <SettingOutlined />,
-    label: "Settings",
   },
 ];
