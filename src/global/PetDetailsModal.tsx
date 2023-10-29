@@ -15,7 +15,6 @@ import {
   HiOutlineChatAlt,
   HiTrash,
 } from "react-icons/hi";
-import { PiHandHeart } from "react-icons/pi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
 import React, { useEffect, useRef, useState } from "react";
 import useLikePost from "../hooks/useLikePost";
@@ -231,10 +230,6 @@ const PetDetailsModal = ({
             {isPostAlreadyLiked && <HiThumbUp size={20} />}
             {!isPostAlreadyLiked && <HiOutlineThumbUp size={20} />}
             <p>Like</p>
-          </div>
-          <div className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1">
-            <PiHandHeart className="mt-1" size={22} />
-            <p>Adopt</p>
           </div>
           <div
             onClick={focusCommentInput}

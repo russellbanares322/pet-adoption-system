@@ -1,13 +1,12 @@
 import { Tooltip } from "antd";
-import { HiOutlineHeart, HiOutlineEye } from "react-icons/hi";
 import {
+  HiOutlineEye,
   HiOutlineThumbUp,
   HiThumbUp,
-  HiChatAlt,
   HiOutlineChatAlt,
 } from "react-icons/hi";
-// HiThumbUp
-// HiHeart
+import { PiHandHeart } from "react-icons/pi";
+
 import moment from "moment";
 import { PetsData } from "../../api/pets/pets";
 import { useState } from "react";
@@ -91,8 +90,8 @@ const PetsCard = ({
       </div>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
-        <Tooltip title="Add to favorites">
-          <HiOutlineHeart className="cursor-pointer" size={24} />
+        <Tooltip title="Adopt pet">
+          <PiHandHeart className="cursor-pointer" size={24} />
         </Tooltip>
       </div>
       <p className="mt-2 px-2 py-1 text-sm text-center">
