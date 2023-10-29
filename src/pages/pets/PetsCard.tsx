@@ -5,7 +5,7 @@ import {
   HiThumbUp,
   HiOutlineChatAlt,
 } from "react-icons/hi";
-import { PiHandHeart } from "react-icons/pi";
+import { PiHandHeart, PiHandHeartFill } from "react-icons/pi";
 
 import moment from "moment";
 import { PetsData } from "../../api/pets/pets";
@@ -14,6 +14,7 @@ import PetDetailsModal from "../../global/PetDetailsModal";
 import useLikePost from "../../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
+import AdoptPetFormModal from "./AdoptPetFormModal";
 
 const PetsCard = ({
   id,
@@ -30,11 +31,13 @@ const PetsCard = ({
   comments,
 }: PetsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const [openAdoptPetFormModal, setOpenAdoptPetFormModal] = useState(false);
   const [user] = useAuthState(auth);
   const { likePost } = useLikePost();
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
+
   const handleOpenDetailsModal = () => {
     setOpenPetDetailsModal(true);
   };
@@ -42,6 +45,15 @@ const PetsCard = ({
   const handleCloseDetailsModal = () => {
     setOpenPetDetailsModal(false);
   };
+
+  const handleOpenAdoptionModal = () => {
+    setOpenAdoptPetFormModal(true);
+  };
+
+  const handleCloseAdoptionModal = () => {
+    setOpenAdoptPetFormModal(false);
+  };
+
   return (
     <div className="border-l-4 border-b-4 border-b-maroon border-l-maroon rounded-lg bg-white">
       <div className="relative group">
@@ -91,7 +103,11 @@ const PetsCard = ({
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
         <Tooltip title="Adopt pet">
-          <PiHandHeart className="cursor-pointer" size={24} />
+          <PiHandHeart
+            onClick={handleOpenAdoptionModal}
+            className="cursor-pointer"
+            size={24}
+          />
         </Tooltip>
       </div>
       <p className="mt-2 px-2 py-1 text-sm text-center">
@@ -118,6 +134,11 @@ const PetsCard = ({
         petImage={petImage}
         createdBy={createdBy}
         dateCreated={dateCreated}
+      />
+      <AdoptPetFormModal
+        openModal={openAdoptPetFormModal}
+        onCancel={handleCloseAdoptionModal}
+        selectedId={id}
       />
     </div>
   );
