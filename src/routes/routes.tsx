@@ -1,6 +1,7 @@
 import AuthLayout from "../components/auth-layout/AuthLayout";
 import ErrorPage from "../components/error-page/ErrorPage";
 import AboutUs from "../pages/about-us/AboutUs";
+import MyAdoptions from "../pages/adoptions/MyAdoptions";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
@@ -42,6 +43,12 @@ export const routes = [
   {
     path: "/my-post",
     element: <MyPost />,
+    isProtected: true,
+    child: [],
+  },
+  {
+    path: "/my-adoptions",
+    element: <MyAdoptions />,
     isProtected: true,
     child: [],
   },
