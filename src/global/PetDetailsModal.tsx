@@ -182,7 +182,7 @@ const PetDetailsModal = ({
           src={petImage}
           alt="Pet"
         />
-        <div className="mb-5 text-[1rem] grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="mb-5 text-[1rem] grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-3">
           <p>
             Pet Name: <span className="font-bold">{petName}</span>
           </p>

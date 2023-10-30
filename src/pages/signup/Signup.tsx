@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { HiOutlineUser, HiOutlineMail } from "react-icons/hi";
 import { PiEyeClosed, PiEye } from "react-icons/pi";
 import { MdOutlinePassword } from "react-icons/md";
@@ -10,29 +10,17 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  doc,
-  onSnapshot,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-} from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
-
-type SignedUsers = {
-  displayName: string;
-  email: string;
-  dateCreated: Timestamp;
-};
+import { useFetchUsers } from "../../api/users/users";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { data: registeredUsersData } = useFetchUsers();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -40,16 +28,22 @@ const Signup = () => {
     confirmPassword: "",
   });
   const passwordsDontMatch = formData.confirmPassword !== formData.password;
-  const [registeredUsers, setRegisteredUsers] = useState<SignedUsers[]>([]);
-  const registeredUsersRef = collection(db, "registered-users");
   const [isLoading, setIsLoading] = useState(false);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const isEmailAlreadyUsed = registeredUsers.some(
-    (data) => data.email === formData.email
-  );
+
+  //Check if the gmail is already present in database
+  const checkIfEmailIsAlreadyUsed = () => {
+    const isEmailAlreadyPresent = registeredUsersData?.some(
+      (data) => data?.email === formData.email
+    );
+    if (isEmailAlreadyPresent) {
+      return true;
+    }
+    return false;
+  };
 
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +58,7 @@ const Signup = () => {
       setIsFormDirty(true);
       setIsLoading(false);
     } else {
-      if (!isEmailAlreadyUsed) {
+      if (!checkIfEmailIsAlreadyUsed) {
         try {
           await createUserWithEmailAndPassword(
             auth,
@@ -80,12 +74,6 @@ const Signup = () => {
           });
 
           updateProfile(auth?.currentUser as User, {
-            displayName: formData.fullName,
-          });
-
-          addDoc(registeredUsersRef, {
-            email: formData.email,
-            dateCreated: Timestamp.now().toDate(),
             displayName: formData.fullName,
           });
 
@@ -123,28 +111,6 @@ const Signup = () => {
     setShowPassword(!showPassword);
   };
 
-  const fetchSignedupUsers = () => {
-    const unsub = onSnapshot(
-      registeredUsersRef,
-      (snapshot) => {
-        const signedUsersData: SignedUsers[] = snapshot.docs.map((doc) => ({
-          ...doc.data(),
-        })) as SignedUsers[];
-        setRegisteredUsers(signedUsersData);
-      },
-      (error) => {
-        toast.error(error.message);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-  };
-
-  useEffect(() => {
-    fetchSignedupUsers();
-  }, []);
   return (
     <form
       onSubmit={onSubmit}
