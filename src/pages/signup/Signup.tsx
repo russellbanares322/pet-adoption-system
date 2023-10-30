@@ -15,6 +15,7 @@ import {
   collection,
   doc,
   onSnapshot,
+  serverTimestamp,
   setDoc,
   Timestamp,
 } from "firebase/firestore";
@@ -72,7 +73,10 @@ const Signup = () => {
           );
 
           setDoc(doc(db, "users", formData.email), {
+            dateCreated: serverTimestamp(),
+            email: formData.email,
             savedFavoritePets: [],
+            notifications: [],
           });
 
           updateProfile(auth?.currentUser as User, {

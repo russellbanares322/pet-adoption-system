@@ -13,6 +13,7 @@ export default {
         maroon: "#41272C",
         whitesmoke: "#F2F2F2",
         blue: "#1677FF",
+        green: "#52C41A"
       },
     },
   },

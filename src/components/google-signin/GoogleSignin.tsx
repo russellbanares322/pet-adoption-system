@@ -3,7 +3,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const GoogleSignin = () => {
   const navigate = useNavigate();
@@ -14,7 +14,10 @@ const GoogleSignin = () => {
       .then((res: any) => {
         navigate("/");
         setDoc(doc(db, "users", res?.user?.email), {
+          dateCreated: serverTimestamp(),
+          email: res?.user?.email,
           savedFavoritePets: [],
+          notifications: [],
         });
         toast.success("Successfully logged in via gmail");
       })

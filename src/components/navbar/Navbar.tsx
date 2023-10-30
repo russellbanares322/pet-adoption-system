@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  HiBell,
   HiOutlineX,
   HiMenu,
   HiOutlineChevronDown,
@@ -11,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import Dropdown from "../dropdown/Dropdown";
+import { Badge } from "antd";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -158,19 +160,26 @@ const Navbar = () => {
             </li>
           )}
           {isLoggedIn && (
-            <li className="ml-auto pr-2 flex items-center gap-2 relative py-2">
-              Hi, {displayName}
-              <HiOutlineChevronDown
-                onClick={handleToggleDropdown}
-                className="cursor-pointer"
-                size={23}
-              />
-              <Dropdown
-                onClose={handleCloseDropdown}
-                dropdownItems={dropdownItems}
-                open={openDropdown}
-              />
-            </li>
+            <div className="flex items-center justify-start ml-auto gap-2  py-2 pr-2">
+              <Badge color="#52C41A" className="mr-2 cursor-pointer" count={5}>
+                <button>
+                  <HiBell size={22} />
+                </button>
+              </Badge>
+              <li className="flex items-center gap-2 relative">
+                Hi, {displayName}
+                <HiOutlineChevronDown
+                  onClick={handleToggleDropdown}
+                  className="cursor-pointer"
+                  size={23}
+                />
+                <Dropdown
+                  onClose={handleCloseDropdown}
+                  dropdownItems={dropdownItems}
+                  open={openDropdown}
+                />
+              </li>
+            </div>
           )}
         </ul>
 
@@ -238,6 +247,12 @@ const Navbar = () => {
                 Dashboard
               </li>
             )}
+            <li className="flex items-center justify-start gap-2 cursor-pointer">
+              Notifications
+              <Badge color="#52C41A" count={5}>
+                <HiBell size={22} />
+              </Badge>
+            </li>
             {!isLoggedIn && (
               <li onClick={() => navigate("/login")} className="cursor-pointer">
                 <button className="button-filled">Login</button>
