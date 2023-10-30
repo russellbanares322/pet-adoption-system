@@ -5,6 +5,7 @@ import MyAdoptions from "../pages/adoptions/MyAdoptions";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
+import RegisteredUsers from "../pages/dashboard/registered-users/RegisteredUsers";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 import MyPost from "../pages/post/MyPost";
@@ -66,6 +67,12 @@ export const routes = [
       {
         path: "pending-posts",
         element: <PendingPosts />,
+        child: [],
+        isProtected: true,
+      },
+      {
+        path: "registered-users",
+        element: <RegisteredUsers />,
         child: [],
         isProtected: true,
       },

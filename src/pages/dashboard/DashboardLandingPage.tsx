@@ -1,5 +1,6 @@
 import CountUp from "react-countup";
 import { useFetchPendingPets, useFetchPets } from "../../api/pets/pets";
+import { useFetchUsers } from "../../api/users/users";
 
 type TDashboardLandingPageDatas = {
   id: number;
@@ -10,8 +11,10 @@ type TDashboardLandingPageDatas = {
 const DashboardLandingPage = () => {
   const { data: listedPetsData } = useFetchPets();
   const { data: pendingPetsData } = useFetchPendingPets();
+  const { data: registeredUsersData } = useFetchUsers();
   const listedPetsCount = listedPetsData?.length;
   const pendingPetsCount = pendingPetsData?.length;
+  const registeredUsersCount = registeredUsersData?.length;
 
   const dashboardLandingPageDatas: TDashboardLandingPageDatas[] = [
     {
@@ -23,6 +26,11 @@ const DashboardLandingPage = () => {
       id: 2,
       title: "Total Number of Pending Post",
       count: pendingPetsCount,
+    },
+    {
+      id: 2,
+      title: "Total Number of Registered Users",
+      count: registeredUsersCount,
     },
   ];
   return (

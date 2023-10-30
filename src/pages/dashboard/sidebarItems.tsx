@@ -3,7 +3,7 @@ import {
   PieChartOutlined,
   OrderedListOutlined,
   FileSyncOutlined,
-  SettingOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 
 type SidebarItems = {
@@ -27,5 +27,10 @@ export const sidebarItems: SidebarItems[] = [
     key: "pending-posts",
     icon: <FileSyncOutlined />,
     label: "Pending Posts",
+  },
+  {
+    key: "registered-users",
+    icon: <TeamOutlined />,
+    label: "Registered Users",
   },
 ];
