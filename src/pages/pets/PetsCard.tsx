@@ -33,6 +33,7 @@ const PetsCard = ({
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [openAdoptPetFormModal, setOpenAdoptPetFormModal] = useState(false);
   const [user] = useAuthState(auth);
+  const isUserLoggedIn = user;
   const { likePost } = useLikePost();
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
@@ -47,7 +48,9 @@ const PetsCard = ({
   };
 
   const handleOpenAdoptionModal = () => {
-    setOpenAdoptPetFormModal(true);
+    if (isUserLoggedIn) {
+      setOpenAdoptPetFormModal(true);
+    }
   };
 
   const handleCloseAdoptionModal = () => {
@@ -102,10 +105,18 @@ const PetsCard = ({
       </div>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
-        <Tooltip title="Adopt pet">
+        <Tooltip
+          title={
+            isUserLoggedIn
+              ? "Adopt pet"
+              : "You need to signin first to adopt a pet"
+          }
+        >
           <PiHandHeart
             onClick={handleOpenAdoptionModal}
-            className="cursor-pointer"
+            className={`${
+              isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
             size={24}
           />
         </Tooltip>

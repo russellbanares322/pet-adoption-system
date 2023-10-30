@@ -138,7 +138,7 @@ const AdoptPetFormModal = ({
           </div>
         )}
         <Form.Item
-          className="flex items-center justify-center"
+          className="flex items-center justify-center font-bold"
           name="finalizePost"
           valuePropName="checked"
         >
