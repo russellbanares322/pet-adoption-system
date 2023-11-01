@@ -31,7 +31,6 @@ const AdoptPetFormModal = ({
   const [isDataReviewed, setIsDataReviewed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { uploadImgToStorage } = useUploadFileToDb();
-  const isDataForUpdate = selectedId;
   const [user] = useAuthState(auth);
   const [form] = Form.useForm();
 
@@ -50,22 +49,20 @@ const AdoptPetFormModal = ({
       const petAdoptionsRef = collection(db, "pet-adoptions");
       const imgUrl = await uploadImgToStorage(imgFile as File);
 
-      if (!isDataForUpdate) {
-        if (imgUrl !== undefined) {
-          addDoc(petAdoptionsRef, {
-            userId: user?.uid,
-            userEmail: user?.email,
-            firstName: values.firstName,
-            middleName: values.middleName,
-            lastName: values.lastName,
-            address: values.address,
-            contactNumber: values.contactNumber,
-            dateCreated: serverTimestamp(),
-            image: imgUrl,
-          });
-          setIsLoading(false);
-          toast.success("Successfully sent application");
-        }
+      if (imgUrl !== undefined) {
+        addDoc(petAdoptionsRef, {
+          userId: user?.uid,
+          userEmail: user?.email,
+          firstName: values.firstName,
+          middleName: values.middleName,
+          lastName: values.lastName,
+          address: values.address,
+          contactNumber: values.contactNumber,
+          dateCreated: serverTimestamp(),
+          image: imgUrl,
+        });
+        setIsLoading(false);
+        toast.success("Successfully sent application");
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -97,7 +94,8 @@ const AdoptPetFormModal = ({
           type="primary"
           htmlType="submit"
         >
-          Submit
+          {isLoading && "Submitting..."}
+          {!isLoading && "Submit"}
         </Button>,
       ]}
     >
