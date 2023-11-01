@@ -1,11 +1,6 @@
 import { Button, Form, Input, Modal, Select } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { deleteObject, ref } from "firebase/storage";
 import {
   addDoc,
   collection,
@@ -19,6 +14,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchPet } from "../api/pets/pets";
 import { auth, db, storage } from "../firebase/firebase-config";
 import { petColors, petGender, petTypes } from "../data/pet-filter-options";
+import useUploadFileToDb from "../hooks/useUploadFileToDb";
 
 type FormInputs = {
   petName: string;
@@ -57,6 +53,7 @@ const AddEditPetFormModal = ({
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
   const isDataForUpdate = selectedId;
   const isUserPosted = user?.email !== import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const { uploadImgToStorage } = useUploadFileToDb();
 
   useEffect(() => {
     if (isDataForUpdate) {
@@ -103,7 +100,7 @@ const AddEditPetFormModal = ({
     setIsLoading(true);
     try {
       const listedPetsRef = collection(db, dbName);
-      const imgUrl = await uploadImgToStorage();
+      const imgUrl = await uploadImgToStorage(imgFile as File);
 
       if (!isDataForUpdate) {
         if (imgUrl !== undefined) {
@@ -152,20 +149,6 @@ const AddEditPetFormModal = ({
     } catch (err: any) {
       toast.error(err.message);
       setIsLoading(false);
-    }
-  };
-
-  const uploadImgToStorage = async () => {
-    const imageRef = ref(storage, `/images/${Date.now()}/${imgFile?.name}`);
-
-    try {
-      const uploadTaskSnapshot = await uploadBytes(imageRef, imgFile as Blob);
-
-      const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
-      return downloadURL;
-    } catch (error: any) {
-      toast.error(error.message);
-      throw error;
     }
   };
 

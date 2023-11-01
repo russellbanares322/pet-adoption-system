@@ -4,6 +4,7 @@ import {
   OrderedListOutlined,
   FileSyncOutlined,
   TeamOutlined,
+  ReconciliationOutlined,
 } from "@ant-design/icons";
 
 type SidebarItems = {
@@ -32,5 +33,10 @@ export const sidebarItems: SidebarItems[] = [
     key: "registered-users",
     icon: <TeamOutlined />,
     label: "Registered Users",
+  },
+  {
+    key: "pet-adoptions",
+    icon: <ReconciliationOutlined />,
+    label: "Pet Adoptions",
   },
 ];

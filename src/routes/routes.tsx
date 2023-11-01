@@ -3,6 +3,7 @@ import ErrorPage from "../components/error-page/ErrorPage";
 import AboutUs from "../pages/about-us/AboutUs";
 import MyAdoptions from "../pages/adoptions/MyAdoptions";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
+import PetAdoption from "../pages/dashboard/adoption/PetAdoption";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
 import RegisteredUsers from "../pages/dashboard/registered-users/RegisteredUsers";
@@ -73,6 +74,12 @@ export const routes = [
       {
         path: "registered-users",
         element: <RegisteredUsers />,
+        child: [],
+        isProtected: true,
+      },
+      {
+        path: "pet-adoptions",
+        element: <PetAdoption />,
         child: [],
         isProtected: true,
       },

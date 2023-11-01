@@ -1,7 +1,12 @@
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { Key, useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { toast } from "react-toastify";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "../../firebase/firebase-config";
+import useUploadFileToDb from "../../hooks/useUploadFileToDb";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type AdoptPetFormModalProps = {
   openModal: boolean;
@@ -9,26 +14,79 @@ type AdoptPetFormModalProps = {
   selectedId: string;
 };
 
+type FormInputs = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  address: string;
+  contactNumber: string;
+};
+
 const AdoptPetFormModal = ({
   openModal,
   onCancel,
   selectedId,
 }: AdoptPetFormModalProps) => {
-  const [imgFile] = useState<File | null | string>(null);
+  const [imgFile, setImgFile] = useState<File | null | string>(null);
   const [isDataReviewed, setIsDataReviewed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { uploadImgToStorage } = useUploadFileToDb();
+  const isDataForUpdate = selectedId;
+  const [user] = useAuthState(auth);
+  const [form] = Form.useForm();
 
   const handleChangeCheckbox = (e: CheckboxChangeEvent) => {
     setIsDataReviewed(e.target.checked);
   };
 
+  const handleCloseModal = () => {
+    onCancel();
+    form.resetFields();
+  };
+
+  const onFinish = async (values: FormInputs) => {
+    setIsLoading(true);
+    try {
+      const petAdoptionsRef = collection(db, "pet-adoptions");
+      const imgUrl = await uploadImgToStorage(imgFile as File);
+
+      if (!isDataForUpdate) {
+        if (imgUrl !== undefined) {
+          addDoc(petAdoptionsRef, {
+            userId: user?.uid,
+            userEmail: user?.email,
+            firstName: values.firstName,
+            middleName: values.middleName,
+            lastName: values.lastName,
+            address: values.address,
+            contactNumber: values.contactNumber,
+            dateCreated: serverTimestamp(),
+            image: imgUrl,
+          });
+          setIsLoading(false);
+          toast.success("Successfully sent application");
+        }
+      }
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files) {
+      setImgFile(files[0]);
+    }
+  };
+
   return (
     <Modal
       open={openModal}
-      onCancel={onCancel}
+      onCancel={handleCloseModal}
       title="Adopting Pet"
       width={500}
       footer={[
-        <Button key="cancel" onClick={onCancel} type="default">
+        <Button key="cancel" onClick={handleCloseModal} type="default">
           Cancel
         </Button>,
         <Button
@@ -47,6 +105,7 @@ const AdoptPetFormModal = ({
         className="my-10"
         name="adopt-pet"
         initialValues={{ remember: true }}
+        onFinish={onFinish}
       >
         {/* First Name */}
         <Form.Item
@@ -115,6 +174,8 @@ const AdoptPetFormModal = ({
         >
           <label className="flex ml-2 border duration-150 hover:border-blue hover:text-blue border-gray-300 rounded-md p-2 cursor-pointer justify-start items-center gap-2">
             <input
+              key={imgFile as Key}
+              onChange={handleChangeImage}
               id="img-upload"
               accept="image/png, image/jpeg"
               className="absolute left-[-99999rem]"
