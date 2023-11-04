@@ -58,6 +58,7 @@ const AdoptPetFormModal = ({
           lastName: values.lastName,
           address: values.address,
           contactNumber: values.contactNumber,
+          petId: selectedId,
           dateCreated: serverTimestamp(),
           image: imgUrl,
         });

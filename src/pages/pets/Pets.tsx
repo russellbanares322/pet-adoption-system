@@ -20,6 +20,11 @@ const Pets = () => {
     gender: [],
     type: [],
   });
+  const [expandFilterOptions, setExpandFilterOptions] = useState(false);
+
+  const handleExpandFilterOptions = () => {
+    setExpandFilterOptions(!expandFilterOptions);
+  };
 
   const filterData = (filterOptionKey: FilterOptionKey, filterItem: string) => {
     if (filterOptions[filterOptionKey].includes(filterItem)) {
@@ -56,8 +61,14 @@ const Pets = () => {
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
       <div className="container flex-1 md:flex items-start justify-start gap-10 mt-1 md:mt-10">
-        <div className="w-full md:w-72">
-          <SidebarFilters filterData={filterData} />
+        <div
+          className={`${expandFilterOptions ? "h-0" : "h-full"} w-full md:w-72`}
+        >
+          <SidebarFilters
+            expandFilterOptions={expandFilterOptions}
+            handleExpandFilterOptions={handleExpandFilterOptions}
+            filterData={filterData}
+          />
         </div>
         <div className="w-full">
           <div className="text-center mt-3 md:mt-0 mb-2">

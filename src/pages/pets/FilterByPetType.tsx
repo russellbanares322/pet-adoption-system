@@ -2,14 +2,10 @@ import { petTypes } from "../../data/pet-filter-options";
 import { FilterOptionKey } from "./Pets";
 
 type FilterByTypeProps = {
-  expandFilterOptions: boolean;
   filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const FilterByPetType = ({
-  expandFilterOptions,
-  filterData,
-}: FilterByTypeProps) => {
+const FilterByPetType = ({ filterData }: FilterByTypeProps) => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
       <p className="text-md py-3">Pet Type</p>

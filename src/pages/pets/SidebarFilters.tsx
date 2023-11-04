@@ -3,18 +3,18 @@ import FilterByGender from "./FilterByGender";
 import FilterByPetType from "./FilterByPetType";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { FilterOptionKey } from "./Pets";
-import { useState } from "react";
 
 type SidebarFilterProps = {
+  expandFilterOptions: boolean;
+  handleExpandFilterOptions: () => void;
   filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const SidebarFilter = ({ filterData }: SidebarFilterProps) => {
-  const [expandFilterOptions, setExpandfilterOptions] = useState(false);
-
-  const handleExpandFilterOptions = () => {
-    setExpandfilterOptions(!expandFilterOptions);
-  };
+const SidebarFilter = ({
+  expandFilterOptions,
+  handleExpandFilterOptions,
+  filterData,
+}: SidebarFilterProps) => {
   return (
     <div>
       <div
@@ -30,20 +30,11 @@ const SidebarFilter = ({ filterData }: SidebarFilterProps) => {
         />
       </div>
       {/* Filter by color */}
-      <FilterByColor
-        expandFilterOptions={expandFilterOptions}
-        filterData={filterData}
-      />
+      <FilterByColor filterData={filterData} />
       {/* Filter by gender */}
-      <FilterByGender
-        expandFilterOptions={expandFilterOptions}
-        filterData={filterData}
-      />
+      <FilterByGender filterData={filterData} />
       {/* Filter by pet type */}
-      <FilterByPetType
-        expandFilterOptions={expandFilterOptions}
-        filterData={filterData}
-      />
+      <FilterByPetType filterData={filterData} />
     </div>
   );
 };

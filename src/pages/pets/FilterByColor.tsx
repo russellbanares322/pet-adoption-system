@@ -2,14 +2,10 @@ import { petColors } from "../../data/pet-filter-options";
 import { FilterOptionKey } from "./Pets";
 
 type FilterByColorProps = {
-  expandFilterOptions: boolean;
   filterData: (filterOptionKey: FilterOptionKey, filterItem: string) => void;
 };
 
-const FilterByColor = ({
-  expandFilterOptions,
-  filterData,
-}: FilterByColorProps) => {
+const FilterByColor = ({ filterData }: FilterByColorProps) => {
   return (
     <div className="border-b border-b-gray-600 pb-4">
       <p className="text-md py-3">Color</p>
