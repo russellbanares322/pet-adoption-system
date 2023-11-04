@@ -1,5 +1,5 @@
 import { Popconfirm, Tag } from "antd";
-import { deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import {
   HiOutlineEye,
@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/firebase-config";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
+import PetDetailsModal from "../../../global/PetDetailsModal";
+import { useState } from "react";
 
 type PetsDisplayProps = {
   handleOpenEditModal: (petId: string) => void;
@@ -22,6 +24,7 @@ const PetDisplay = ({
   petAge,
   petGender,
   petColor,
+  petLocation,
   petDescription,
   petImage,
   status,
@@ -31,6 +34,7 @@ const PetDisplay = ({
   comments,
   handleOpenEditModal,
 }: PetsDisplayProps) => {
+  const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const location = useLocation();
   const isPostCreatedByGuest = location.pathname === "/my-post";
   const isPostStatusPending = status === "Pending";
@@ -49,6 +53,15 @@ const PetDisplay = ({
       toast.error(err.message);
     }
   };
+
+  const handleOpenDetailsModal = () => {
+    setOpenPetDetailsModal(true);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setOpenPetDetailsModal(false);
+  };
+
   return (
     <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200">
       <div className="relative group">
@@ -56,7 +69,10 @@ const PetDisplay = ({
           className="rounded-md object-cover h-60 w-full bg-center"
           src={petImage}
         />
-        <div className="rounded-md cursor-pointer bg-black/50 absolute text-white top-0 left-0 w-full flex-col h-full flex justify-center items-center opacity-0 group-hover:opacity-100">
+        <div
+          onClick={handleOpenDetailsModal}
+          className="rounded-md cursor-pointer bg-black/50 absolute text-white top-0 left-0 w-full flex-col h-full flex justify-center items-center opacity-0 group-hover:opacity-100"
+        >
           <HiOutlineEye size={45} />
           <p>View Details</p>
         </div>
@@ -125,6 +141,22 @@ const PetDisplay = ({
           </Popconfirm>
         </div>
       </div>
+      <PetDetailsModal
+        open={openPetDetailsModal}
+        onCancel={handleCloseDetailsModal}
+        id={id}
+        petName={petName}
+        petAge={petAge}
+        petGender={petGender}
+        petColor={petColor}
+        petLocation={petLocation}
+        petDescription={petDescription}
+        likes={likes}
+        comments={comments}
+        petImage={petImage}
+        createdBy={createdBy}
+        dateCreated={dateCreated}
+      />
     </div>
   );
 };
