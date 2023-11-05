@@ -102,7 +102,7 @@ const PendingPostsCard = ({
               className: "primary-btn",
             }}
           >
-            <button className=" bg-green-600 text-base px-2 py-1 rounded-sm hover:bg-green-500 flex items-center gap-2 disabled:bg-dark-blue/75">
+            <button className="bg-green text-base px-2 py-1 rounded-sm hover:bg-green/90 flex items-center gap-2 disabled:bg-dark-blue/75">
               Approve Post <HiCheckCircle size={20} />
             </button>
           </Popconfirm>

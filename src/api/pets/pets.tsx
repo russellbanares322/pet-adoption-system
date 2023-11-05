@@ -3,6 +3,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  orderBy,
   query,
   Timestamp,
   where,
@@ -43,7 +44,11 @@ const useFetchPets = () => {
   const getPets = () => {
     setIsLoading(true);
     const listedPetsRef = collection(db, "listed-pets");
-    const q = query(listedPetsRef, where("status", "==", "Approved"));
+    const q = query(
+      listedPetsRef,
+      where("status", "==", "Approved"),
+      orderBy("dateCreated", "desc")
+    );
     onSnapshot(q, (snapshot) => {
       const petsData = snapshot.docs.map((doc) => ({
         id: doc.id,

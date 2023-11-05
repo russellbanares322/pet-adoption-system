@@ -21,7 +21,7 @@ const Featured = () => {
         )}
         <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-10 mt-4">
           {!emptyPetsData &&
-            petsData?.map((pet) => (
+            petsData?.slice(0, 3)?.map((pet) => (
               <div
                 className="hover:-translate-y-3 duration-150 ease-in-out relative"
                 key={pet.id}

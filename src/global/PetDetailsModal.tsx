@@ -272,7 +272,7 @@ const PetDetailsModal = ({
               </div>
               <p className="text-[1rem]">{comment.comment}</p>
               <span className="text-xs font-light">
-                {moment(comment?.dateCreated.toDate()).fromNow()}
+                {moment(comment?.dateCreated?.toDate()).fromNow()}
               </span>
             </div>
           ))}
