@@ -15,6 +15,7 @@ const MyPost = () => {
   const [openModal, setOpenModal] = useState(false);
   const [user] = useAuthState(auth);
   const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
+  const emptyPetsData = petsData.length === 0;
   const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
     openEditModal: false,
     selectedId: null,
@@ -44,15 +45,22 @@ const MyPost = () => {
   return (
     <div className="py-24 bg-whitesmoke min-h-screen h-full">
       <div className="container pt-10">
-        <div className="flex justify-end items-end mt-3">
-          <button onClick={handleOpenModal} className="button-filled">
-            Add Post
-          </button>
-        </div>
-        {!isLoading && petsData.length === 0 && (
-          <h1 className="text-center text-lg">
-            You don't have an active post yet...
-          </h1>
+        {!emptyPetsData && (
+          <div className="flex justify-end items-end mt-3">
+            <button onClick={handleOpenModal} className="button-filled">
+              Add Post
+            </button>
+          </div>
+        )}
+        {!isLoading && emptyPetsData && (
+          <div className="flex flex-col items-center justify-center gap-2">
+            <h1 className="text-lg">You don't have an active post yet...</h1>
+            {emptyPetsData && (
+              <button onClick={handleOpenModal} className="button-filled">
+                Add Post
+              </button>
+            )}
+          </div>
         )}
         {!isLoading && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">

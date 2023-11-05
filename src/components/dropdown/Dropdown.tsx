@@ -1,3 +1,5 @@
+import React, { useEffect, useRef } from "react";
+
 type DropdownItems = {
   name: string;
   action: () => void;
@@ -11,11 +13,24 @@ type DropdownProps = {
 };
 
 const Dropdown = ({ dropdownItems, onClose, open }: DropdownProps) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  //Function for closing dropdown when clicked outside
+  useEffect(() => {
+    const closeDropdownHandler = (e: any) => {
+      if (!dropdownRef.current?.contains(e.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", closeDropdownHandler);
+  }, []);
+
   return (
     <div
       className={`absolute top-7 right-4 bg-white z-30 rounded-sm shadow-md ${
         !open && "scale-0"
       } duration-300 ease-in-out`}
+      ref={dropdownRef}
     >
       <ul className="p-1 w-max">
         {dropdownItems.map((item, index) => (
