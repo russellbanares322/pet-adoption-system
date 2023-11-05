@@ -29,12 +29,16 @@ const SidebarFilter = ({
           size={25}
         />
       </div>
-      {/* Filter by color */}
-      <FilterByColor filterData={filterData} />
-      {/* Filter by gender */}
-      <FilterByGender filterData={filterData} />
-      {/* Filter by pet type */}
-      <FilterByPetType filterData={filterData} />
+      {expandFilterOptions && (
+        <div>
+          {/* Filter by color */}
+          <FilterByColor filterData={filterData} />
+          {/* Filter by gender */}
+          <FilterByGender filterData={filterData} />
+          {/* Filter by pet type */}
+          <FilterByPetType filterData={filterData} />
+        </div>
+      )}
     </div>
   );
 };
