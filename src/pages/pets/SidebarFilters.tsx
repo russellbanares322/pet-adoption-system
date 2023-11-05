@@ -3,6 +3,7 @@ import FilterByGender from "./FilterByGender";
 import FilterByPetType from "./FilterByPetType";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { FilterOptionKey } from "./Pets";
+import SearchInput from "./SearchInput";
 
 type SidebarFilterProps = {
   expandFilterOptions: boolean;
@@ -31,6 +32,8 @@ const SidebarFilter = ({
       </div>
       {expandFilterOptions && (
         <div>
+          {/* Search filter */}
+          <SearchInput />
           {/* Filter by color */}
           <FilterByColor filterData={filterData} />
           {/* Filter by gender */}
