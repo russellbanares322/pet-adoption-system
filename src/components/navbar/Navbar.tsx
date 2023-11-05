@@ -37,6 +37,10 @@ const Navbar = () => {
     setOpenNav(!openNav);
   };
 
+  const handleCloseNavbar = () => {
+    setOpenNav(false);
+  };
+
   const handleLogout = () => {
     signOut(auth);
     navigate("/");
@@ -194,7 +198,10 @@ const Navbar = () => {
         >
           <ul className="flex flex-col justify-start items-start w-full text-md gap-5 font-semibold px-5">
             <li
-              onClick={() => navigate("/")}
+              onClick={() => {
+                navigate("/");
+                handleCloseNavbar();
+              }}
               className={`cursor-pointer relative ${
                 activeNavLink === "Home" && "mobile-active-nav-link"
               }`}
@@ -202,7 +209,10 @@ const Navbar = () => {
               Home
             </li>
             <li
-              onClick={() => navigate("/pets")}
+              onClick={() => {
+                navigate("/pets");
+                handleCloseNavbar();
+              }}
               className={`cursor-pointer relative ${
                 activeNavLink === "Pets" && "mobile-active-nav-link"
               }`}
@@ -211,7 +221,10 @@ const Navbar = () => {
             </li>
             {!isAdminLoggedIn && isLoggedIn && (
               <li
-                onClick={() => navigate("/my-post")}
+                onClick={() => {
+                  navigate("/my-post");
+                  handleCloseNavbar();
+                }}
                 className={`cursor-pointer relative ${
                   activeNavLink === "MyPost" && "mobile-active-nav-link"
                 }`}
@@ -221,7 +234,10 @@ const Navbar = () => {
             )}
             {!isAdminLoggedIn && isLoggedIn && (
               <li
-                onClick={() => navigate("/my-adoptions")}
+                onClick={() => {
+                  navigate("/my-adoptions");
+                  handleCloseNavbar();
+                }}
                 className={`cursor-pointer relative ${
                   activeNavLink === "MyAdoptions" && "mobile-active-nav-link"
                 }`}
@@ -230,7 +246,10 @@ const Navbar = () => {
               </li>
             )}
             <li
-              onClick={() => navigate("/about-us")}
+              onClick={() => {
+                navigate("/about-us");
+                handleCloseNavbar();
+              }}
               className={`cursor-pointer relative ${
                 activeNavLink === "About" && "mobile-active-nav-link"
               }`}
@@ -239,7 +258,10 @@ const Navbar = () => {
             </li>
             {isAdminLoggedIn && (
               <li
-                onClick={() => navigate("/dashboard")}
+                onClick={() => {
+                  navigate("/dashboard");
+                  handleCloseNavbar();
+                }}
                 className={`cursor-pointer relative ${
                   activeNavLink === "Dashboard" && "mobile-active-nav-link"
                 }`}
@@ -254,7 +276,13 @@ const Navbar = () => {
               </Badge>
             </li>
             {!isLoggedIn && (
-              <li onClick={() => navigate("/login")} className="cursor-pointer">
+              <li
+                onClick={() => {
+                  navigate("/login");
+                  handleCloseNavbar();
+                }}
+                className="cursor-pointer"
+              >
                 <button className="button-filled">Login</button>
               </li>
             )}
