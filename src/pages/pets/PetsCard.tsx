@@ -23,6 +23,7 @@ const PetsCard = ({
   petGender,
   petColor,
   petLocation,
+  showAdoptButton,
   petDescription,
   petImage,
   createdBy,
@@ -48,13 +49,23 @@ const PetsCard = ({
   };
 
   const handleOpenAdoptionModal = () => {
-    if (isUserLoggedIn) {
+    if (isUserLoggedIn && showAdoptButton) {
       setOpenAdoptPetFormModal(true);
     }
   };
 
   const handleCloseAdoptionModal = () => {
     setOpenAdoptPetFormModal(false);
+  };
+
+  const adoptButtonTooltip = () => {
+    if (isUserLoggedIn && showAdoptButton) {
+      return "Adopt Pet";
+    } else if (!isUserLoggedIn) {
+      return "You need to signin first to adopt a pet";
+    } else if (isUserLoggedIn && !showAdoptButton) {
+      return "This pet is not available to be adopted yet";
+    }
   };
 
   return (
@@ -105,17 +116,13 @@ const PetsCard = ({
       </div>
       <div className="flex justify-between items-center px-5 mt-2">
         <p className="mt-3 uppercase font-bold">{petName}</p>
-        <Tooltip
-          title={
-            isUserLoggedIn
-              ? "Adopt pet"
-              : "You need to signin first to adopt a pet"
-          }
-        >
+        <Tooltip title={adoptButtonTooltip()}>
           <PiHandHeart
             onClick={handleOpenAdoptionModal}
             className={`${
-              isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
+              showAdoptButton && isUserLoggedIn
+                ? "cursor-pointer"
+                : "cursor-not-allowed"
             }`}
             size={24}
           />
