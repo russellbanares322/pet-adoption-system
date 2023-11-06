@@ -27,6 +27,7 @@ export type PetsData = {
   petGender: string;
   petColor: string;
   petLocation: string;
+  showAdoptButton: boolean;
   petDescription: string;
   petImage: string;
   status?: string;

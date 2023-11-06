@@ -1,5 +1,10 @@
-import { Button, Form, Input, Modal, Select } from "antd";
-import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Modal, Select, Switch } from "antd";
+import {
+  UploadOutlined,
+  DeleteOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import { deleteObject, ref } from "firebase/storage";
 import {
   addDoc,
@@ -23,6 +28,7 @@ type FormInputs = {
   petColor: string;
   petType: string;
   petLocation: string;
+  showAdoptButton: boolean;
   petDescription: string;
 };
 
@@ -112,6 +118,7 @@ const AddEditPetFormModal = ({
             petColor: values.petColor,
             petType: values.petType,
             petLocation: values.petLocation,
+            showAdoptButton: true,
             petDescription: values.petDescription,
             petImage: typeof imgFile === "object" ? imgUrl : imgFile,
             status: isUserPosted ? "Pending" : "Approved",
@@ -133,6 +140,7 @@ const AddEditPetFormModal = ({
           petColor: values.petColor,
           petType: values.petType,
           petLocation: values.petLocation,
+          showAdoptButton: values.showAdoptButton ? true : false,
           petDescription: values.petDescription,
           petImage: typeof imgFile === "object" ? imgUrl : imgFile,
           status: isUserPosted ? "Pending" : "Approved",
@@ -262,6 +270,20 @@ const AddEditPetFormModal = ({
         <Form.Item label="Location" name="petLocation">
           <Input placeholder="Enter where your pet is located..." />
         </Form.Item>
+        {/*For showing adopt pet button*/}
+        {isDataForUpdate && (
+          <Form.Item
+            label="Is this pet still available to be adopted?"
+            name="showAdoptButton"
+            valuePropName="checked"
+          >
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              defaultChecked
+            />
+          </Form.Item>
+        )}
         {/* Pet's Description */}
         <Form.Item name="petDescription" label="Description">
           <TextArea placeholder="Enter your pet's description..." rows={4} />
