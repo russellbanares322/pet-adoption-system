@@ -28,7 +28,7 @@ const ForgotPassword = () => {
     } else {
       try {
         await sendPasswordResetEmail(auth, email, {
-          url: "http://localhost:5173/login",
+          url: "https://adoptapetportal-muntinlupa.onrender.com/login",
         });
         toast.success(
           `Reset password link is sent to ${email}, please check your email`

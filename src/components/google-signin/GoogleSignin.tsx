@@ -25,8 +25,7 @@ const GoogleSignin = () => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider)
       .then((res: any) => {
-        navigate("/");
-        if (!checkIfGmailIsAlreadyUsed(res?.email)) {
+        if (!checkIfGmailIsAlreadyUsed(res?.user?.email)) {
           setDoc(doc(db, "users", res?.user?.email), {
             dateCreated: serverTimestamp(),
             email: res?.user?.email,
@@ -34,6 +33,7 @@ const GoogleSignin = () => {
             notifications: [],
           });
         }
+        navigate("/");
         toast.success("Successfully logged in via gmail");
       })
       .catch((err) => {

@@ -58,7 +58,7 @@ const Signup = () => {
       setIsFormDirty(true);
       setIsLoading(false);
     } else {
-      if (!checkIfEmailIsAlreadyUsed) {
+      if (!checkIfEmailIsAlreadyUsed()) {
         try {
           await createUserWithEmailAndPassword(
             auth,
@@ -66,14 +66,14 @@ const Signup = () => {
             formData.password
           );
 
-          setDoc(doc(db, "users", formData.email), {
+          await setDoc(doc(db, "users", formData.email), {
             dateCreated: serverTimestamp(),
             email: formData.email,
             savedFavoritePets: [],
             notifications: [],
           });
 
-          updateProfile(auth?.currentUser as User, {
+          await updateProfile(auth?.currentUser as User, {
             displayName: formData.fullName,
           });
 
