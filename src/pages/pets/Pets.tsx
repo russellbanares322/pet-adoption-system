@@ -2,7 +2,7 @@ import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import { useFetchPets } from "../../api/pets/pets";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type FilterOptions = {
   color: string[];
@@ -48,23 +48,9 @@ const Pets = () => {
     setSearchInput(e.target.value);
   };
 
-  useEffect(() => {
-    if (
-      filterOptions.color.length > 0 ||
-      filterOptions.gender.length > 0 ||
-      filterOptions.type.length > 0
-    ) {
-      petsData.filter(
-        (data) =>
-          filterOptions.color.includes(data.petColor) ||
-          filterOptions.gender.includes(data.petGender) ||
-          filterOptions.type.includes(data.petType)
-      );
-    }
-  }, [filterOptions]);
-
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
+      {JSON.stringify(petsData?.length)}
       <div className="container flex-1 md:flex items-start justify-start gap-10 mt-1 md:mt-10">
         <div className="w-full md:w-72">
           <SidebarFilters
@@ -87,12 +73,17 @@ const Pets = () => {
                   if (
                     filterOptions.color.length > 0 ||
                     filterOptions.gender.length > 0 ||
-                    filterOptions.type.length > 0
+                    filterOptions.type.length > 0 ||
+                    searchInput.trim().length > 0
                   ) {
                     return (
                       filterOptions.color.includes(data.petColor) ||
                       filterOptions.gender.includes(data.petGender) ||
-                      filterOptions.type.includes(data.petType)
+                      filterOptions.type.includes(data.petType) ||
+                      data.petColor.toLowerCase().includes(searchInput) ||
+                      data.petGender.toLowerCase().includes(searchInput) ||
+                      data.petType.toLowerCase().includes(searchInput) ||
+                      data.petName.toLowerCase().includes(searchInput)
                     );
                   }
                   return data;
