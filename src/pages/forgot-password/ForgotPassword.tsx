@@ -34,6 +34,7 @@ const ForgotPassword = () => {
           `Reset password link is sent to ${email}, please check your email`
         );
         setIsLoading(false);
+        setEmail("");
       } catch (err: any) {
         toast.error(err?.message);
         setIsLoading(false);
