@@ -4,12 +4,12 @@ import { MdOutlinePassword } from "react-icons/md";
 import { PiEyeClosed, PiEye } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import AuthDivider from "../../components/auth-layout/AuthDivider";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import { auth } from "../../firebase/firebase-config";
 import { ClipLoader } from "react-spinners";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 
 const Login = () => {
   const navigate = useNavigate();

@@ -3,7 +3,6 @@ import { HiOutlineUser, HiOutlineMail } from "react-icons/hi";
 import { PiEyeClosed, PiEye } from "react-icons/pi";
 import { MdOutlinePassword } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import AuthDivider from "../../components/auth-layout/AuthDivider";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import {
   createUserWithEmailAndPassword,
@@ -15,6 +14,7 @@ import { ClipLoader } from "react-spinners";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
 import { useFetchUsers } from "../../api/users/users";
+import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 
 const Signup = () => {
   const navigate = useNavigate();

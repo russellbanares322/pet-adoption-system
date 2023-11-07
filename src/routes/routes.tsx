@@ -1,5 +1,5 @@
-import AuthLayout from "../components/auth-layout/AuthLayout";
 import ErrorPage from "../components/error-page/ErrorPage";
+import AuthLayout from "../layouts/auth-layout/AuthLayout";
 import AboutUs from "../pages/about-us/AboutUs";
 import MyAdoptions from "../pages/adoptions/MyAdoptions";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";

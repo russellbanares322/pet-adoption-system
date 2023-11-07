@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import AuthDivider from "../../components/auth-layout/AuthDivider";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import { auth } from "../../firebase/firebase-config";
 import { ClipLoader } from "react-spinners";
 import { sendPasswordResetEmail } from "firebase/auth";
+import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
