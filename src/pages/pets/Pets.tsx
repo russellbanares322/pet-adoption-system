@@ -21,6 +21,7 @@ const Pets = () => {
     type: [],
   });
   const [expandFilterOptions, setExpandFilterOptions] = useState(true);
+  const [searchInput, setSearchInput] = useState("");
 
   const handleExpandFilterOptions = () => {
     setExpandFilterOptions(!expandFilterOptions);
@@ -41,6 +42,10 @@ const Pets = () => {
         [filterOptionKey]: [...filterOptions[filterOptionKey], filterItem],
       });
     }
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
   };
 
   useEffect(() => {
@@ -66,6 +71,7 @@ const Pets = () => {
             expandFilterOptions={expandFilterOptions}
             handleExpandFilterOptions={handleExpandFilterOptions}
             filterData={filterData}
+            onInputChange={onInputChange}
           />
         </div>
         <div className="w-full">
