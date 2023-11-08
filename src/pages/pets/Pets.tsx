@@ -50,7 +50,6 @@ const Pets = () => {
 
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
-      {JSON.stringify(petsData?.length)}
       <div className="container flex-1 md:flex items-start justify-start gap-10 mt-1 md:mt-10">
         <div className="w-full md:w-72">
           <SidebarFilters

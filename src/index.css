@@ -10,7 +10,7 @@ body {
 
 /* Page layout */
 .container {
-  @apply w-full max-w-[1170px] mx-auto px-5;
+  @apply w-full max-w-[1240px] mx-auto px-5;
 }
 
 /* Button styles */
