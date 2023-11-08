@@ -14,6 +14,7 @@ import {
   HiChatAlt,
   HiOutlineChatAlt,
   HiOutlineHeart,
+  HiHeart,
   HiTrash,
 } from "react-icons/hi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
@@ -23,6 +24,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase/firebase-config";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import useAddToFavorites from "../hooks/useAddToFavorites";
 
 type PetDetailsModalProps = {
   open: boolean;
@@ -60,14 +62,32 @@ const PetDetailsModal = ({
   const { TextArea } = Input;
   const [commentInput, setCommentInput] = useState("");
   const commentInputRef = useRef<HTMLTextAreaElement>(null);
+  const { addPostToFavorites, isPostAlreadyAdded } = useAddToFavorites();
   const isCommentInputEmpty = commentInput.trim().length === 0;
   const { likePost } = useLikePost();
   const [user] = useAuthState(auth);
   const isUserLoggedIn = user;
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
+  const postIsSavedToFavorites = isPostAlreadyAdded(id);
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
   const commentsRef = doc(db, "listed-pets", id);
+  const modalTitle =
+    createdBy === user?.displayName ? "Your post" : `${createdBy}'s post`;
+  const dataToBeAddedInFavorites = {
+    id,
+    petName,
+    petAge,
+    petGender,
+    petColor,
+    petLocation,
+    petDescription,
+    likes,
+    comments,
+    petImage,
+    createdBy,
+    dateCreated,
+  };
 
   const handleChangeCommentInput = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -165,9 +185,10 @@ const PetDetailsModal = ({
   useEffect(() => {
     focusCommentInput();
   }, []);
+
   return (
     <Modal
-      title={`${createdBy}'s post`}
+      title={modalTitle}
       open={open}
       footer={[commentInputElement]}
       onCancel={onCancel}
@@ -232,8 +253,16 @@ const PetDetailsModal = ({
             {!isPostAlreadyLiked && <HiOutlineThumbUp size={20} />}
             <p>Like</p>
           </div>
-          <div className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1">
-            <HiOutlineHeart className="mt-1" size={20} />
+          <div
+            onClick={() => addPostToFavorites(dataToBeAddedInFavorites)}
+            className={`flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
+              postIsSavedToFavorites ? "text-red-600" : "text-black"
+            }`}
+          >
+            {!postIsSavedToFavorites && (
+              <HiOutlineHeart className="mt-1" size={20} />
+            )}
+            {postIsSavedToFavorites && <HiHeart className="mt-1" size={20} />}
             <p>Add to favorites</p>
           </div>
           <div

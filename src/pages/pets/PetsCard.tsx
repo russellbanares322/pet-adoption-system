@@ -131,7 +131,7 @@ const PetsCard = ({
       <p className="mt-2 px-2 py-1 text-sm text-center">
         Posted by:{" "}
         <span className="font-bold text-md">
-          {createdBy === "Admin Account" ? "Admin" : createdBy}
+          {createdBy === user?.displayName ? "You" : createdBy}
         </span>
       </p>
       <p className="mt-1 mb-4 italic text-center text-sm">
