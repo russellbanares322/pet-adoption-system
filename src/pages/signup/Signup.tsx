@@ -13,8 +13,8 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
-import { useFetchUsers } from "../../api/users/users";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
+import { useFetchUsers } from "../../api/users/users";
 
 const Signup = () => {
   const navigate = useNavigate();

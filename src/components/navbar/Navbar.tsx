@@ -26,6 +26,7 @@ const Navbar = () => {
   const isInAboutPage = location.pathname === "/about-us";
   const isInMyPostPage = location.pathname === "/my-post";
   const isInMyAdoptionsPage = location.pathname === "/my-adoptions";
+  const isInFavoritesPage = location.pathname === "/favorites";
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -76,6 +77,8 @@ const Navbar = () => {
       setActiveNavLink("MyPost");
     } else if (isInMyAdoptionsPage) {
       setActiveNavLink("MyAdoptions");
+    } else if (isInFavoritesPage) {
+      setActiveNavLink("Favorites");
     } else {
       setActiveNavLink("Home");
     }
@@ -116,6 +119,16 @@ const Navbar = () => {
           >
             Pets
           </li>
+          {!isAdminLoggedIn && isLoggedIn && (
+            <li
+              onClick={() => navigate("/favorites")}
+              className={`cursor-pointer relative ${
+                activeNavLink === "Favorites" && "active-nav-link"
+              }`}
+            >
+              Favorites
+            </li>
+          )}
           {!isAdminLoggedIn && isLoggedIn && (
             <li
               onClick={() => navigate("/my-post")}
@@ -219,6 +232,19 @@ const Navbar = () => {
             >
               Pets
             </li>
+            {!isAdminLoggedIn && isLoggedIn && (
+              <li
+                onClick={() => {
+                  navigate("/favorites");
+                  handleCloseNavbar();
+                }}
+                className={`cursor-pointer relative ${
+                  activeNavLink === "Favorites" && "mobile-active-nav-link"
+                }`}
+              >
+                Favorites
+              </li>
+            )}
             {!isAdminLoggedIn && isLoggedIn && (
               <li
                 onClick={() => {

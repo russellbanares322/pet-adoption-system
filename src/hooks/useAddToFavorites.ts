@@ -37,9 +37,10 @@ const useAddToFavorites = () => {
         if(isPostAlreadyAdded(postData.id)) {
            return  removePostToFavorites(postData.id)
         } 
-        return await updateDoc(userDataRef, {
+        return [await updateDoc(userDataRef, {
             savedFavoritePets: arrayUnion(postData)
-        })
+        }),
+        toast.success("Added to favorites")]
     }
 
     const removePostToFavorites = async (postId: string) => {

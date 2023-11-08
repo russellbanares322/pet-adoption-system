@@ -16,10 +16,10 @@ import {
 import React, { Key, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useFetchPet } from "../api/pets/pets";
 import { auth, db, storage } from "../firebase/firebase-config";
 import { petColors, petGender, petTypes } from "../data/pet-filter-options";
 import useUploadFileToDb from "../hooks/useUploadFileToDb";
+import { useFetchPet } from "../api/pets/pets";
 
 type FormInputs = {
   petName: string;

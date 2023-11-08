@@ -7,6 +7,7 @@ import PetAdoption from "../pages/dashboard/adoption/PetAdoption";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
 import RegisteredUsers from "../pages/dashboard/registered-users/RegisteredUsers";
+import SavedFavoritePosts from "../pages/favorites/SavedFavoritePosts";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 import MyPost from "../pages/post/MyPost";
@@ -51,6 +52,12 @@ export const routes = [
   {
     path: "/my-adoptions",
     element: <MyAdoptions />,
+    isProtected: true,
+    child: [],
+  },
+  {
+    path: "/favorites",
+    element: <SavedFavoritePosts />,
     isProtected: true,
     child: [],
   },
