@@ -13,6 +13,7 @@ import {
   HiThumbUp,
   HiChatAlt,
   HiOutlineChatAlt,
+  HiOutlineHeart,
   HiTrash,
 } from "react-icons/hi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
@@ -175,7 +176,7 @@ const PetDetailsModal = ({
       <hr />
       <div className="h-[34rem] overflow-y-scroll px-2">
         <p className="text-xs my-2">
-          {moment(dateCreated.toDate()).format("LLL")}
+          {moment(dateCreated?.toDate()).format("LLL")}
         </p>
         <img
           className="h-[20rem] w-full object-cover rounded-md border mb-5"
@@ -230,6 +231,10 @@ const PetDetailsModal = ({
             {isPostAlreadyLiked && <HiThumbUp size={20} />}
             {!isPostAlreadyLiked && <HiOutlineThumbUp size={20} />}
             <p>Like</p>
+          </div>
+          <div className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1">
+            <HiOutlineHeart className="mt-1" size={20} />
+            <p>Add to favorites</p>
           </div>
           <div
             onClick={focusCommentInput}
