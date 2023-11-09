@@ -23,6 +23,7 @@ const useAddToFavorites = () => {
     const [user] = useAuthState(auth);
     const {data: favoritePostsData} = useFetchFavoritePosts();
     const userDataRef = doc(db, "users", user?.email + "")
+    const isLoggedIn = user;
 
     const isPostAlreadyAdded = (postId: string) => {
         const isPostAlreadyAddedToFav = favoritePostsData?.some((data) => data.id === postId);
@@ -33,6 +34,7 @@ const useAddToFavorites = () => {
     }
 
     const addPostToFavorites = async(postData: DataToBeAddedToFavorites) => {
+        if(!isLoggedIn) return;
 
         if(isPostAlreadyAdded(postData.id)) {
            return  removePostToFavorites(postData.id)

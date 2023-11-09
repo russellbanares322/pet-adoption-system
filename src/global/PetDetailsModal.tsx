@@ -256,8 +256,8 @@ const PetDetailsModal = ({
           <div
             onClick={() => addPostToFavorites(dataToBeAddedInFavorites)}
             className={`flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
-              postIsSavedToFavorites ? "text-red-600" : "text-black"
-            }`}
+              isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
+            } ${postIsSavedToFavorites ? "text-red-600" : "text-black"}`}
           >
             {!postIsSavedToFavorites && (
               <HiOutlineHeart className="mt-1" size={20} />
