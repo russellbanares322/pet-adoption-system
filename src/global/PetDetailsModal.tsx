@@ -245,9 +245,9 @@ const PetDetailsModal = ({
         <div className="my-2 flex justify-around items-center w-full">
           <div
             onClick={() => likePost(id, likes)}
-            className={`flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
-              isPostAlreadyLiked ? "text-blue" : "text-black"
-            }`}
+            className={`flex justify-center items-center gap-2 text-[1rem]  hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
+              isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
+            } ${isPostAlreadyLiked ? "text-blue" : "text-black"}`}
           >
             {isPostAlreadyLiked && <HiThumbUp size={20} />}
             {!isPostAlreadyLiked && <HiOutlineThumbUp size={20} />}
@@ -255,7 +255,7 @@ const PetDetailsModal = ({
           </div>
           <div
             onClick={() => addPostToFavorites(dataToBeAddedInFavorites)}
-            className={`flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
+            className={`flex justify-center items-center gap-2 text-[1rem] hover:bg-gray-300 rounded-md w-full duration-150 py-1 ${
               isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
             } ${postIsSavedToFavorites ? "text-red-600" : "text-black"}`}
           >

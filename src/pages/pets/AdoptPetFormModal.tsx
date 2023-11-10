@@ -38,19 +38,24 @@ const AdoptPetFormModal = ({
     setIsDataReviewed(e.target.checked);
   };
 
+  const resetFormInputFields = () => {
+    form.resetFields();
+    setImgFile(null);
+  };
+
   const handleCloseModal = () => {
     onCancel();
-    form.resetFields();
+    resetFormInputFields();
   };
 
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
-      const petAdoptionsRef = collection(db, "pet-adoptions");
+      const petAdoptionsRef = collection(db, "adoption-applications");
       const imgUrl = await uploadImgToStorage(imgFile as File);
 
       if (imgUrl !== undefined) {
-        addDoc(petAdoptionsRef, {
+        await addDoc(petAdoptionsRef, {
           userId: user?.uid,
           userEmail: user?.email,
           firstName: values.firstName,
@@ -58,12 +63,17 @@ const AdoptPetFormModal = ({
           lastName: values.lastName,
           address: values.address,
           contactNumber: values.contactNumber,
+          status: "To be reviewed",
+          rejectionReason: "",
           petId: selectedId,
           dateCreated: serverTimestamp(),
-          image: imgUrl,
+          validIdImg: imgUrl,
         });
         setIsLoading(false);
-        toast.success("Successfully sent application");
+        toast.success(
+          "Successfully sent application, we'll just inform you if your application has been approved."
+        );
+        handleCloseModal();
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -88,10 +98,10 @@ const AdoptPetFormModal = ({
           Cancel
         </Button>,
         <Button
-          disabled={!isDataReviewed}
+          disabled={!isDataReviewed || isLoading}
           key="submit"
           className="primary-btn"
-          form="add-pet"
+          form="adopt-pet"
           type="primary"
           htmlType="submit"
         >
@@ -105,6 +115,7 @@ const AdoptPetFormModal = ({
         name="adopt-pet"
         initialValues={{ remember: true }}
         onFinish={onFinish}
+        form={form}
       >
         {/* First Name */}
         <Form.Item

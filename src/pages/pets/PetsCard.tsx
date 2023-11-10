@@ -15,6 +15,7 @@ import useLikePost from "../../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import AdoptPetFormModal from "./AdoptPetFormModal";
+import { useFetchAdoptionsByUserId } from "../../api/adoptions/useFetchMyAdoptions";
 
 const PetsCard = ({
   id,
@@ -30,14 +31,20 @@ const PetsCard = ({
   dateCreated,
   likes,
   comments,
+  userId,
 }: PetsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [openAdoptPetFormModal, setOpenAdoptPetFormModal] = useState(false);
+  const { data: adoptionsData } = useFetchAdoptionsByUserId();
   const [user] = useAuthState(auth);
   const isUserLoggedIn = user;
   const { likePost } = useLikePost();
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
+  const isPetAdoptedByLoggedUser = adoptionsData.some(
+    (data) => data.petId === id
+  );
+  const isLoggedUserOwnedPost = userId === user?.uid;
   const isPostAlreadyLiked = likes?.includes(user?.uid as string);
 
   const handleOpenDetailsModal = () => {
@@ -49,6 +56,7 @@ const PetsCard = ({
   };
 
   const handleOpenAdoptionModal = () => {
+    if (isPetAdoptedByLoggedUser) return;
     if (isUserLoggedIn && showAdoptButton) {
       setOpenAdoptPetFormModal(true);
     }
@@ -59,7 +67,9 @@ const PetsCard = ({
   };
 
   const adoptButtonTooltip = () => {
-    if (isUserLoggedIn && showAdoptButton) {
+    if (isPetAdoptedByLoggedUser) {
+      return "You have pending application for this pet";
+    } else if (isUserLoggedIn && showAdoptButton) {
       return "Adopt Pet";
     } else if (!isUserLoggedIn) {
       return "You need to signin first to adopt a pet";
@@ -95,11 +105,19 @@ const PetsCard = ({
           <span className="font-bold text-md">{commentsCount}</span>
         </div>
         <div className="flex items-center gap-1">
-          <Tooltip title="Like post">
+          <Tooltip
+            title={
+              isUserLoggedIn
+                ? "Like post"
+                : "You need to signin first to like this post"
+            }
+          >
             {!isPostAlreadyLiked && (
               <HiOutlineThumbUp
                 onClick={() => likePost(id, likes)}
-                className="cursor-pointer"
+                className={`${
+                  isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
+                }`}
                 size={20}
               />
             )}
@@ -115,18 +133,34 @@ const PetsCard = ({
         </div>
       </div>
       <div className="flex justify-between items-center px-5 mt-2">
-        <p className="mt-3 uppercase font-bold">{petName}</p>
-        <Tooltip title={adoptButtonTooltip()}>
-          <PiHandHeart
-            onClick={handleOpenAdoptionModal}
-            className={`${
-              showAdoptButton && isUserLoggedIn
-                ? "cursor-pointer"
-                : "cursor-not-allowed"
-            }`}
-            size={24}
-          />
-        </Tooltip>
+        <p
+          className={`mt-3 uppercase font-bold ${
+            isLoggedUserOwnedPost ? "mx-auto" : "mx-0"
+          }`}
+        >
+          {petName}
+        </p>
+        {!isLoggedUserOwnedPost && (
+          <Tooltip title={adoptButtonTooltip()}>
+            {!isPetAdoptedByLoggedUser && (
+              <PiHandHeart
+                onClick={handleOpenAdoptionModal}
+                className={`${
+                  showAdoptButton && isUserLoggedIn
+                    ? "cursor-pointer"
+                    : "cursor-not-allowed"
+                }`}
+                size={24}
+              />
+            )}
+            {isPetAdoptedByLoggedUser && (
+              <PiHandHeartFill
+                className="text-red-600 cursor-not-allowed"
+                size={24}
+              />
+            )}
+          </Tooltip>
+        )}
       </div>
       <p className="mt-2 px-2 py-1 text-sm text-center">
         Posted by:{" "}

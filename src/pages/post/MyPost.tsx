@@ -15,7 +15,8 @@ const MyPost = () => {
   const [openModal, setOpenModal] = useState(false);
   const [user] = useAuthState(auth);
   const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
-  const emptyPetsData = petsData.length === 0;
+  const petsDataTotalCount = petsData?.length;
+  const emptyPetsData = petsDataTotalCount === 0;
   const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
     openEditModal: false,
     selectedId: null,
@@ -46,10 +47,16 @@ const MyPost = () => {
     <div className="py-24 bg-whitesmoke min-h-screen h-full">
       <div className="container pt-10">
         {!emptyPetsData && (
-          <div className="flex justify-end items-end mt-3">
+          <h1 className="text-lg text-center">
+            Total Post: <span className="font-bold">{petsDataTotalCount}</span>
+          </h1>
+        )}
+        {!emptyPetsData && (
+          <div className="flex justify-end items-end mt-3 gap-3">
             <button onClick={handleOpenModal} className="button-filled">
               Add Post
             </button>
+            <button className="button-filled">People Adopted Your Pet</button>
           </div>
         )}
         {!isLoading && emptyPetsData && (
@@ -65,7 +72,11 @@ const MyPost = () => {
         {!isLoading && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
             {petsData?.map((pet) => (
-              <PetDisplay handleOpenEditModal={handleOpenEditModal} {...pet} />
+              <PetDisplay
+                key={pet.id}
+                handleOpenEditModal={handleOpenEditModal}
+                {...pet}
+              />
             ))}
           </div>
         )}

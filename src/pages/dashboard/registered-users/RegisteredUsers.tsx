@@ -4,6 +4,7 @@ import { useFetchUsers } from "../../../api/users/users";
 
 const RegisteredUsers = () => {
   const { data: registeredUsersData, isLoading } = useFetchUsers();
+  const totalRegisteredUsersCount = registeredUsersData?.length;
 
   const dataSource = registeredUsersData?.map((user, index) => ({
     id: index + 1,
@@ -30,6 +31,10 @@ const RegisteredUsers = () => {
   ];
   return (
     <div>
+      <h1 className="text-center text-lg">
+        Total Registered Users:{" "}
+        <span className="font-bold">{totalRegisteredUsersCount}</span>
+      </h1>
       <Table loading={isLoading} dataSource={dataSource} columns={columns} />
     </div>
   );
