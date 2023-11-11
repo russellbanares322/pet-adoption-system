@@ -1,11 +1,12 @@
 import { Popconfirm, Tag } from "antd";
-import { HiCheckCircle, HiTrash } from "react-icons/hi";
+import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
 import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
 import { deleteObject, ref } from "firebase/storage";
+import Button from "../../../global/Button";
 
 const PendingPostsCard = ({
   id,
@@ -94,7 +95,7 @@ const PendingPostsCard = ({
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
           <Popconfirm
             title="Approve post"
-            description="Are you sure want to approve this post?"
+            description="Did you already reviewed the post properly before approving?"
             okText="Yes"
             cancelText="No"
             onConfirm={approvePost}
@@ -102,13 +103,16 @@ const PendingPostsCard = ({
               className: "primary-btn",
             }}
           >
-            <button className="bg-green text-base px-2 py-1 rounded-sm hover:bg-green/90 flex items-center gap-2 disabled:bg-dark-blue/75">
-              Approve Post <HiCheckCircle size={20} />
-            </button>
+            <Button
+              type="primary"
+              styleClass="bg-green"
+              title="Approve Post"
+              icon={<CheckCircleOutlined />}
+            />
           </Popconfirm>
           <Popconfirm
-            title="Reject post"
-            description="Are you sure want to reject this post?"
+            title={`Reject the post of ${createdBy}`}
+            description="Are you sure you want to reject this post?"
             okText="Yes"
             cancelText="No"
             onConfirm={rejectPost}
@@ -116,9 +120,12 @@ const PendingPostsCard = ({
               className: "primary-btn",
             }}
           >
-            <button className=" bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2 disabled:bg-dark-blue/75">
-              Reject Post <HiTrash size={20} />
-            </button>
+            <Button
+              type="primary"
+              danger={true}
+              title="Reject Post"
+              icon={<DeleteOutlined />}
+            />
           </Popconfirm>
         </div>
       </div>

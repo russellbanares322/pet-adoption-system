@@ -1,5 +1,7 @@
 import { Collapse, Modal, Space, Tag } from "antd";
 import { AdoptionsData } from "../../api/adoptions/adoptions";
+import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import Button from "../../global/Button";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
@@ -25,10 +27,31 @@ const ApplicationsToBeReviewedModal = ({
   };
   const renderCollapseItemChildren = (data: AdoptionsData) => {
     return (
-      <div className="flex flex-col items-center justify-start">
-        {renderCollapseChildrenText("First Name", data.firstName)}
-        {renderCollapseChildrenText("Middle Name", data.middleName)}
-        {renderCollapseChildrenText("Last Name", data.lastName)}
+      <div>
+        <div className="flex flex-col items-start justify-start gap-2">
+          {renderCollapseChildrenText("First Name", data.firstName)}
+          {renderCollapseChildrenText("Middle Name", data.middleName)}
+          {renderCollapseChildrenText("Last Name", data.lastName)}
+          {renderCollapseChildrenText("Email", data.userEmail)}
+          {renderCollapseChildrenText("Address", data.address)}
+          {renderCollapseChildrenText("Contact Number", data.contactNumber)}
+        </div>
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <Button
+            type="primary"
+            size="small"
+            styleClass="bg-green"
+            title="Approve Application"
+            icon={<CheckCircleOutlined />}
+          />
+          <Button
+            type="primary"
+            size="small"
+            danger={true}
+            title="Reject Application"
+            icon={<DeleteOutlined />}
+          />
+        </div>
       </div>
     );
   };
