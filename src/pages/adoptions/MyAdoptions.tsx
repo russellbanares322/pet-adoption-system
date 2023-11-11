@@ -30,8 +30,8 @@ const MyAdoptions = () => {
         )}
         {!isLoading && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
-            {adoptionsData?.map((data, index) => (
-              <AdoptionCard index={index} key={data.id} {...data} />
+            {adoptionsData?.map((data) => (
+              <AdoptionCard key={data.id} {...data} />
             ))}
           </div>
         )}

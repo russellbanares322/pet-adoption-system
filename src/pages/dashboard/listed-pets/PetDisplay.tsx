@@ -1,11 +1,7 @@
 import { Popconfirm, Tag } from "antd";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import {
-  HiOutlineEye,
-  HiOutlinePencilAlt,
-  HiOutlineTrash,
-} from "react-icons/hi";
+import { HiOutlineEye } from "react-icons/hi";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db, storage } from "../../../firebase/firebase-config";
@@ -13,7 +9,8 @@ import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import { useState } from "react";
-
+import Button from "../../../global/Button";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 type PetsDisplayProps = {
   handleOpenEditModal: (petId: string) => void;
 } & PetsData;
@@ -107,17 +104,18 @@ const PetDisplay = ({
           </p>
         )}
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
-          <button
-            disabled={disableUpdateAndDeleteBtn}
-            onClick={() => handleOpenEditModal(id)}
-            className={`bg-dark-blue text-base px-2 py-1 rounded-sm hover:bg-dark-blue/90 flex items-center gap-2 disabled:bg-dark-blue/75 ${
+          <Button
+            type="primary"
+            title="Update"
+            icon={<EditOutlined />}
+            styleClass={`primary-btn ${
               disableUpdateAndDeleteBtn
                 ? "cursor-not-allowed"
                 : "cursor-pointer"
             }`}
-          >
-            Update <HiOutlinePencilAlt size={20} />
-          </button>
+            onClick={() => handleOpenEditModal(id)}
+            disabled={disableUpdateAndDeleteBtn}
+          />
           <Popconfirm
             title="Remove pet from list"
             description="Are you sure to delete this data?"
@@ -128,16 +126,18 @@ const PetDisplay = ({
               className: "primary-btn",
             }}
           >
-            <button
-              disabled={disableUpdateAndDeleteBtn}
-              className={`bg-red-600 text-base px-2 py-1 rounded-sm hover:bg-red-500 flex items-center gap-2 disabled:bg-red-400 ${
+            <Button
+              type="primary"
+              danger={true}
+              title="Delete"
+              icon={<DeleteOutlined />}
+              styleClass={`${
                 disableUpdateAndDeleteBtn
                   ? "cursor-not-allowed"
                   : "cursor-pointer"
               }`}
-            >
-              Delete <HiOutlineTrash size={20} />
-            </button>
+              disabled={disableUpdateAndDeleteBtn}
+            />
           </Popconfirm>
         </div>
       </div>

@@ -70,7 +70,7 @@ const AddEditPetFormModal = ({
         petColor: petDataForUpdate?.petColor,
         petType: petDataForUpdate?.petType,
         petLocation: petDataForUpdate?.petLocation,
-        showAdoptButton: petDataForUpdate?.showAdoptButton ? true : false,
+        showAdoptButton: petDataForUpdate?.showAdoptButton,
         petDescription: petDataForUpdate?.petDescription,
       });
       setImgFile(petDataForUpdate?.petImage);
