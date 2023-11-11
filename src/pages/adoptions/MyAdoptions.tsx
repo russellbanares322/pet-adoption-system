@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useFetchAdoptionsByUserId } from "../../api/adoptions/useFetchMyAdoptions";
+import { useFetchAdoptionsByUserId } from "../../api/adoptions/adoptions";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import AdoptionCard from "./AdoptionCard";
 

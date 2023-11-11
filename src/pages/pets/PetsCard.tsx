@@ -15,7 +15,7 @@ import useLikePost from "../../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import AdoptPetFormModal from "./AdoptPetFormModal";
-import { useFetchAdoptionsByUserId } from "../../api/adoptions/useFetchMyAdoptions";
+import { useFetchAdoptionsByUserId } from "../../api/adoptions/adoptions";
 
 const PetsCard = ({
   id,
@@ -191,6 +191,7 @@ const PetsCard = ({
         openModal={openAdoptPetFormModal}
         onCancel={handleCloseAdoptionModal}
         selectedId={id}
+        recipientId={userId}
       />
     </div>
   );

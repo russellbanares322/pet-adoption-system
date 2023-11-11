@@ -12,6 +12,7 @@ type AdoptPetFormModalProps = {
   openModal: boolean;
   onCancel: () => void;
   selectedId: string;
+  recipientId: string;
 };
 
 type FormInputs = {
@@ -26,6 +27,7 @@ const AdoptPetFormModal = ({
   openModal,
   onCancel,
   selectedId,
+  recipientId,
 }: AdoptPetFormModalProps) => {
   const [imgFile, setImgFile] = useState<File | null | string>(null);
   const [isDataReviewed, setIsDataReviewed] = useState(false);
@@ -65,6 +67,7 @@ const AdoptPetFormModal = ({
           contactNumber: values.contactNumber,
           status: "To be reviewed",
           rejectionReason: "",
+          recipientId: recipientId,
           petId: selectedId,
           dateCreated: serverTimestamp(),
           validIdImg: imgUrl,

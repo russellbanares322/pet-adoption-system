@@ -47,4 +47,35 @@ const useFetchAdoptionsByUserId = () => {
   
     return { data, isLoading };
   };
-  export {useFetchAdoptionsByUserId}
+
+  const useFetchApplicationsByRecipientId = () => {
+    const [data, setData] = useState<AdoptionsData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [user] = useAuthState(auth);
+  
+    const getAdoptionsByRecipientId = () => {
+      if(!user) return;
+      setIsLoading(true);
+      const adoptionsRef = collection(db, "adoption-applications");
+      const q = query(
+        adoptionsRef,
+        where("recipientId", "==", user?.uid),
+      );
+      onSnapshot(q, (snapshot) => {
+        const adoptionsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as AdoptionsData[];
+        setData(adoptionsData);
+        setIsLoading(false);
+      });
+    };
+  
+    useEffect(() => {
+      getAdoptionsByRecipientId();
+    }, []);
+  
+    return { data, isLoading };
+  };
+
+  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId}

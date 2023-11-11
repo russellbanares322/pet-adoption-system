@@ -3,8 +3,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchPostedPet } from "../../api/pets/pets";
 import { auth } from "../../firebase/firebase-config";
 import AddEditPetFormModal from "../../global/AddEditPetFormModal";
+import Button from "../../global/Button";
 import LoadingSpinner from "../../global/LoadingSpinner";
 import PetDisplay from "../dashboard/listed-pets/PetDisplay";
+import { CopyOutlined } from "@ant-design/icons";
+import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
+import ApplicationsToBeReviewedModal from "./ApplicationsToBeReviewedModal";
 
 type DataForUpdate = {
   openEditModal: boolean;
@@ -12,22 +16,34 @@ type DataForUpdate = {
 };
 
 const MyPost = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [openAddPetModal, setOpenAddPetModal] = useState(false);
+  const [openApplicationsModal, setOpenApplicationsModal] = useState(false);
   const [user] = useAuthState(auth);
-  const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
+  const { data: petsData, isLoading: isPostedPetDataPending } =
+    useFetchPostedPet(user?.uid);
+  const { data: applicationsData } = useFetchApplicationsByRecipientId();
+  const applicationsDataTotalCount = applicationsData?.length;
+  const isApplicationsDataEmpty = applicationsDataTotalCount === 0;
   const petsDataTotalCount = petsData?.length;
-  const emptyPetsData = petsDataTotalCount === 0;
+  const isPetsDataEmpty = petsDataTotalCount === 0;
   const [dataForUpdate, setDataForUpdate] = useState<DataForUpdate>({
     openEditModal: false,
     selectedId: null,
   });
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenApplicationsModal = () => {
+    setOpenApplicationsModal(true);
+  };
+
+  const handleCloseApplicationsModal = () => {
+    setOpenApplicationsModal(false);
+  };
+  const handleOpenAddPetModal = () => {
+    setOpenAddPetModal(true);
   };
 
   const handleCloseAddPetModal = () => {
-    setOpenModal(false);
+    setOpenAddPetModal(false);
   };
   const handleCloseEditPetModal = () => {
     setDataForUpdate({
@@ -46,30 +62,44 @@ const MyPost = () => {
   return (
     <div className="py-24 bg-whitesmoke min-h-screen h-full">
       <div className="container pt-10">
-        {!emptyPetsData && (
+        {!isPetsDataEmpty && (
           <h1 className="text-lg text-center">
             Total Post: <span className="font-bold">{petsDataTotalCount}</span>
           </h1>
         )}
-        {!emptyPetsData && (
-          <div className="flex justify-end items-end mt-3 gap-3">
-            <button onClick={handleOpenModal} className="button-filled">
-              Add Post
-            </button>
-            <button className="button-filled">People Adopted Your Pet</button>
+        {!isApplicationsDataEmpty && (
+          <div className="flex flex-col items-center gap-2 justify-center">
+            <h1 className="text-lg text-center">
+              Applications to be reviewed: <span className="font-bold">1</span>
+            </h1>
+            <Button
+              onClick={handleOpenApplicationsModal}
+              type="primary"
+              title="View Applications"
+              icon={<CopyOutlined />}
+              size="small"
+              styleClass="primary-btn"
+            />
           </div>
         )}
-        {!isLoading && emptyPetsData && (
+        {!isPetsDataEmpty && (
+          <div className="flex justify-end items-end mt-3">
+            <button onClick={handleOpenAddPetModal} className="button-filled">
+              Add Post
+            </button>
+          </div>
+        )}
+        {!isPostedPetDataPending && isPetsDataEmpty && (
           <div className="flex flex-col items-center justify-center gap-2">
             <h1 className="text-lg">You don't have an active post yet...</h1>
-            {emptyPetsData && (
-              <button onClick={handleOpenModal} className="button-filled">
+            {isPetsDataEmpty && (
+              <button onClick={handleOpenAddPetModal} className="button-filled">
                 Add Post
               </button>
             )}
           </div>
         )}
-        {!isLoading && (
+        {!isPostedPetDataPending && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
             {petsData?.map((pet) => (
               <PetDisplay
@@ -80,14 +110,22 @@ const MyPost = () => {
             ))}
           </div>
         )}
-        {isLoading && <LoadingSpinner title="Loading..." size="large" />}
+        {isPostedPetDataPending && (
+          <LoadingSpinner title="Loading..." size="large" />
+        )}
         <AddEditPetFormModal
           dbName="listed-pets"
           selectedId={dataForUpdate.selectedId}
           openEditModal={dataForUpdate.openEditModal}
-          openModal={openModal}
+          openModal={openAddPetModal}
           handleCloseAddPetModal={handleCloseAddPetModal}
           handleCloseEditPetModal={handleCloseEditPetModal}
+        />
+        <ApplicationsToBeReviewedModal
+          applicationsDataTotalCount={applicationsDataTotalCount}
+          applicationsData={applicationsData}
+          openModal={openApplicationsModal}
+          handleCloseApplicationsModal={handleCloseApplicationsModal}
         />
       </div>
     </div>

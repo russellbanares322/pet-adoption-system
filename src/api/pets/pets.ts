@@ -68,7 +68,7 @@ const useFetchPets = () => {
 };
 
 const useFetchPet = (id: string) => {
-  const [data, setData] = useState<Record<string, string>>({});
+  const [data, setData] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   const getSinglePet = async () => {

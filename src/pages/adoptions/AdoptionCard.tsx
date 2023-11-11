@@ -1,6 +1,9 @@
 import { Tag, Tooltip } from "antd";
 import Button from "../../global/Button";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { useFetchPet } from "../../api/pets/pets";
+import PetDetailsModal from "../../global/PetDetailsModal";
 
 type AdoptionCardProps = {
   petId: string;
@@ -8,6 +11,9 @@ type AdoptionCardProps = {
 };
 
 const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
+  const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const { data: petData, isLoading } = useFetchPet(petId);
+
   const getTagColor = () => {
     const upperCasedStatus = status.toUpperCase();
     if (upperCasedStatus === "TO BE REVIEWED") {
@@ -19,12 +25,25 @@ const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
     return "green";
   };
 
+  const handleOpenDetailsModal = () => {
+    if (!isLoading) {
+      setOpenPetDetailsModal(true);
+    }
+  };
+
+  const handleCloseDetailsModal = () => {
+    setOpenPetDetailsModal(false);
+  };
+
   return (
     <div className="shadow-md rounded-md p-2 border bg-white">
       <h1 className="text-center flex flex-col items-center">
         Application for post:{" "}
         <Tooltip title="View Post Details" placement="right">
-          <span className="font-bold underline cursor-pointer hover:text-blue">
+          <span
+            onClick={handleOpenDetailsModal}
+            className="font-bold underline cursor-pointer hover:text-blue"
+          >
             {petId}
           </span>
         </Tooltip>
@@ -49,6 +68,22 @@ const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
           icon={<DeleteOutlined />}
         />
       </div>
+      <PetDetailsModal
+        open={openPetDetailsModal}
+        onCancel={handleCloseDetailsModal}
+        id={petId}
+        petName={petData?.petName}
+        petAge={petData?.petAge}
+        petGender={petData?.petGender}
+        petColor={petData?.petColor}
+        petLocation={petData?.petLocation}
+        petDescription={petData?.petDescription}
+        likes={petData?.likes}
+        comments={petData?.comments}
+        petImage={petData?.petImage}
+        createdBy={petData?.createdBy}
+        dateCreated={petData?.dateCreated}
+      />
     </div>
   );
 };
