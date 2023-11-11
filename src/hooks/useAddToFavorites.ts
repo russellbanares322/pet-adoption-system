@@ -57,7 +57,7 @@ const useAddToFavorites = () => {
 
 
 
-  return {addPostToFavorites, isPostAlreadyAdded}
+  return {addPostToFavorites, isPostAlreadyAdded, removePostToFavorites}
 }
 
 export default useAddToFavorites
