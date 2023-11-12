@@ -90,7 +90,7 @@ const ApplicationsToBeReviewedModal = ({
 
   const collapseItems = applicationsData?.map((data, index) => ({
     key: index + 1,
-    label: <span className="font-bold">Application #{index + 1}</span>,
+    label: <span className="font-bold">Application # {index + 1}</span>,
     children: renderCollapseItemChildren(data),
   }));
   return (
