@@ -1,7 +1,13 @@
-import { Collapse, Modal, Space, Tag } from "antd";
+import { Collapse, Image, Modal, Space, Tag } from "antd";
 import { AdoptionsData } from "../../api/adoptions/adoptions";
-import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  DeleteOutlined,
+  FileImageOutlined,
+} from "@ant-design/icons";
 import Button from "../../global/Button";
+import { useState } from "react";
+import moment from "moment";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
@@ -17,6 +23,11 @@ const ApplicationsToBeReviewedModal = ({
   handleCloseApplicationsModal,
 }: ApplicationsToBeReviewedModalProps) => {
   const enableModalScroll = applicationsDataTotalCount > 6;
+  const [showImgPreview, setShowImgPreview] = useState(false);
+
+  const handleShowImgPreview = () => {
+    setShowImgPreview(true);
+  };
 
   const renderCollapseChildrenText = (label: string, value: string) => {
     return (
@@ -28,13 +39,23 @@ const ApplicationsToBeReviewedModal = ({
   const renderCollapseItemChildren = (data: AdoptionsData) => {
     return (
       <div>
+        <p className="text-center my-1 italic">
+          {moment(data.dateCreated?.toDate())?.fromNow()}
+        </p>
         <div className="flex flex-col items-start justify-start gap-2">
-          {renderCollapseChildrenText("First Name", data.firstName)}
-          {renderCollapseChildrenText("Middle Name", data.middleName)}
-          {renderCollapseChildrenText("Last Name", data.lastName)}
-          {renderCollapseChildrenText("Email", data.userEmail)}
-          {renderCollapseChildrenText("Address", data.address)}
-          {renderCollapseChildrenText("Contact Number", data.contactNumber)}
+          {renderCollapseChildrenText("First Name", data?.firstName)}
+          {renderCollapseChildrenText("Middle Name", data?.middleName)}
+          {renderCollapseChildrenText("Last Name", data?.lastName)}
+          {renderCollapseChildrenText("Email", data?.userEmail)}
+          {renderCollapseChildrenText("Address", data?.address)}
+          {renderCollapseChildrenText("Contact Number", data?.contactNumber)}
+          <Button
+            onClick={handleShowImgPreview}
+            size="small"
+            type="default"
+            title="View Sent Valid Id"
+            icon={<FileImageOutlined />}
+          />
         </div>
         <div className="flex justify-center items-center gap-2 mt-4">
           <Button
@@ -52,6 +73,17 @@ const ApplicationsToBeReviewedModal = ({
             icon={<DeleteOutlined />}
           />
         </div>
+        <Image
+          width={200}
+          style={{ display: "none" }}
+          preview={{
+            visible: showImgPreview,
+            src: data?.validIdImg,
+            onVisibleChange: (value) => {
+              setShowImgPreview(value);
+            },
+          }}
+        />
       </div>
     );
   };
