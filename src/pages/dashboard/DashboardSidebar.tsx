@@ -1,5 +1,6 @@
 import { Badge, Layout, Menu } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
 import { useFetchPendingPets } from "../../api/pets/pets";
 import { sidebarItems } from "./sidebarItems";
 
@@ -11,6 +12,9 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
   const { Sider } = Layout;
   const { Item } = Menu;
   const { data: petsData } = useFetchPendingPets();
+  const { data: adoptionsApplicationsData } =
+    useFetchApplicationsByRecipientId();
+  const adoptionsApplicationsCount = adoptionsApplicationsData.length;
   const pendingPetsCount = petsData.length;
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,6 +54,13 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
                 className="absolute top-2 right-2"
                 color="blue"
                 count={pendingPetsCount}
+              />
+            )}
+            {item.key === "pet-adoptions" && adoptionsApplicationsCount > 0 && (
+              <Badge
+                className="absolute top-2 right-2"
+                color="blue"
+                count={adoptionsApplicationsCount}
               />
             )}
           </Item>
