@@ -106,7 +106,7 @@ const PendingPostsCard = ({
             <Button
               type="primary"
               styleClass="bg-green"
-              title="Approve Post"
+              title="Approve"
               icon={<CheckCircleOutlined />}
             />
           </Popconfirm>
@@ -123,7 +123,7 @@ const PendingPostsCard = ({
             <Button
               type="primary"
               danger={true}
-              title="Reject Post"
+              title="Reject"
               icon={<DeleteOutlined />}
             />
           </Popconfirm>

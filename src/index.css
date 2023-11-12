@@ -3,22 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body
-  > div:nth-child(3)
-  > div
-  > div.ant-modal-wrap
-  > div
-  > div.ant-modal-content
-  > div.ant-modal-body
-  > div
-  > div
-  > div
-  > div.ant-collapse-content.ant-collapse-content-active
-  > div
-  > div
-  > div.flex.justify-center.items-center.gap-2.mt-4
-  > button.ant-btn.css-dev-only-do-not-override-pr0fja.ant-btn-primary.ant-btn-sm.bg-green:hover {
-  background-color: #73c54a;
+.ant-btn-primary.bg-green:hover {
+  background-color: #73c54a !important;
 }
 
 body {
