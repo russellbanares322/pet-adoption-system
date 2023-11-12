@@ -1,4 +1,4 @@
-import { collection, onSnapshot, Timestamp } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
 
@@ -17,7 +17,8 @@ const useFetchUsers = () => {
   const getUsers = () => {
     setIsLoading(true);
     const listedUsersRef = collection(db, "users");
-    onSnapshot(listedUsersRef, (snapshot) => {
+    const q = query(listedUsersRef,orderBy("dateCreated", "desc"))
+    onSnapshot(q, (snapshot) => {
       const usersData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

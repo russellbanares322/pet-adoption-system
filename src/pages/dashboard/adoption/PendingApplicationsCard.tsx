@@ -1,7 +1,11 @@
 import { AdoptionsData } from "../../../api/adoptions/adoptions";
-import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  DeleteOutlined,
+  FileImageOutlined,
+} from "@ant-design/icons";
 import Button from "../../../global/Button";
-import { Space, Tag, Tooltip } from "antd";
+import { Image, Space, Tag, Tooltip } from "antd";
 import { useState } from "react";
 import { useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
@@ -21,7 +25,12 @@ const PendingApplicationsCard = ({
   validIdImg,
 }: AdoptionsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const [showImgPreview, setShowImgPreview] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
+
+  const handleShowImgPreview = () => {
+    setShowImgPreview(true);
+  };
 
   const applicationsText = (label: string, value: string) => {
     return (
@@ -64,7 +73,13 @@ const PendingApplicationsCard = ({
         {applicationsText("Email", userEmail)}
         {applicationsText("Address", address)}
         {applicationsText("Contact Number", contactNumber)}
-        <p>View Sent Valid Id</p>
+        <Button
+          onClick={handleShowImgPreview}
+          size="small"
+          type="default"
+          title="View Sent Valid Id"
+          icon={<FileImageOutlined />}
+        />
       </div>
       <div className="flex justify-center items-center gap-2 mt-4">
         <Button
@@ -95,6 +110,17 @@ const PendingApplicationsCard = ({
         petImage={petData?.petImage}
         createdBy={petData?.createdBy}
         dateCreated={petData?.dateCreated}
+      />
+      <Image
+        width={200}
+        style={{ display: "none" }}
+        preview={{
+          visible: showImgPreview,
+          src: validIdImg,
+          onVisibleChange: (value) => {
+            setShowImgPreview(value);
+          },
+        }}
       />
     </div>
   );
