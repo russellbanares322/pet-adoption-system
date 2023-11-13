@@ -13,11 +13,14 @@ import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import Dropdown from "../dropdown/Dropdown";
 import { Badge } from "antd";
+import { useFetchNotifications } from "../../api/notifications/notifications";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [activeNavLink, setActiveNavLink] = useState("");
+  const { data: notificationsData } = useFetchNotifications();
+  const notificationsTotalCount = notificationsData?.length;
   const location = useLocation();
   const isInLoginPage = location.pathname === "/login";
   const isInSignupPage = location.pathname === "/sign-up";
@@ -178,7 +181,13 @@ const Navbar = () => {
           )}
           {isLoggedIn && (
             <div className="flex items-center justify-start ml-auto gap-2  py-2 pr-2">
-              <Badge color="#52C41A" className="mr-2 cursor-pointer" count={5}>
+              <Badge
+                color="#52C41A"
+                className="mr-2 cursor-pointer"
+                count={
+                  notificationsTotalCount === 0 ? null : notificationsTotalCount
+                }
+              >
                 <button>
                   <HiBell size={22} />
                 </button>
@@ -297,7 +306,12 @@ const Navbar = () => {
             )}
             <li className="flex items-center justify-start gap-2 cursor-pointer">
               Notifications
-              <Badge color="#52C41A" count={5}>
+              <Badge
+                color="#52C41A"
+                count={
+                  notificationsTotalCount === 0 ? null : notificationsTotalCount
+                }
+              >
                 <HiBell size={22} />
               </Badge>
             </li>
