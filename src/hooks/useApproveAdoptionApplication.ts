@@ -14,7 +14,7 @@ const useApproveAdoptionApplication = () => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
       setIsLoading(true)
         try {
-          await updateDoc(doc(db,"adoptions-application", applicationData.id), {
+          await updateDoc(doc(db,"adoption-applications", applicationData.id), {
             userId: applicationData.userId,
             userEmail:applicationData.userEmail,
             firstName: applicationData.firstName,
@@ -43,7 +43,7 @@ const useApproveAdoptionApplication = () => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
       setIsLoading(true)
         try {
-          await updateDoc(doc(db,"adoptions-application", applicationData.id), {
+          await updateDoc(doc(db,"adoption-applications", applicationData.id), {
             userId: applicationData.userId,
             userEmail:applicationData.userEmail,
             firstName: applicationData.firstName,

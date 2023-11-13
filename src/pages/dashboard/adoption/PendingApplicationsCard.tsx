@@ -69,7 +69,7 @@ const PendingApplicationsCard = ({
     });
   };
   const handleRejectApplicationInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setRejectApplicationOptions({
       ...rejectApplicationOptions,
@@ -204,6 +204,7 @@ const PendingApplicationsCard = ({
         rejectInputValue={rejectApplicationOptions.rejectInput}
         open={rejectApplicationOptions.openModal}
         onCancel={handleCloseRejectApplicationModal}
+        applicationData={applicationData}
       />
     </div>
   );
