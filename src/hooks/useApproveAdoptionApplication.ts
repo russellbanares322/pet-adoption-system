@@ -4,12 +4,15 @@ import { toast } from "react-toastify"
 import { AdoptionsData } from "../api/adoptions/adoptions"
 import {  auth, db } from "../firebase/firebase-config"
 import {v4 as uuidv4} from "uuid";
+import { useState } from "react"
 
 const useApproveAdoptionApplication = () => {
   const [user] = useAuthState(auth)
+  const [isLoading, setIsLoading] = useState(false);
   
   const approveApplication = async (applicationData: AdoptionsData) => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
+      setIsLoading(true)
         try {
           await updateDoc(doc(db,"adoptions-application", applicationData.id), {
             userId: applicationData.userId,
@@ -29,13 +32,16 @@ const useApproveAdoptionApplication = () => {
           })
           sendNotification(userDataRef, applicationData.petId, applicationData.id, "Approved")
           toast.success(`Successfully approved application for ${applicationData.id}`)
+          setIsLoading(false)
         } catch (err: any) {
           toast.error(err.message)
+          setIsLoading(false)
         }
     }
 
   const rejectApplication = async (applicationData: AdoptionsData, rejectionReason: string) => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
+      setIsLoading(true)
         try {
           await updateDoc(doc(db,"adoptions-application", applicationData.id), {
             userId: applicationData.userId,
@@ -55,8 +61,10 @@ const useApproveAdoptionApplication = () => {
           })
           sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
           toast.success(`Successfully approved application for ${applicationData.id}`)
+          setIsLoading(false)
         } catch (err: any) {
           toast.error(err.message)
+          setIsLoading(false)
         }
     }
 
@@ -79,7 +87,7 @@ const useApproveAdoptionApplication = () => {
         notifications: arrayUnion(notificationToBeSent)
       })
     }
-  return {approveApplication, rejectApplication}
+  return {approveApplication, rejectApplication, isLoading}
 }
 
 export default useApproveAdoptionApplication
