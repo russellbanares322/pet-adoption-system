@@ -111,7 +111,7 @@ const AddEditPetFormModal = ({
 
       if (!isDataForUpdate) {
         if (imgUrl !== undefined) {
-          addDoc(listedPetsRef, {
+          await addDoc(listedPetsRef, {
             userId: user?.uid,
             petName: values.petName,
             petAge: values.petAge,
@@ -133,7 +133,7 @@ const AddEditPetFormModal = ({
           toast.success("Successfully created post");
         }
       } else {
-        updateDoc(doc(db, "listed-pets", selectedId), {
+        await updateDoc(doc(db, "listed-pets", selectedId), {
           userId: user?.uid,
           petName: values.petName,
           petAge: values.petAge,

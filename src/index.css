@@ -6,7 +6,9 @@
 .ant-btn-primary.bg-green:hover {
   background-color: #73c54a !important;
 }
-
+.ant-btn-primary.bg-green:disabled:hover {
+  background-color: unset !important;
+}
 body {
   background-color: #fdfdfd;
   overflow-x: hidden;

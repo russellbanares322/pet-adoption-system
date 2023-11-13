@@ -13,8 +13,10 @@ export type AdoptionsData = {
     address: string,
     contactNumber: string,
     status: string,
+    recipientId:string,
     rejectionReason:string,
     petId: string,
+    dateUpdated?:Timestamp,
     dateCreated:Timestamp,
     validIdImg: string
 }

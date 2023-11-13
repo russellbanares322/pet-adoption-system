@@ -94,7 +94,7 @@ const PendingPostsCard = ({
         </p>
         <div className="flex items-center justify-center gap-2 mt-5 text-white">
           <Popconfirm
-            title="Approve post"
+            title="Approve Post"
             description="Did you already reviewed the post properly before approving?"
             okText="Yes"
             cancelText="No"
@@ -111,7 +111,7 @@ const PendingPostsCard = ({
             />
           </Popconfirm>
           <Popconfirm
-            title={`Reject the post of ${createdBy}`}
+            title="Reject Post"
             description="Are you sure you want to reject this post?"
             okText="Yes"
             cancelText="No"

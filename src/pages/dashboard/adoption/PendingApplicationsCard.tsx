@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import moment from "moment";
+import useApproveAdoptionApplication from "../../../hooks/useApproveAdoptionApplication";
 
 const PendingApplicationsCard = ({
   id,
@@ -21,12 +22,15 @@ const PendingApplicationsCard = ({
   address,
   contactNumber,
   petId,
+  status,
   dateCreated,
   validIdImg,
 }: AdoptionsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [showImgPreview, setShowImgPreview] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
+  const { approveApplication, rejectApplication } =
+    useApproveAdoptionApplication();
 
   const handleShowImgPreview = () => {
     setShowImgPreview(true);
@@ -35,11 +39,24 @@ const PendingApplicationsCard = ({
   const applicationsText = (label: string, value: string) => {
     return (
       <Space>
-        {label}: <Tag>{value}</Tag>
+        {label}:{" "}
+        <Tag color={label === "Status" ? getStatusTagColor(value) : ""}>
+          {value}
+        </Tag>
       </Space>
     );
   };
 
+  const getStatusTagColor = (status: string) => {
+    const lowercasedStatus = status.toLowerCase();
+    if (lowercasedStatus === "to be reviewed") {
+      return "orange";
+    } else if (lowercasedStatus === "rejected") {
+      return "red";
+    } else {
+      return "green";
+    }
+  };
   const handleOpenDetailsModal = () => {
     if (!isLoading) {
       setOpenPetDetailsModal(true);
@@ -66,7 +83,8 @@ const PendingApplicationsCard = ({
       <p className="text-center my-1 italic">
         {moment(dateCreated?.toDate())?.fromNow()}
       </p>
-      <div className="flex flex-col items-start justify-start gap-2">
+      <div className="flex flex-col items-start justify-start gap-2 mt-2">
+        {applicationsText("Status", status)}
         {applicationsText("First Name", firstName)}
         {applicationsText("Middle Name", middleName)}
         {applicationsText("Last Name", lastName)}
@@ -83,12 +101,14 @@ const PendingApplicationsCard = ({
       </div>
       <div className="flex justify-center items-center gap-2 mt-4">
         <Button
+          disabled={status === "Approved"}
           type="primary"
           styleClass="bg-green"
           title="Approve"
           icon={<CheckCircleOutlined />}
         />
         <Button
+          disabled={status === "Rejected"}
           type="primary"
           danger={true}
           title="Reject"
@@ -121,6 +141,7 @@ const PendingApplicationsCard = ({
             setShowImgPreview(value);
           },
         }}
+        fallback="https://placehold.co/600x400?text=Can't load image properly, it might be broken."
       />
     </div>
   );
