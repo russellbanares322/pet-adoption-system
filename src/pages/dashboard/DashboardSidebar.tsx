@@ -12,9 +12,10 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
   const { Sider } = Layout;
   const { Item } = Menu;
   const { data: petsData } = useFetchPendingPets();
-  const { data: adoptionsApplicationsData } =
-    useFetchApplicationsByRecipientId();
-  const adoptionsApplicationsCount = adoptionsApplicationsData.length;
+  const { data: applicationsData } = useFetchApplicationsByRecipientId();
+  const adoptionsApplicationsCount = applicationsData?.filter(
+    (data) => data.status.toLowerCase() === "to be reviewed"
+  ).length;
   const pendingPetsCount = petsData.length;
   const navigate = useNavigate();
   const location = useLocation();

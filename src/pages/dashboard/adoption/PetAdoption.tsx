@@ -5,7 +5,9 @@ import PendingApplicationsCard from "./PendingApplicationsCard";
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =
     useFetchApplicationsByRecipientId();
-  const applicationDataTotalCount = applicationsData?.length;
+  const applicationDataTotalCount = applicationsData?.filter(
+    (data) => data.status.toLowerCase() === "to be reviewed"
+  ).length;
   const isAdoptionsDataEmpty = applicationDataTotalCount === 0;
 
   return (
