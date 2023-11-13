@@ -5,6 +5,7 @@ import { AdoptionsData } from "../api/adoptions/adoptions"
 import {  auth, db } from "../firebase/firebase-config"
 import {v4 as uuidv4} from "uuid";
 import { useState } from "react"
+import moment from "moment"
 
 const useApproveAdoptionApplication = () => {
   const [user] = useAuthState(auth)
@@ -30,7 +31,7 @@ const useApproveAdoptionApplication = () => {
             dateUpdated: serverTimestamp(),
             validIdImg: applicationData.validIdImg,
           })
-          sendNotification(userDataRef, applicationData.petId, applicationData.id, "Approved")
+          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Approved")
           toast.success(`Successfully approved application for ${applicationData.id}`)
           setIsLoading(false)
         } catch (err: any) {
@@ -59,7 +60,7 @@ const useApproveAdoptionApplication = () => {
             dateUpdated: serverTimestamp(),
             validIdImg: applicationData.validIdImg,
           })
-          sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
+          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
           toast.success(`Successfully approved application for ${applicationData.id}`)
           setIsLoading(false)
         } catch (err: any) {
@@ -80,7 +81,7 @@ const useApproveAdoptionApplication = () => {
           userId: user?.uid,
           userFullName:user?.displayName
         },
-        dateUpdated: serverTimestamp()
+        dateUpdated: moment().format()
       }
 
       await updateDoc(userDataRef, {
