@@ -11,13 +11,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
-import Dropdown from "../dropdown/Dropdown";
 import { Badge } from "antd";
 import { useFetchNotifications } from "../../api/notifications/notifications";
+import type { MenuProps } from "antd";
+import MenuDropdown from "../dropdown/MenuDropdown";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [activeNavLink, setActiveNavLink] = useState("");
   const { data: notificationsData } = useFetchNotifications();
   const notificationsTotalCount = notificationsData?.length;
@@ -36,7 +36,6 @@ const Navbar = () => {
   const displayName = user?.displayName;
   const isAdminLoggedIn =
     user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
-
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
   };
@@ -45,23 +44,28 @@ const Navbar = () => {
     setOpenNav(false);
   };
 
-  const handleLogout = () => {
-    signOut(auth);
-    navigate("/");
+  const renderDropdownItemsLabel = (
+    title: string,
+    icon: React.ReactElement
+  ) => {
+    return (
+      <p className="flex items-center justify-start gap-2">
+        {icon}
+        {title}
+      </p>
+    );
+  };
+  const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
+    if (key === "1") {
+      signOut(auth);
+      navigate("/");
+    }
   };
 
-  const handleToggleDropdown = () => {
-    setOpenDropdown(!openDropdown);
-  };
-  const handleCloseDropdown = () => {
-    setOpenDropdown(false);
-  };
-
-  const dropdownItems = [
+  const dropdownItems: MenuProps["items"] = [
     {
-      name: "Logout",
-      action: handleLogout,
-      icon: <HiOutlineLogout />,
+      label: renderDropdownItemsLabel("Logout", <HiOutlineLogout />),
+      key: "1",
     },
   ];
 
@@ -194,16 +198,13 @@ const Navbar = () => {
               </Badge>
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
-                <HiOutlineChevronDown
-                  onClick={handleToggleDropdown}
-                  className="cursor-pointer"
-                  size={23}
-                />
-                <Dropdown
-                  onClose={handleCloseDropdown}
-                  dropdownItems={dropdownItems}
-                  open={openDropdown}
-                />
+                <MenuDropdown
+                  items={dropdownItems}
+                  itemActions={dropdownItemActions}
+                  trigger="click"
+                >
+                  <HiOutlineChevronDown className="cursor-pointer" size={23} />
+                </MenuDropdown>
               </li>
             </div>
           )}
@@ -329,16 +330,13 @@ const Navbar = () => {
             {isLoggedIn && (
               <li className="flex items-center gap-2 relative py-2">
                 Hi, {displayName}
-                <HiOutlineChevronDown
-                  onClick={handleToggleDropdown}
-                  className="cursor-pointer"
-                  size={23}
-                />
-                <Dropdown
-                  onClose={handleCloseDropdown}
-                  dropdownItems={dropdownItems}
-                  open={openDropdown}
-                />
+                <MenuDropdown
+                  items={dropdownItems}
+                  itemActions={dropdownItemActions}
+                  trigger="click"
+                >
+                  <HiOutlineChevronDown className="cursor-pointer" size={23} />
+                </MenuDropdown>
               </li>
             )}
           </ul>
