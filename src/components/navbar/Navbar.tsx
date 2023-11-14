@@ -44,7 +44,7 @@ const Navbar = () => {
     setOpenNav(false);
   };
 
-  const renderDropdownItemsLabel = (
+  const renderNavDropdownItemsLabel = (
     title: string,
     icon: React.ReactElement
   ) => {
@@ -62,9 +62,9 @@ const Navbar = () => {
     }
   };
 
-  const dropdownItems: MenuProps["items"] = [
+  const navDropdownItems: MenuProps["items"] = [
     {
-      label: renderDropdownItemsLabel("Logout", <HiOutlineLogout />),
+      label: renderNavDropdownItemsLabel("Logout", <HiOutlineLogout />),
       key: "1",
     },
   ];
@@ -192,14 +192,12 @@ const Navbar = () => {
                   notificationsTotalCount === 0 ? null : notificationsTotalCount
                 }
               >
-                <button>
-                  <HiBell size={22} />
-                </button>
+                <HiBell size={22} />
               </Badge>
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
                 <MenuDropdown
-                  items={dropdownItems}
+                  items={navDropdownItems}
                   itemActions={dropdownItemActions}
                   trigger="click"
                 >
@@ -331,7 +329,7 @@ const Navbar = () => {
               <li className="flex items-center gap-2 relative py-2">
                 Hi, {displayName}
                 <MenuDropdown
-                  items={dropdownItems}
+                  items={navDropdownItems}
                   itemActions={dropdownItemActions}
                   trigger="click"
                 >
