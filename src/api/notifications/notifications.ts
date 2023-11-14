@@ -22,7 +22,7 @@ const useFetchNotifications = () => {
     const [data, setData] = useState<NotificationData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [user] = useAuthState(auth);
-
+    const isUserLoggedIn = user;
     const getNotifications = () => {
         setIsLoading(true);
         const userRef = doc(db, "users", user?.email + "");
@@ -34,8 +34,10 @@ const useFetchNotifications = () => {
     }
 
     useEffect(() => {
-        getNotifications()
-    }, [])
+        if(isUserLoggedIn){
+            getNotifications()
+        }
+    }, [isUserLoggedIn])
     
     
     return {data, isLoading}
