@@ -17,6 +17,7 @@ import type { MenuProps } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import { useFetchPets } from "../../api/pets/pets";
 import moment, { Moment } from "moment";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -39,6 +40,7 @@ const Navbar = () => {
   const displayName = user?.displayName;
   const isAdminLoggedIn =
     user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
   };
@@ -95,7 +97,7 @@ const Navbar = () => {
 
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
-      alert("Wow");
+      toast.warning("This feature is currently under development.");
     }
   };
 
@@ -244,7 +246,6 @@ const Navbar = () => {
                   items={notificationDropdownItems}
                   itemActions={notificationsDropdownItemActions}
                   trigger="click"
-                  isSelectable={true}
                 >
                   <HiBell className="cursor-pointer" size={22} />
                 </MenuDropdown>
@@ -370,7 +371,6 @@ const Navbar = () => {
                   items={notificationDropdownItems}
                   itemActions={notificationsDropdownItemActions}
                   trigger="click"
-                  isSelectable={true}
                 >
                   <HiBell className="cursor-pointer" size={22} />
                 </MenuDropdown>
