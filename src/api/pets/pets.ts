@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase-config";
+import { TStatus } from "../../global/types";
 
 export type Comments = {
   userId: string;
@@ -30,7 +31,7 @@ export type PetsData = {
   showAdoptButton: boolean;
   petDescription: string;
   petImage: string;
-  status?: string;
+  status?: TStatus;
   createdBy: string;
   dateCreated: Timestamp;
   likes: string[];

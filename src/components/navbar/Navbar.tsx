@@ -192,7 +192,13 @@ const Navbar = () => {
                   notificationsTotalCount === 0 ? null : notificationsTotalCount
                 }
               >
-                <HiBell className="cursor-pointer" size={22} />
+                <MenuDropdown
+                  items={navDropdownItems}
+                  itemActions={dropdownItemActions}
+                  trigger="click"
+                >
+                  <HiBell className="cursor-pointer" size={22} />
+                </MenuDropdown>
               </Badge>
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
