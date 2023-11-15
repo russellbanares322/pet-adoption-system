@@ -96,9 +96,7 @@ const Navbar = () => {
   };
 
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
-    if (key === "1") {
-      toast.warning("This feature is currently under development.");
-    }
+    toast.warning("This feature is currently under development.");
   };
 
   const navDropdownItems: MenuProps["items"] = [

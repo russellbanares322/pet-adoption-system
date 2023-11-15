@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query, Timestamp, where } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase/firebase-config";
@@ -62,6 +62,7 @@ const useFetchAdoptionsByUserId = () => {
       const q = query(
         adoptionsRef,
         where("recipientId", "==", user?.uid),
+        orderBy("dateCreated", "desc")
       );
       onSnapshot(q, (snapshot) => {
         const adoptionsData = snapshot.docs.map((doc) => ({
