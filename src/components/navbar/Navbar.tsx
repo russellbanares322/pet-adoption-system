@@ -15,11 +15,14 @@ import { Badge } from "antd";
 import { useFetchNotifications } from "../../api/notifications/notifications";
 import type { MenuProps } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
+import { useFetchPets } from "../../api/pets/pets";
+import moment, { Moment } from "moment";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [activeNavLink, setActiveNavLink] = useState("");
   const { data: notificationsData } = useFetchNotifications();
+  const { data: petsData } = useFetchPets();
   const notificationsTotalCount = notificationsData?.length;
   const location = useLocation();
   const isInLoginPage = location.pathname === "/login";
@@ -55,10 +58,44 @@ const Navbar = () => {
       </p>
     );
   };
+
+  const getPetImage = (petId: string) => {
+    const petImage = petsData?.find((data) => data.id === petId)?.petImage;
+    return petImage;
+  };
+
+  const renderNotificationDropdownItemsLabel = (
+    petId: string,
+    status: string,
+    dateUpdated: Moment
+  ) => {
+    return (
+      <div className="flex items-center justify-start gap-3">
+        <img
+          className="h-10 w-10 object-cover rounded-md"
+          src={getPetImage(petId)}
+        />
+        <div>
+          <p className="text-sm">
+            Your application for <span className="font-bold">{petId}</span> has
+            been <span className="font-bold">{status}</span>
+          </p>
+          <p className="text-xs text-blue">{moment(dateUpdated).fromNow()}</p>
+        </div>
+      </div>
+    );
+  };
+
   const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (key === "1") {
       signOut(auth);
       navigate("/");
+    }
+  };
+
+  const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
+    if (key === "1") {
+      alert("Wow");
     }
   };
 
@@ -68,6 +105,17 @@ const Navbar = () => {
       key: "1",
     },
   ];
+
+  const notificationDropdownItems: MenuProps["items"] = notificationsData?.map(
+    (data, index) => ({
+      label: renderNotificationDropdownItemsLabel(
+        data?.petId,
+        data?.status,
+        data?.dateUpdated
+      ),
+      key: `${index + 1}`,
+    })
+  );
 
   useEffect(() => {
     if (isInLoginPage) {
@@ -193,9 +241,10 @@ const Navbar = () => {
                 }
               >
                 <MenuDropdown
-                  items={navDropdownItems}
-                  itemActions={dropdownItemActions}
+                  items={notificationDropdownItems}
+                  itemActions={notificationsDropdownItemActions}
                   trigger="click"
+                  isSelectable={true}
                 >
                   <HiBell className="cursor-pointer" size={22} />
                 </MenuDropdown>
@@ -318,9 +367,10 @@ const Navbar = () => {
                 }
               >
                 <MenuDropdown
-                  items={navDropdownItems}
-                  itemActions={dropdownItemActions}
+                  items={notificationDropdownItems}
+                  itemActions={notificationsDropdownItemActions}
                   trigger="click"
+                  isSelectable={true}
                 >
                   <HiBell className="cursor-pointer" size={22} />
                 </MenuDropdown>
