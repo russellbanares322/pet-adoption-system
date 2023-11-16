@@ -238,17 +238,19 @@ const Navbar = () => {
                 itemActions={notificationsDropdownItemActions}
                 trigger="click"
               >
-                <Badge
-                  color="#52C41A"
-                  className="mr-2 cursor-pointer"
-                  count={
-                    notificationsTotalCount === 0
-                      ? null
-                      : notificationsTotalCount
-                  }
-                >
-                  <HiBell className="cursor-pointer" size={22} />
-                </Badge>
+                <div className="cursor-pointer">
+                  <Badge
+                    color="#52C41A"
+                    className="mr-2"
+                    count={
+                      notificationsTotalCount === 0
+                        ? null
+                        : notificationsTotalCount
+                    }
+                  >
+                    <HiBell className="cursor-pointer" size={22} />
+                  </Badge>
+                </div>
               </MenuDropdown>
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
@@ -365,17 +367,19 @@ const Navbar = () => {
                 itemActions={notificationsDropdownItemActions}
                 trigger="click"
               >
-                Notifications
-                <Badge
-                  color="#52C41A"
-                  count={
-                    notificationsTotalCount === 0
-                      ? null
-                      : notificationsTotalCount
-                  }
-                >
-                  <HiBell className="cursor-pointer" size={22} />
-                </Badge>
+                <div className="flex items-center justify-start gap-2">
+                  <p>Notifications</p>
+                  <Badge
+                    color="#52C41A"
+                    count={
+                      notificationsTotalCount === 0
+                        ? null
+                        : notificationsTotalCount
+                    }
+                  >
+                    <HiBell className="cursor-pointer" size={22} />
+                  </Badge>
+                </div>
               </MenuDropdown>
             </li>
             {!isLoggedIn && (
