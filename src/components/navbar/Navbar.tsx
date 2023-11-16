@@ -25,6 +25,7 @@ const Navbar = () => {
   const { data: notificationsData } = useFetchNotifications();
   const { data: petsData } = useFetchPets();
   const notificationsTotalCount = notificationsData?.length;
+  const allowNotificationMenuToShow = notificationsTotalCount;
   const location = useLocation();
   const isInLoginPage = location.pathname === "/login";
   const isInSignupPage = location.pathname === "/sign-up";
@@ -236,9 +237,15 @@ const Navbar = () => {
               <MenuDropdown
                 items={notificationDropdownItems}
                 itemActions={notificationsDropdownItemActions}
-                trigger="click"
+                trigger={allowNotificationMenuToShow ? "click" : "contextMenu"}
               >
-                <div className="cursor-pointer">
+                <div
+                  className={`${
+                    allowNotificationMenuToShow
+                      ? "cursor-pointer"
+                      : "pointer-events-none"
+                  } pt-1`}
+                >
                   <Badge
                     color="#52C41A"
                     className="mr-2"

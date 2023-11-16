@@ -2,7 +2,7 @@ import { Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import React from "react";
 
-type TriggerOptions = "click" | "hover";
+type TriggerOptions = "click" | "hover" | "contextMenu";
 type MenuDropdownPlacements =
   | "bottom"
   | "bottomLeft"
