@@ -233,21 +233,23 @@ const Navbar = () => {
           )}
           {isLoggedIn && (
             <div className="flex items-center justify-start ml-auto gap-2  py-2 pr-2">
-              <Badge
-                color="#52C41A"
-                className="mr-2 cursor-pointer"
-                count={
-                  notificationsTotalCount === 0 ? null : notificationsTotalCount
-                }
+              <MenuDropdown
+                items={notificationDropdownItems}
+                itemActions={notificationsDropdownItemActions}
+                trigger="click"
               >
-                <MenuDropdown
-                  items={notificationDropdownItems}
-                  itemActions={notificationsDropdownItemActions}
-                  trigger="click"
+                <Badge
+                  color="#52C41A"
+                  className="mr-2 cursor-pointer"
+                  count={
+                    notificationsTotalCount === 0
+                      ? null
+                      : notificationsTotalCount
+                  }
                 >
                   <HiBell className="cursor-pointer" size={22} />
-                </MenuDropdown>
-              </Badge>
+                </Badge>
+              </MenuDropdown>
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
                 <MenuDropdown
@@ -358,21 +360,23 @@ const Navbar = () => {
               </li>
             )}
             <li className="flex items-center justify-start gap-2 cursor-pointer">
-              Notifications
-              <Badge
-                color="#52C41A"
-                count={
-                  notificationsTotalCount === 0 ? null : notificationsTotalCount
-                }
+              <MenuDropdown
+                items={notificationDropdownItems}
+                itemActions={notificationsDropdownItemActions}
+                trigger="click"
               >
-                <MenuDropdown
-                  items={notificationDropdownItems}
-                  itemActions={notificationsDropdownItemActions}
-                  trigger="click"
+                Notifications
+                <Badge
+                  color="#52C41A"
+                  count={
+                    notificationsTotalCount === 0
+                      ? null
+                      : notificationsTotalCount
+                  }
                 >
                   <HiBell className="cursor-pointer" size={22} />
-                </MenuDropdown>
-              </Badge>
+                </Badge>
+              </MenuDropdown>
             </li>
             {!isLoggedIn && (
               <li
