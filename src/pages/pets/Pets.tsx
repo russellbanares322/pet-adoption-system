@@ -1,8 +1,10 @@
 import PetsCard from "./PetsCard";
 import SidebarFilters from "./SidebarFilters";
 import LoadingSpinner from "../../global/LoadingSpinner";
-import { useFetchPets } from "../../api/pets/pets";
-import { useState } from "react";
+import { PetsData, useFetchPets } from "../../api/pets/pets";
+import { useEffect, useState } from "react";
+import usePaginate from "../../hooks/usePaginate";
+import { Pagination } from "antd";
 
 type FilterOptions = {
   color: string[];
@@ -14,14 +16,19 @@ export type FilterOptionKey = keyof FilterOptions;
 
 const Pets = () => {
   const { data: petsData, isLoading } = useFetchPets();
-  const totalPostedPetCount = petsData.length;
+  const [filteredPetsData, setFilteredPetsData] = useState<PetsData[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     color: [],
     gender: [],
     type: [],
   });
-  const [expandFilterOptions, setExpandFilterOptions] = useState(true);
   const [searchInput, setSearchInput] = useState("");
+  const pageData: PetsData[] =
+    filteredPetsData?.length > 0 ? filteredPetsData : petsData;
+  const totalPostedPetCount = petsData.length;
+  const { pageSize, currentItems, onPageChange, totalItemsCount } =
+    usePaginate<PetsData>({ pageData });
+  const [expandFilterOptions, setExpandFilterOptions] = useState(true);
 
   const handleExpandFilterOptions = () => {
     setExpandFilterOptions(!expandFilterOptions);
@@ -48,6 +55,26 @@ const Pets = () => {
     setSearchInput(e.target.value);
   };
 
+  useEffect(() => {
+    const filteredPetsData = petsData?.filter(
+      (data) =>
+        filterOptions.color.includes(data.petColor) ||
+        filterOptions.gender.includes(data.petGender) ||
+        filterOptions.type.includes(data.petType) ||
+        data.petColor.toLowerCase().includes(searchInput) ||
+        data.petGender.toLowerCase().includes(searchInput) ||
+        data.petType.toLowerCase().includes(searchInput) ||
+        data.petName.toLowerCase().includes(searchInput)
+    );
+
+    setFilteredPetsData(filteredPetsData);
+  }, [
+    filterOptions.color,
+    filterOptions.gender,
+    filterOptions.type,
+    searchInput,
+  ]);
+
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
       <div className="container flex-1 md:flex items-start justify-start gap-10 mt-1 md:mt-10">
@@ -60,39 +87,34 @@ const Pets = () => {
           />
         </div>
         <div className="w-full">
-          <div className="text-center mt-3 md:mt-0 mb-2">
-            <p className="font-semibold">
-              {totalPostedPetCount} {totalPostedPetCount > 1 ? "ITEMS" : "ITEM"}
-            </p>
-          </div>
+          {!isLoading && totalPostedPetCount > 0 && (
+            <div className="text-center mt-3 md:mt-0 mb-2">
+              <p className="font-semibold">
+                {totalPostedPetCount}{" "}
+                {totalPostedPetCount > 1 ? "ITEMS" : "ITEM"}
+              </p>
+            </div>
+          )}
+          {!isLoading && totalPostedPetCount > 0 && (
+            <div className="flex items-end justify-end">
+              <Pagination
+                defaultCurrent={1}
+                onChange={onPageChange}
+                size="default"
+                total={totalItemsCount}
+                pageSize={pageSize}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
             {petsData.length > 0 &&
-              petsData
-                .filter((data) => {
-                  if (
-                    filterOptions.color.length > 0 ||
-                    filterOptions.gender.length > 0 ||
-                    filterOptions.type.length > 0 ||
-                    searchInput.trim().length > 0
-                  ) {
-                    return (
-                      filterOptions.color.includes(data.petColor) ||
-                      filterOptions.gender.includes(data.petGender) ||
-                      filterOptions.type.includes(data.petType) ||
-                      data.petColor.toLowerCase().includes(searchInput) ||
-                      data.petGender.toLowerCase().includes(searchInput) ||
-                      data.petType.toLowerCase().includes(searchInput) ||
-                      data.petName.toLowerCase().includes(searchInput)
-                    );
-                  }
-                  return data;
-                })
-                .map((pet) => <PetsCard key={pet.id} {...pet} />)}
+              currentItems.map((pet) => <PetsCard key={pet.id} {...pet} />)}
           </div>
           {isLoading && (
             <LoadingSpinner title="Fetching pets..." size="large" />
           )}
-          {!isLoading && petsData.length === 0 && (
+          {!isLoading && totalPostedPetCount === 0 && (
             <h1 className="flex justify-center items-center h-96 font-bold text-lg">
               No added pets yet...
             </h1>

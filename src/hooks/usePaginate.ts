@@ -1,20 +1,26 @@
-import { useState } from "react"
+import  { useState } from "react"
 
 const ITEMS_PER_PAGE = 6;
 
-const usePaginate = (pageData: Record<string, any>) => {
-    const [itemOffset, setItemOffset] = useState(0);
-    const pageDataTotalCount = pageData.length
-    const endOffset = itemOffset * ITEMS_PER_PAGE
-    const paginatedItems = pageData.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(pageDataTotalCount / ITEMS_PER_PAGE);
+type UsePaginateProps<T> = {
+  pageData: T[]
+}
 
-    const handlePageClick = (event:any) => {
-        const newOffset = (event.selected * ITEMS_PER_PAGE) % pageDataTotalCount
-        setItemOffset(newOffset)
-    }
 
-  return {paginatedItems, handlePageClick, pageCount}
+const usePaginate = <T>({pageData}: UsePaginateProps<T>) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalItemsCount = pageData.length;
+  const pageSize = ITEMS_PER_PAGE;
+
+  const onPageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentItems = pageData.slice(startIndex, endIndex);
+
+  return {pageSize, currentItems, onPageChange, totalItemsCount}
 }
 
 export default usePaginate

@@ -65,7 +65,7 @@ const useFetchPets = () => {
     getPets();
   }, []);
 
-  return { data, isLoading };
+  return { data, isLoading};
 };
 
 const useFetchPet = (id: string) => {
