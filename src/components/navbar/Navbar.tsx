@@ -255,7 +255,7 @@ const Navbar = () => {
                         : notificationsTotalCount
                     }
                   >
-                    <HiBell className="cursor-pointer" size={22} />
+                    <HiBell className="cursor-pointer" size={21} />
                   </Badge>
                 </div>
               </MenuDropdown>
@@ -384,7 +384,7 @@ const Navbar = () => {
                         : notificationsTotalCount
                     }
                   >
-                    <HiBell className="cursor-pointer" size={22} />
+                    <HiBell className="cursor-pointer" size={21} />
                   </Badge>
                 </div>
               </MenuDropdown>

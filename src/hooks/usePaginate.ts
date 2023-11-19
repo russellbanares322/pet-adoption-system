@@ -7,7 +7,7 @@ type UsePaginateProps<T> = {
 }
 
 
-const usePaginate = <T>({pageData}: UsePaginateProps<T>) => {
+const usePaginate = <T>({ pageData }: UsePaginateProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalItemsCount = pageData.length;
   const pageSize = ITEMS_PER_PAGE;
