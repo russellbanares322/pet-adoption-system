@@ -2,7 +2,6 @@ import { useFetchApplicationsByRecipientId } from "../../../api/adoptions/adopti
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import PendingApplicationsCard from "./PendingApplicationsCard";
 import CountUp from "react-countup";
-import { Key } from "react";
 
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =

@@ -95,18 +95,7 @@ const Pets = () => {
               </p>
             </div>
           )}
-          {!isLoading && totalPostedPetCount > 0 && (
-            <div className="flex items-end justify-end">
-              <Pagination
-                defaultCurrent={1}
-                onChange={onPageChange}
-                size="default"
-                total={totalItemsCount}
-                pageSize={pageSize}
-                showSizeChanger={false}
-              />
-            </div>
-          )}
+
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
             {petsData.length > 0 &&
               currentItems.map((pet) => <PetsCard key={pet.id} {...pet} />)}
@@ -121,6 +110,18 @@ const Pets = () => {
           )}
         </div>
       </div>
+      {!isLoading && totalPostedPetCount > 0 && (
+        <div className="flex items-center justify-center mt-5">
+          <Pagination
+            defaultCurrent={1}
+            onChange={onPageChange}
+            size="default"
+            total={totalItemsCount}
+            pageSize={pageSize}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
