@@ -31,7 +31,7 @@ const RegisteredUsers = () => {
   ];
   return (
     <div>
-      <h1 className="text-center text-lg">
+      <h1 className="text-center text-lg my-3">
         Total Registered Users:{" "}
         <span className="font-bold">{totalRegisteredUsersCount}</span>
       </h1>

@@ -1,12 +1,20 @@
-import { useFetchApplicationsByRecipientId } from "../../../api/adoptions/adoptions";
+import {
+  AdoptionsData,
+  useFetchApplicationsByRecipientId,
+} from "../../../api/adoptions/adoptions";
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import PendingApplicationsCard from "./PendingApplicationsCard";
 import CountUp from "react-countup";
+import usePaginate from "../../../hooks/usePaginate";
+import { Pagination } from "antd";
 
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =
     useFetchApplicationsByRecipientId();
   const applicationDataTotalCount = applicationsData?.length;
+  const pageData: AdoptionsData[] = applicationsData;
+  const { pageSize, currentItems, onPageChange, totalItemsCount } =
+    usePaginate<AdoptionsData>({ pageData });
   const toBeReviewedApplicationTotalCount = applicationsData?.filter(
     (data) => data.status.toLowerCase() === "to be reviewed"
   ).length;
@@ -66,7 +74,7 @@ const PetAdoption = () => {
       {!isLoading && (
         <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7 w-full">
           {!isAdoptionsDataEmpty &&
-            applicationsData.map((data) => (
+            currentItems.map((data) => (
               <PendingApplicationsCard key={data.id} {...data} />
             ))}
         </div>
@@ -76,6 +84,18 @@ const PetAdoption = () => {
         <h1 className="flex justify-center items-center h-96 font-bold text-lg">
           No pending adoption applications yet...
         </h1>
+      )}
+      {!isLoading && applicationDataTotalCount > 0 && (
+        <div className="flex items-center justify-center mt-5">
+          <Pagination
+            defaultCurrent={1}
+            onChange={onPageChange}
+            size="default"
+            total={totalItemsCount}
+            pageSize={pageSize}
+            showSizeChanger={false}
+          />
+        </div>
       )}
     </div>
   );
