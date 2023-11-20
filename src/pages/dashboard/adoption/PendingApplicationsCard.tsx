@@ -101,6 +101,7 @@ const PendingApplicationsCard = ({
       return "green";
     }
   };
+
   const handleOpenDetailsModal = () => {
     if (!isLoading) {
       setOpenPetDetailsModal(true);

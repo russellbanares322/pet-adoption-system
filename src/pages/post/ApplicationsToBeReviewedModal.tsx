@@ -22,20 +22,35 @@ const ApplicationsToBeReviewedModal = ({
   openModal,
   handleCloseApplicationsModal,
 }: ApplicationsToBeReviewedModalProps) => {
-  const enableModalScroll = applicationsDataTotalCount > 6;
+  const enableModalScroll = applicationsDataTotalCount > 1;
   const [showImgPreview, setShowImgPreview] = useState(false);
 
   const handleShowImgPreview = () => {
     setShowImgPreview(true);
   };
 
+  const getStatusTagColor = (status: string) => {
+    const lowercasedStatus = status.toLowerCase();
+    if (lowercasedStatus === "to be reviewed") {
+      return "orange";
+    } else if (lowercasedStatus === "rejected") {
+      return "red";
+    } else {
+      return "green";
+    }
+  };
+
   const renderCollapseChildrenText = (label: string, value: string) => {
     return (
       <Space>
-        {label}: <Tag>{value}</Tag>
+        {label}:{" "}
+        <Tag color={label === "Status" ? getStatusTagColor(value) : ""}>
+          {value}
+        </Tag>
       </Space>
     );
   };
+
   const renderCollapseItemChildren = (data: AdoptionsData) => {
     return (
       <div>
@@ -43,6 +58,7 @@ const ApplicationsToBeReviewedModal = ({
           {moment(data.dateCreated?.toDate())?.fromNow()}
         </p>
         <div className="flex flex-col items-start justify-start gap-2">
+          {renderCollapseChildrenText("Status", data?.status)}
           {renderCollapseChildrenText("First Name", data?.firstName)}
           {renderCollapseChildrenText("Middle Name", data?.middleName)}
           {renderCollapseChildrenText("Last Name", data?.lastName)}
@@ -105,7 +121,7 @@ const ApplicationsToBeReviewedModal = ({
           enableModalScroll
             ? "h-80 overflow-y-scroll"
             : "h-auto overflow-y-hidden"
-        }`}
+        } p-2`}
       >
         <Collapse size="middle" items={collapseItems} />
       </div>

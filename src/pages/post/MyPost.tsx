@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useFetchPostedPet } from "../../api/pets/pets";
+import { PetsData, useFetchPostedPet } from "../../api/pets/pets";
 import { auth } from "../../firebase/firebase-config";
 import AddEditPetFormModal from "../../global/AddEditPetFormModal";
 import Button from "../../global/Button";
@@ -9,6 +9,8 @@ import PetDisplay from "../dashboard/listed-pets/PetDisplay";
 import { CopyOutlined } from "@ant-design/icons";
 import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
 import ApplicationsToBeReviewedModal from "./ApplicationsToBeReviewedModal";
+import usePaginate from "../../hooks/usePaginate";
+import { Pagination } from "antd";
 
 type DataForUpdate = {
   openEditModal: boolean;
@@ -21,6 +23,9 @@ const MyPost = () => {
   const [user] = useAuthState(auth);
   const { data: petsData, isLoading: isPostedPetDataPending } =
     useFetchPostedPet(user?.uid);
+  const pageData: PetsData[] = petsData;
+  const { pageSize, currentItems, onPageChange, totalItemsCount } =
+    usePaginate<PetsData>({ pageData });
   const { data: applicationsData } = useFetchApplicationsByRecipientId();
   const applicationsDataTotalCount = applicationsData?.length;
   const isApplicationsDataEmpty = applicationsDataTotalCount === 0;
@@ -70,7 +75,8 @@ const MyPost = () => {
         {!isApplicationsDataEmpty && (
           <div className="flex flex-col items-center gap-2 justify-center">
             <h1 className="text-lg text-center">
-              Applications to be reviewed: <span className="font-bold">1</span>
+              Applications to be reviewed:{" "}
+              <span className="font-bold">{applicationsDataTotalCount}</span>
             </h1>
             <Button
               onClick={handleOpenApplicationsModal}
@@ -101,13 +107,25 @@ const MyPost = () => {
         )}
         {!isPostedPetDataPending && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
-            {petsData?.map((pet) => (
+            {currentItems?.map((pet) => (
               <PetDisplay
                 key={pet.id}
                 handleOpenEditModal={handleOpenEditModal}
                 {...pet}
               />
             ))}
+          </div>
+        )}
+        {!isPostedPetDataPending && petsDataTotalCount > 0 && (
+          <div className="flex items-center justify-center mt-5">
+            <Pagination
+              defaultCurrent={1}
+              onChange={onPageChange}
+              size="default"
+              total={totalItemsCount}
+              pageSize={pageSize}
+              showSizeChanger={false}
+            />
           </div>
         )}
         {isPostedPetDataPending && (
