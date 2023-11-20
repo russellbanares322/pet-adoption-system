@@ -27,7 +27,9 @@ const MyPost = () => {
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
     usePaginate<PetsData>({ pageData });
   const { data: applicationsData } = useFetchApplicationsByRecipientId();
-  const applicationsDataTotalCount = applicationsData?.length;
+  const applicationsDataTotalCount = applicationsData?.filter(
+    (data) => data.status.toLowerCase() === "to be reviewed"
+  )?.length;
   const isApplicationsDataEmpty = applicationsDataTotalCount === 0;
   const petsDataTotalCount = petsData?.length;
   const isPetsDataEmpty = petsDataTotalCount === 0;

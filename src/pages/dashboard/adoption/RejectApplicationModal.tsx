@@ -28,7 +28,10 @@ const RejectApplicationModal = ({
       open={open}
       onCancel={onCancel}
       confirmLoading={isLoading}
-      onOk={() => rejectApplication(applicationData, rejectInputValue)}
+      onOk={() => {
+        rejectApplication(applicationData, rejectInputValue);
+        onCancel();
+      }}
       centered
       okText="Submit"
       okButtonProps={{

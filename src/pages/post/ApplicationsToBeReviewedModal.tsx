@@ -1,4 +1,4 @@
-import { Collapse, Image, Modal, Space, Tag } from "antd";
+import { Collapse, Image, Modal, Popconfirm, Space, Tag } from "antd";
 import { AdoptionsData } from "../../api/adoptions/adoptions";
 import {
   CheckCircleOutlined,
@@ -8,12 +8,20 @@ import {
 import Button from "../../global/Button";
 import { useState } from "react";
 import moment from "moment";
+import useApproveAdoptionApplication from "../../hooks/useApproveAdoptionApplication";
+import RejectApplicationModal from "../dashboard/adoption/RejectApplicationModal";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
   handleCloseApplicationsModal: () => void;
   applicationsData: AdoptionsData[];
   applicationsDataTotalCount: number;
+};
+
+type RejectApplicationOptionItems = {
+  openModal: boolean;
+  rejectInput: string;
+  selectedAdoptionsData: AdoptionsData | null;
 };
 
 const ApplicationsToBeReviewedModal = ({
@@ -24,6 +32,37 @@ const ApplicationsToBeReviewedModal = ({
 }: ApplicationsToBeReviewedModalProps) => {
   const enableModalScroll = applicationsDataTotalCount > 1;
   const [showImgPreview, setShowImgPreview] = useState(false);
+  const { approveApplication } = useApproveAdoptionApplication();
+  const [rejectApplicationOptions, setRejectApplicationOptions] =
+    useState<RejectApplicationOptionItems>({
+      openModal: false,
+      rejectInput: "",
+      selectedAdoptionsData: null,
+    });
+
+  const handleOpenRejectApplicationModal = (data: AdoptionsData) => {
+    setRejectApplicationOptions({
+      ...rejectApplicationOptions,
+      openModal: true,
+      selectedAdoptionsData: data,
+    });
+  };
+
+  const handleCloseRejectApplicationModal = () => {
+    setRejectApplicationOptions({
+      ...rejectApplicationOptions,
+      openModal: false,
+      selectedAdoptionsData: null,
+    });
+  };
+  const handleRejectApplicationInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setRejectApplicationOptions({
+      ...rejectApplicationOptions,
+      rejectInput: e.target.value,
+    });
+  };
 
   const handleShowImgPreview = () => {
     setShowImgPreview(true);
@@ -52,6 +91,9 @@ const ApplicationsToBeReviewedModal = ({
   };
 
   const renderCollapseItemChildren = (data: AdoptionsData) => {
+    const selectedApplicationsData = {
+      ...data,
+    };
     return (
       <div>
         <p className="text-center my-1 italic">
@@ -74,14 +116,26 @@ const ApplicationsToBeReviewedModal = ({
           />
         </div>
         <div className="flex justify-center items-center gap-2 mt-4">
-          <Button
-            type="primary"
-            size="small"
-            styleClass="bg-green"
+          <Popconfirm
             title="Approve Application"
-            icon={<CheckCircleOutlined />}
-          />
+            description="Did you already reviewed the application properly before approving?"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => approveApplication(selectedApplicationsData)}
+            okButtonProps={{
+              className: "primary-btn",
+            }}
+          >
+            <Button
+              type="primary"
+              size="small"
+              styleClass="bg-green"
+              title="Approve Application"
+              icon={<CheckCircleOutlined />}
+            />
+          </Popconfirm>
           <Button
+            onClick={() => handleOpenRejectApplicationModal(data)}
             type="primary"
             size="small"
             danger={true}
@@ -125,6 +179,15 @@ const ApplicationsToBeReviewedModal = ({
       >
         <Collapse size="middle" items={collapseItems} />
       </div>
+      <RejectApplicationModal
+        onInputChange={handleRejectApplicationInputChange}
+        rejectInputValue={rejectApplicationOptions.rejectInput}
+        open={rejectApplicationOptions.openModal}
+        onCancel={handleCloseRejectApplicationModal}
+        applicationData={
+          rejectApplicationOptions.selectedAdoptionsData as AdoptionsData
+        }
+      />
     </Modal>
   );
 };
