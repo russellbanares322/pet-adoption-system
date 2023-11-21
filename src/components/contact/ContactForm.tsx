@@ -1,6 +1,7 @@
 import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencil } from "react-icons/hi";
+import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { db } from "../../firebase/firebase-config";
 
@@ -147,8 +148,14 @@ const ContactForm = () => {
           </p>
         </div>
       </div>
-
-      <button className="button-filled w-full mt-4">Send</button>
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="button-filled w-full mt-4 flex items-center justify-center"
+      >
+        {isLoading ? "Sending..." : "Send"}
+        {isLoading && <ClipLoader color="white" size={18} />}
+      </button>
     </form>
   );
 };
