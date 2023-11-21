@@ -1,0 +1,7 @@
+
+
+const useFetchSuggestions = () => {
+
+}
+
+export {useFetchSuggestions}
