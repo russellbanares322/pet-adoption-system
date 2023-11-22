@@ -10,11 +10,16 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
 
+type TableDataSource = {
+  suggestionId: string;
+} & SuggestionsData;
+
 const UserSuggestions = () => {
   const { data: userSuggestionsData, isLoading: isFetchSuggestionsPending } =
     useFetchSuggestions();
   const totalSuggestionsCount = userSuggestionsData?.length;
   const dataSource = userSuggestionsData?.map((user, index) => ({
+    suggestionId: user?.id,
     id: index + 1,
     fullName: user?.fullName,
     email: user?.email,
@@ -69,7 +74,7 @@ const UserSuggestions = () => {
       width: 100,
       title: "Actions",
       key: "actions",
-      render: (rec: SuggestionsData) => {
+      render: (rec: TableDataSource) => {
         return (
           <Space size={10}>
             <Tooltip title="Reply">
@@ -86,7 +91,7 @@ const UserSuggestions = () => {
             <Tooltip title="Delete">
               <Popconfirm
                 placement="left"
-                onConfirm={() => handleDeleteSuggestion(rec.id)}
+                onConfirm={() => handleDeleteSuggestion(rec.suggestionId)}
                 title="Delete data"
                 description="Are you sure to delete this suggestion/comment?"
                 okButtonProps={{
