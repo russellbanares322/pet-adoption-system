@@ -6,7 +6,7 @@ type ButtonSizes = "large" | "middle" | "small";
 type ButtonProps = {
   type: ButtonTypes;
   danger?: boolean;
-  title: string;
+  title?: string;
   icon: React.ReactNode;
   size?: ButtonSizes;
   styleClass?: string;

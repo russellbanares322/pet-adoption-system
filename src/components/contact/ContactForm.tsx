@@ -1,4 +1,9 @@
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+} from "firebase/firestore";
 import { useState } from "react";
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencil } from "react-icons/hi";
 import { ClipLoader } from "react-spinners";
@@ -34,7 +39,10 @@ const ContactForm = () => {
       setIsFormDirty(true);
     } else {
       try {
-        await addDoc(suggestionsRef, formData);
+        await addDoc(suggestionsRef, {
+          ...formData,
+          dateCreated: serverTimestamp(),
+        });
         setIsLoading(false);
         setFormData({
           fullName: "",

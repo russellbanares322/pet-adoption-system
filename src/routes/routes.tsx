@@ -7,6 +7,7 @@ import PetAdoption from "../pages/dashboard/adoption/PetAdoption";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
 import RegisteredUsers from "../pages/dashboard/registered-users/RegisteredUsers";
+import UserSuggestions from "../pages/dashboard/suggestions/UserSuggestions";
 import SavedFavoritePosts from "../pages/favorites/SavedFavoritePosts";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
@@ -87,6 +88,12 @@ export const routes = [
       {
         path: "pet-adoptions",
         element: <PetAdoption />,
+        child: [],
+        isProtected: true,
+      },
+      {
+        path: "user-suggestions",
+        element: <UserSuggestions />,
         child: [],
         isProtected: true,
       },
