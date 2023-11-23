@@ -5,6 +5,7 @@ import { PetsData, useFetchPets } from "../../api/pets/pets";
 import { useEffect, useState } from "react";
 import usePaginate from "../../hooks/usePaginate";
 import { Pagination } from "antd";
+import NoResultsFound from "../../global/NoResultsFound";
 
 type FilterOptions = {
   color: string[];
@@ -94,6 +95,7 @@ const Pets = () => {
           />
         </div>
         <div className="w-full">
+          {/* <NoResultsFound title="No results found" /> */}
           {!isLoading && totalPostedPetCount > 0 && (
             <div className="text-center mt-3 md:mt-0 mb-2">
               <p className="font-semibold">
