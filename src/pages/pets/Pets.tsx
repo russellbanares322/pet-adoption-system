@@ -23,9 +23,15 @@ const Pets = () => {
     type: [],
   });
   const [searchInput, setSearchInput] = useState("");
-  const pageData: PetsData[] =
-    filteredPetsData?.length > 0 ? filteredPetsData : petsData;
+  const hasSelectedFilterOption =
+    Object.values(filterOptions).some((data) => data.length > 0) ||
+    searchInput.trim().length > 0;
+  const pageData: PetsData[] = hasSelectedFilterOption
+    ? filteredPetsData
+    : petsData;
   const totalPostedPetCount = petsData.length;
+  const emptyFilterQueryResponse =
+    hasSelectedFilterOption && filteredPetsData.length === 0;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
     usePaginate<PetsData>({ pageData });
   const [expandFilterOptions, setExpandFilterOptions] = useState(true);
@@ -56,18 +62,19 @@ const Pets = () => {
   };
 
   useEffect(() => {
-    const filteredPetsData = petsData?.filter(
-      (data) =>
-        filterOptions.color.includes(data.petColor) ||
-        filterOptions.gender.includes(data.petGender) ||
-        filterOptions.type.includes(data.petType) ||
-        data.petColor.toLowerCase().includes(searchInput) ||
-        data.petGender.toLowerCase().includes(searchInput) ||
-        data.petType.toLowerCase().includes(searchInput) ||
-        data.petName.toLowerCase().includes(searchInput)
-    );
-
-    setFilteredPetsData(filteredPetsData);
+    const filteredData = hasSelectedFilterOption
+      ? petsData?.filter(
+          (data) =>
+            filterOptions.color.some((color) => color === data.petColor) ||
+            filterOptions.type.some((type) => type === data.petType) ||
+            filterOptions.gender.some((gender) => gender === data.petGender) ||
+            data.petColor.toLowerCase().includes(searchInput.toLowerCase()) ||
+            data.petGender.toLowerCase().includes(searchInput.toLowerCase()) ||
+            data.petType.toLowerCase().includes(searchInput.toLowerCase()) ||
+            data.petName.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      : petsData;
+    setFilteredPetsData(filteredData);
   }, [
     filterOptions.color,
     filterOptions.gender,
