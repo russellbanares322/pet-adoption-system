@@ -15,6 +15,7 @@ export type NotificationData = {
       userId: string,
       userFullName:string
     },
+    hasViewed: boolean,
     dateUpdated: Moment
 }
 

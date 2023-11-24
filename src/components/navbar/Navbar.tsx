@@ -11,21 +11,24 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
-import { Badge } from "antd";
+import { Badge, Empty } from "antd";
 import { useFetchNotifications } from "../../api/notifications/notifications";
 import type { MenuProps } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import { useFetchPets } from "../../api/pets/pets";
 import moment, { Moment } from "moment";
-import { toast } from "react-toastify";
+import useViewNotification from "../../hooks/useViewNotification";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const [activeNavLink, setActiveNavLink] = useState("");
+  const { viewNotification } = useViewNotification();
   const { data: notificationsData } = useFetchNotifications();
   const { data: petsData } = useFetchPets();
-  const notificationsTotalCount = notificationsData?.length;
-  const allowNotificationMenuToShow = notificationsTotalCount;
+  const unViewedNotificationsCount = notificationsData?.filter(
+    (data) => !data.hasViewed
+  )?.length;
+  const emptyNotificationsData = notificationsData?.length === 0;
   const location = useLocation();
   const isInLoginPage = location.pathname === "/login";
   const isInSignupPage = location.pathname === "/sign-up";
@@ -70,53 +73,78 @@ const Navbar = () => {
   const renderNotificationDropdownItemsLabel = (
     petId: string,
     status: string,
-    dateUpdated: Moment
+    dateUpdated: Moment,
+    hasViewed: boolean
   ) => {
     return (
-      <div className="flex items-center justify-start gap-3">
-        <img
-          className="h-11 w-11 object-cover rounded-md"
-          src={getPetImage(petId)}
-        />
-        <div>
-          <p className="text-sm">
-            Your application for <span className="font-bold">{petId}</span> has
-            been <span className="font-bold">{status}</span>
-          </p>
-          <p className="text-xs text-blue">{moment(dateUpdated).fromNow()}</p>
+      <div className="flex items-center gap-2">
+        <div className="flex items-center justify-start gap-3">
+          <img
+            className="h-11 w-11 object-cover rounded-md"
+            src={getPetImage(petId)}
+          />
+          <div>
+            <p className="text-sm">
+              Your application for <span className="font-bold">{petId}</span>{" "}
+              has been <span className="font-bold">{status}</span>
+            </p>
+            <p className="text-xs text-blue">{moment(dateUpdated).fromNow()}</p>
+          </div>
         </div>
+        {!hasViewed && <div className="bg-green p-[6px] rounded-full mt-6" />}
       </div>
     );
   };
 
+  const renderEmptyComponent = () => {
+    return (
+      <Empty
+        className="cursor-default flex flex-col items-center"
+        imageStyle={{ height: "30%", width: "30%", objectFit: "cover" }}
+        description={
+          <p className="text-md font-semibold">
+            You don't have any notifications
+          </p>
+        }
+      />
+    );
+  };
+
   const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
-    if (key === "1") {
+    if (key === "logout") {
       signOut(auth);
       navigate("/");
     }
   };
 
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
-    toast.warning("This feature is currently under development.");
+    if (!emptyNotificationsData) {
+      viewNotification(key);
+    }
   };
 
   const navDropdownItems: MenuProps["items"] = [
     {
       label: renderNavDropdownItemsLabel("Logout", <HiOutlineLogout />),
-      key: "1",
+      key: "logout",
     },
   ];
 
-  const notificationDropdownItems: MenuProps["items"] = notificationsData?.map(
-    (data, index) => ({
-      label: renderNotificationDropdownItemsLabel(
-        data?.petId,
-        data?.status,
-        data?.dateUpdated
-      ),
-      key: `${index + 1}`,
-    })
-  );
+  const notificationDropdownItems: MenuProps["items"] = emptyNotificationsData
+    ? Array.from({ length: 1 }).map((_) => ({
+        label: renderEmptyComponent(),
+        key: "x",
+        disabled: true,
+      }))
+    : notificationsData?.map((data) => ({
+        label: renderNotificationDropdownItemsLabel(
+          data?.petId,
+          data?.status,
+          data?.dateUpdated,
+          data?.hasViewed
+        ),
+        key: data?.notificationId,
+      }));
 
   useEffect(() => {
     if (isInLoginPage) {
@@ -237,22 +265,16 @@ const Navbar = () => {
               <MenuDropdown
                 items={notificationDropdownItems}
                 itemActions={notificationsDropdownItemActions}
-                trigger={allowNotificationMenuToShow ? "click" : "contextMenu"}
+                trigger="click"
               >
-                <div
-                  className={`${
-                    allowNotificationMenuToShow
-                      ? "cursor-pointer"
-                      : "pointer-events-none"
-                  } pt-1`}
-                >
+                <div className="cursor-pointer pt-1">
                   <Badge
                     color="#52C41A"
                     className="mr-2"
                     count={
-                      notificationsTotalCount === 0
+                      unViewedNotificationsCount === 0
                         ? null
-                        : notificationsTotalCount
+                        : unViewedNotificationsCount
                     }
                   >
                     <HiBell className="cursor-pointer" size={21} />
@@ -379,9 +401,9 @@ const Navbar = () => {
                   <Badge
                     color="#52C41A"
                     count={
-                      notificationsTotalCount === 0
+                      unViewedNotificationsCount === 0
                         ? null
-                        : notificationsTotalCount
+                        : unViewedNotificationsCount
                     }
                   >
                     <HiBell className="cursor-pointer" size={21} />

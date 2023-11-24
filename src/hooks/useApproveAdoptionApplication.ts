@@ -81,6 +81,7 @@ const useApproveAdoptionApplication = () => {
           userId: user?.uid,
           userFullName:user?.displayName
         },
+        hasViewed: false,
         dateUpdated: moment().format()
       }
 
