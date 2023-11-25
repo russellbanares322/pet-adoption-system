@@ -24,13 +24,15 @@ const Pets = () => {
     type: [],
   });
   const [searchInput, setSearchInput] = useState("");
-  const emptySearchInput = searchInput.trim().length === 0
+  const emptySearchInput = searchInput.trim().length === 0;
   const hasSelectedFilterOption =
-    Object.values(filterOptions).some((data) => data.length > 0) || !emptySearchInput
+    Object.values(filterOptions).some((data) => data.length > 0) ||
+    !emptySearchInput;
   const pageData: PetsData[] = hasSelectedFilterOption
     ? filteredPetsData
     : petsData;
   const totalPostedPetCount = petsData.length;
+  const totalFilteredPetsDataCount = filteredPetsData.length;
   const emptyFilterQueryResponse =
     hasSelectedFilterOption && filteredPetsData.length === 0;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
@@ -77,7 +79,7 @@ const Pets = () => {
   }, [filterOptions.color, filterOptions.gender, filterOptions.type]);
 
   useEffect(() => {
-    const filteredData =  petsData?.filter(
+    const filteredData = petsData?.filter(
       (data) =>
         data.petColor.toLowerCase().includes(searchInput.toLowerCase()) ||
         data.petGender.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -104,8 +106,14 @@ const Pets = () => {
           {!isLoading && totalPostedPetCount > 0 && (
             <div className="text-center mt-3 md:mt-0 mb-2">
               <p className="font-semibold">
-                {totalPostedPetCount}{" "}
-                {totalPostedPetCount > 1 ? "ITEMS" : "ITEM"}
+                {hasSelectedFilterOption
+                  ? totalFilteredPetsDataCount
+                  : totalPostedPetCount}{" "}
+                {(!hasSelectedFilterOption
+                  ? totalPostedPetCount
+                  : totalFilteredPetsDataCount) > 1
+                  ? "ITEMS"
+                  : "ITEM"}
               </p>
             </div>
           )}
