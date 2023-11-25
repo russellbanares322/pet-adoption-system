@@ -109,11 +109,10 @@ const Pets = () => {
                 {hasSelectedFilterOption
                   ? totalFilteredPetsDataCount
                   : totalPostedPetCount}{" "}
-                {(!hasSelectedFilterOption
-                  ? totalPostedPetCount
-                  : totalFilteredPetsDataCount) > 1
-                  ? "ITEMS"
-                  : "ITEM"}
+                {!hasSelectedFilterOption &&
+                  (totalPostedPetCount > 1 ? "ITEMS" : "ITEM")}
+                {hasSelectedFilterOption &&
+                  (totalFilteredPetsDataCount > 1 ? "ITEMS" : "ITEM")}
               </p>
             </div>
           )}
