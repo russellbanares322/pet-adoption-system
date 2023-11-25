@@ -60,7 +60,7 @@ const AdoptPetFormModal = ({
       });
       setImgFile(adoptionApplicationForUpdate?.validIdImg);
     }
-  }, [adoptionApplicationForUpdate]);
+  }, [adoptionApplicationForUpdate, isDataForUpdate]);
 
   const handleChangeCheckbox = (e: CheckboxChangeEvent) => {
     setIsDataReviewed(e.target.checked);
