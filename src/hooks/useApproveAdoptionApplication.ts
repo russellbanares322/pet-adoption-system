@@ -1,16 +1,27 @@
-import { arrayUnion, doc, DocumentReference, serverTimestamp, updateDoc } from "firebase/firestore"
+import { arrayUnion, deleteDoc, doc, DocumentReference, serverTimestamp, updateDoc } from "firebase/firestore"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { toast } from "react-toastify"
 import { AdoptionsData } from "../api/adoptions/adoptions"
-import {  auth, db } from "../firebase/firebase-config"
+import {  auth, db, storage } from "../firebase/firebase-config"
 import {v4 as uuidv4} from "uuid";
 import { useState } from "react"
 import moment from "moment"
+import { deleteObject, ref } from "firebase/storage"
 
 const useApproveAdoptionApplication = () => {
   const [user] = useAuthState(auth)
   const [isLoading, setIsLoading] = useState(false);
   
+  const deleteApplication = async (applicationId: string, validIdImg: string) => {
+    try {
+      const imgToBeDeleted = ref(storage, validIdImg);
+      await deleteDoc(doc(db, "adoption-applications", applicationId));
+      await deleteObject(imgToBeDeleted);
+      toast.success("Successfully deleted application");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  }
   const approveApplication = async (applicationData: AdoptionsData) => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
       setIsLoading(true)
@@ -89,7 +100,7 @@ const useApproveAdoptionApplication = () => {
         notifications: arrayUnion(notificationToBeSent)
       })
     }
-  return {approveApplication, rejectApplication, isLoading}
+  return {approveApplication,deleteApplication, rejectApplication, isLoading}
 }
 
 export default useApproveAdoptionApplication

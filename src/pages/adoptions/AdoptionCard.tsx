@@ -4,14 +4,23 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useFetchPet } from "../../api/pets/pets";
 import PetDetailsModal from "../../global/PetDetailsModal";
+import AdoptPetFormModal from "../pets/AdoptPetFormModal";
 
 type AdoptionCardProps = {
+  id: string;
+  recipientId: string;
   petId: string;
   status: string;
 };
 
-const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
+const AdoptionCard = ({
+  id,
+  recipientId,
+  petId,
+  status,
+}: AdoptionCardProps) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const [openEditAdoptionModal, setOpenEditAdoptionModal] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
 
   const getTagColor = () => {
@@ -23,6 +32,14 @@ const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
       return "red";
     }
     return "green";
+  };
+
+  const handleOpenEditAdoptionModal = () => {
+    setOpenEditAdoptionModal(true);
+  };
+
+  const handleCloseEditAdoptionModal = () => {
+    setOpenEditAdoptionModal(false);
   };
 
   const handleOpenDetailsModal = () => {
@@ -54,6 +71,7 @@ const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
       </p>
       <div className="flex items-center justify-center mt-5 mb-2 gap-2">
         <Button
+          onClick={handleOpenEditAdoptionModal}
           size="small"
           type="primary"
           title="Update"
@@ -83,6 +101,13 @@ const AdoptionCard = ({ petId, status }: AdoptionCardProps) => {
         petImage={petData?.petImage}
         createdBy={petData?.createdBy}
         dateCreated={petData?.dateCreated}
+      />
+      <AdoptPetFormModal
+        openModal={openEditAdoptionModal}
+        onCancel={handleCloseEditAdoptionModal}
+        selectedId={id}
+        recipientId={recipientId}
+        isDataForUpdate={true}
       />
     </div>
   );

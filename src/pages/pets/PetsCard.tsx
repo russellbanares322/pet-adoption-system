@@ -192,6 +192,7 @@ const PetsCard = ({
         onCancel={handleCloseAdoptionModal}
         selectedId={id}
         recipientId={userId}
+        isDataForUpdate={false}
       />
     </div>
   );

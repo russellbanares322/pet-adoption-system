@@ -1,4 +1,4 @@
-import { collection, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase/firebase-config";
@@ -81,4 +81,27 @@ const useFetchAdoptionsByUserId = () => {
     return { data, isLoading };
   };
 
-  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId}
+  const useFetchAdoptionApplication = (id: string) => {
+    const [data, setData] = useState<Record<string, any>>({});
+    const [isLoading, setIsLoading] = useState(false);
+  
+    const getSingleAdoptionApplication = async () => {
+      if (id !== null) {
+        setIsLoading(true);
+        const adoptionsRef = doc(db, "adoption-applications", id);
+        const snapshot = await getDoc(adoptionsRef);
+        if (snapshot.exists()) {
+          setData({ ...snapshot.data() });
+          setIsLoading(false);
+        }
+      }
+    };
+  
+    useEffect(() => {
+      getSingleAdoptionApplication();
+    }, [id]);
+  
+    return { data, isLoading };
+  };
+
+  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication}

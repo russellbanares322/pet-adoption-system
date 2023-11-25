@@ -70,10 +70,6 @@ const Pets = () => {
         filterOptions.color.some((color) => color === data.petColor) ||
         filterOptions.type.some((type) => type === data.petType) ||
         filterOptions.gender.some((gender) => gender === data.petGender)
-      // data.petColor.toLowerCase().includes(searchInput.toLowerCase()) ||
-      // data.petGender.toLowerCase().includes(searchInput.toLowerCase()) ||
-      // data.petType.toLowerCase().includes(searchInput.toLowerCase()) ||
-      // data.petName.toLowerCase().includes(searchInput.toLowerCase())
     );
     setFilteredPetsData(filteredData);
   }, [filterOptions.color, filterOptions.gender, filterOptions.type]);

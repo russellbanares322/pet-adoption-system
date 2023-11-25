@@ -1,18 +1,27 @@
 import { Button, Checkbox, Form, Input, Modal } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { toast } from "react-toastify";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "../../firebase/firebase-config";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { auth, db, storage } from "../../firebase/firebase-config";
 import useUploadFileToDb from "../../hooks/useUploadFileToDb";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useFetchAdoptionApplication } from "../../api/adoptions/adoptions";
+import { deleteObject, ref } from "firebase/storage";
 
 type AdoptPetFormModalProps = {
   openModal: boolean;
   onCancel: () => void;
   selectedId: string;
   recipientId: string;
+  isDataForUpdate: boolean;
 };
 
 type FormInputs = {
@@ -28,13 +37,30 @@ const AdoptPetFormModal = ({
   onCancel,
   selectedId,
   recipientId,
+  isDataForUpdate,
 }: AdoptPetFormModalProps) => {
   const [imgFile, setImgFile] = useState<File | null | string>(null);
+  const [removedImg, setRemovedImg] = useState<File | null | string>("");
   const [isDataReviewed, setIsDataReviewed] = useState(false);
+  const { data: adoptionApplicationForUpdate } =
+    useFetchAdoptionApplication(selectedId);
   const [isLoading, setIsLoading] = useState(false);
   const { uploadImgToStorage } = useUploadFileToDb();
   const [user] = useAuthState(auth);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (isDataForUpdate) {
+      form.setFieldsValue({
+        firstName: adoptionApplicationForUpdate?.firstName,
+        middleName: adoptionApplicationForUpdate?.middleName,
+        lastName: adoptionApplicationForUpdate?.lastName,
+        address: adoptionApplicationForUpdate?.address,
+        contactNumber: adoptionApplicationForUpdate?.contactNumber,
+      });
+      setImgFile(adoptionApplicationForUpdate?.validIdImg);
+    }
+  }, [adoptionApplicationForUpdate]);
 
   const handleChangeCheckbox = (e: CheckboxChangeEvent) => {
     setIsDataReviewed(e.target.checked);
@@ -50,14 +76,48 @@ const AdoptPetFormModal = ({
     resetFormInputFields();
   };
 
+  const deletePrevSelectedImgInStorage = async () => {
+    if (typeof removedImg === "string") {
+      const imgUrl = ref(storage, removedImg);
+      await deleteObject(imgUrl);
+    }
+  };
+  const removeImg = () => {
+    setRemovedImg(imgFile);
+    setImgFile(null);
+  };
+
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
       const petAdoptionsRef = collection(db, "adoption-applications");
       const imgUrl = await uploadImgToStorage(imgFile as File);
 
-      if (imgUrl !== undefined) {
-        await addDoc(petAdoptionsRef, {
+      if (!isDataForUpdate) {
+        if (imgUrl !== undefined) {
+          await addDoc(petAdoptionsRef, {
+            userId: user?.uid,
+            userEmail: user?.email,
+            firstName: values.firstName,
+            middleName: values.middleName,
+            lastName: values.lastName,
+            address: values.address,
+            contactNumber: values.contactNumber,
+            status: "To be reviewed",
+            rejectionReason: "",
+            recipientId: recipientId,
+            petId: selectedId,
+            dateCreated: serverTimestamp(),
+            validIdImg: imgUrl,
+          });
+          setIsLoading(false);
+          toast.success(
+            "Successfully sent application, we'll just inform you if your application has been approved."
+          );
+          handleCloseModal();
+        }
+      } else {
+        await updateDoc(doc(db, "adoption-applications", selectedId), {
           userId: user?.uid,
           userEmail: user?.email,
           firstName: values.firstName,
@@ -65,18 +125,16 @@ const AdoptPetFormModal = ({
           lastName: values.lastName,
           address: values.address,
           contactNumber: values.contactNumber,
-          status: "To be reviewed",
+          status: adoptionApplicationForUpdate?.status,
           rejectionReason: "",
           recipientId: recipientId,
-          petId: selectedId,
+          petId: adoptionApplicationForUpdate?.petId,
           dateCreated: serverTimestamp(),
-          validIdImg: imgUrl,
+          validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
         });
+        await deletePrevSelectedImgInStorage();
         setIsLoading(false);
-        toast.success(
-          "Successfully sent application, we'll just inform you if your application has been approved."
-        );
-        handleCloseModal();
+        toast.success("Successfully updated application");
       }
     } catch (err: any) {
       toast.error(err.message);
@@ -94,7 +152,7 @@ const AdoptPetFormModal = ({
     <Modal
       open={openModal}
       onCancel={handleCloseModal}
-      title="Adopting Pet"
+      title={isDataForUpdate ? "Edit Application" : "Adopt Pet"}
       width={500}
       footer={[
         <Button key="cancel" onClick={handleCloseModal} type="default">
@@ -208,7 +266,10 @@ const AdoptPetFormModal = ({
                   : (imgFile as string)
               }
             />
-            <DeleteOutlined className="pr-1 cursor-pointer hover:text-red-500" />
+            <DeleteOutlined
+              onClick={removeImg}
+              className="pr-1 cursor-pointer hover:text-red-500"
+            />
           </div>
         )}
         <Form.Item

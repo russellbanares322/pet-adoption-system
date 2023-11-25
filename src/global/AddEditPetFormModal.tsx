@@ -150,7 +150,7 @@ const AddEditPetFormModal = ({
           likes: petDataForUpdate.likes,
           comments: petDataForUpdate.comments,
         });
-        deletePrevSelectedImgInStorage();
+        await deletePrevSelectedImgInStorage();
         setIsLoading(false);
         handleCloseModal();
         toast.success("Successfully updated post");
