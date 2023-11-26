@@ -1,11 +1,19 @@
+import { Pagination } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useFetchAdoptionsByUserId } from "../../api/adoptions/adoptions";
+import {
+  AdoptionsData,
+  useFetchAdoptionsByUserId,
+} from "../../api/adoptions/adoptions";
 import LoadingSpinner from "../../global/LoadingSpinner";
+import usePaginate from "../../hooks/usePaginate";
 import AdoptionCard from "./AdoptionCard";
 
 const MyAdoptions = () => {
   const navigate = useNavigate();
   const { data: adoptionsData, isLoading } = useFetchAdoptionsByUserId();
+  const pageData: AdoptionsData[] = adoptionsData;
+  const { pageSize, currentItems, onPageChange, totalItemsCount } =
+    usePaginate<AdoptionsData>({ pageData });
   const adoptionsDataTotalCount = adoptionsData?.length;
   const isAdoptionsDataEmpty = adoptionsDataTotalCount === 0;
 
@@ -30,13 +38,25 @@ const MyAdoptions = () => {
         )}
         {!isLoading && (
           <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
-            {adoptionsData?.map((data) => (
+            {currentItems?.map((data) => (
               <AdoptionCard key={data.id} {...data} />
             ))}
           </div>
         )}
         {isLoading && <LoadingSpinner title="Loading..." size="large" />}
       </div>
+      {!isLoading && adoptionsDataTotalCount > 0 && (
+        <div className="flex items-center justify-center mt-5">
+          <Pagination
+            defaultCurrent={1}
+            onChange={onPageChange}
+            size="default"
+            total={totalItemsCount}
+            pageSize={pageSize}
+            showSizeChanger={false}
+          />
+        </div>
+      )}
     </div>
   );
 };
