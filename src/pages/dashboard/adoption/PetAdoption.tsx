@@ -95,13 +95,19 @@ const PetAdoption = () => {
             <div className="flex items-center justify-start gap-2">
               {filterOptions.map((data) => (
                 <div
-                  className={`border rounded-full cursor-pointer py-2 px-3 flex items-center justify-start gap-2 ${
+                  className={`border rounded-full py-2 px-3 flex items-center justify-start ${
+                    data.count === 0 ? "cursor-not-allowed" : "cursor-pointer"
+                  } gap-2 ${
                     checkIfStatusIsSelected(data.title)
                       ? "bg-blue text-white"
                       : "text-black"
                   }`}
                   key={data.title}
-                  onClick={() => handleSelectFilterStatus(data.title)}
+                  onClick={() => {
+                    if (data.count !== 0) {
+                      handleSelectFilterStatus(data.title);
+                    }
+                  }}
                 >
                   <p>{data.title}</p>
                   <p>{data.count}</p>
