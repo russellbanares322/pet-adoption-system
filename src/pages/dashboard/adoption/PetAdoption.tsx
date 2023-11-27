@@ -12,7 +12,9 @@ import { useState } from "react";
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =
     useFetchApplicationsByRecipientId();
-  const [selectedFilterStatus, setSelectedFilterStatus] = useState([]);
+  const [selectedApplicationStatus, setSelectedApplicationStatus] = useState<
+    string[]
+  >([]);
   const applicationDataTotalCount = applicationsData?.length;
   const pageData: AdoptionsData[] = applicationsData;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
@@ -45,6 +47,20 @@ const PetAdoption = () => {
       bgColor: "#FF4D4F",
     },
   ];
+
+  const handleSelectFilterStatus = (selectedStatus: string) => {
+    if (selectedApplicationStatus.includes(selectedStatus)) {
+      const filteredSelectedStatus = selectedApplicationStatus.filter(
+        (status) => status !== selectedStatus
+      );
+      setSelectedApplicationStatus(filteredSelectedStatus);
+    } else {
+      setSelectedApplicationStatus([
+        ...selectedApplicationStatus,
+        selectedStatus,
+      ]);
+    }
+  };
 
   return (
     <div>
