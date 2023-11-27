@@ -30,26 +30,27 @@ const PetAdoption = () => {
   ).length;
   const isAdoptionsDataEmpty = applicationDataTotalCount === 0;
 
-  const applicationsStatus = [
+  const filterOptions = [
     {
-      status: "Pending",
+      title: "All",
+      count: applicationDataTotalCount,
+    },
+    {
+      title: "Pending",
       count: toBeReviewedApplicationTotalCount,
-      bgColor: "#FE6F45",
     },
     {
-      status: "Approved",
+      title: "Approved",
       count: approvedApplicationTotalCount,
-      bgColor: "#52C41A",
     },
     {
-      status: "Rejected",
+      title: "Rejected",
       count: rejectedApplicationTotalCount,
-      bgColor: "#FF4D4F",
     },
   ];
 
   const handleSelectFilterStatus = (selectedStatus: string) => {
-    if (selectedApplicationStatus.includes(selectedStatus)) {
+    if (checkIfStatusIsSelected(selectedStatus)) {
       const filteredSelectedStatus = selectedApplicationStatus.filter(
         (status) => status !== selectedStatus
       );
@@ -62,42 +63,38 @@ const PetAdoption = () => {
     }
   };
 
+  const checkIfStatusIsSelected = (applicationStatus: string) => {
+    if (selectedApplicationStatus.includes(applicationStatus)) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div>
       {!isLoading && !isAdoptionsDataEmpty && (
         <div>
           <div className="flex flex-col items-center justify-center gap-3 mb-10">
-            <h1 className="text-lg">Applications Status:</h1>
-            <div className="flex items-center justify-center gap-4">
-              {applicationsStatus?.map((data) => (
+            <h1 className="text-lg">Adoption Applications</h1>
+          </div>
+          <div>
+            <p className="mb-2">Filter by status:</p>
+            <div className="flex items-center justify-start gap-2">
+              {filterOptions.map((data) => (
                 <div
-                  className="flex flex-col items-center justify-center"
-                  key={data.status}
+                  className={`border rounded-full cursor-pointer py-2 px-3 flex items-center justify-start gap-2 ${
+                    checkIfStatusIsSelected(data.title)
+                      ? "bg-blue text-white"
+                      : "text-black"
+                  }`}
+                  key={data.title}
+                  onClick={() => handleSelectFilterStatus(data.title)}
                 >
-                  <div
-                    style={{ backgroundColor: data.bgColor }}
-                    className="py-2 px-5 text-white rounded-md shadow-md border-l border-l-black border-b border-b-black"
-                  >
-                    <CountUp
-                      className="text-lg font-bold mb-2"
-                      end={data.count}
-                      duration={1}
-                    />
-                  </div>
-                  <p className="text-xs font-bold">{data.status}</p>
+                  <p>{data.title}</p>
+                  <p>{data.count}</p>
                 </div>
               ))}
             </div>
-          </div>
-          <div className="flex items-center justify-start gap-2">
-            {applicationsStatus.map((data) => (
-              <p
-                key={data.status}
-                className="border rounded-full cursor-pointer py-2 px-3"
-              >
-                {data.status}
-              </p>
-            ))}
           </div>
         </div>
       )}
