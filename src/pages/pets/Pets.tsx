@@ -98,36 +98,44 @@ const Pets = () => {
           />
         </div>
         <div className="w-full">
-          {/* <NoResultsFound title="No results found" /> */}
-          {!isLoading && totalPostedPetCount > 0 && (
-            <div className="text-center mt-3 md:mt-0 mb-2">
-              <p className="font-semibold">
-                {hasSelectedFilterOption
-                  ? totalFilteredPetsDataCount
-                  : totalPostedPetCount}{" "}
-                {!hasSelectedFilterOption &&
-                  (totalPostedPetCount > 1 ? "ITEMS" : "ITEM")}
-                {hasSelectedFilterOption &&
-                  (totalFilteredPetsDataCount > 1 ? "ITEMS" : "ITEM")}
-              </p>
+          {emptyFilterQueryResponse && (
+            <NoResultsFound title="No results found" />
+          )}
+          {!emptyFilterQueryResponse &&
+            !isLoading &&
+            totalPostedPetCount > 0 && (
+              <div className="text-center mt-3 md:mt-0 mb-2">
+                <p className="font-semibold">
+                  {hasSelectedFilterOption
+                    ? totalFilteredPetsDataCount
+                    : totalPostedPetCount}{" "}
+                  {!hasSelectedFilterOption &&
+                    (totalPostedPetCount > 1 ? "ITEMS" : "ITEM")}
+                  {hasSelectedFilterOption &&
+                    (totalFilteredPetsDataCount > 1 ? "ITEMS" : "ITEM")}
+                </p>
+              </div>
+            )}
+
+          {!emptyFilterQueryResponse && (
+            <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
+              {petsData.length > 0 &&
+                currentItems.map((pet) => <PetsCard key={pet.id} {...pet} />)}
             </div>
           )}
-
-          <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
-            {petsData.length > 0 &&
-              currentItems.map((pet) => <PetsCard key={pet.id} {...pet} />)}
-          </div>
-          {isLoading && (
+          {!emptyFilterQueryResponse && isLoading && (
             <LoadingSpinner title="Fetching pets..." size="large" />
           )}
-          {!isLoading && totalPostedPetCount === 0 && (
-            <h1 className="flex justify-center items-center h-96 font-bold text-lg">
-              No added pets yet...
-            </h1>
-          )}
+          {!emptyFilterQueryResponse &&
+            !isLoading &&
+            totalPostedPetCount === 0 && (
+              <h1 className="flex justify-center items-center h-96 font-bold text-lg">
+                No added pets yet...
+              </h1>
+            )}
         </div>
       </div>
-      {!isLoading && totalPostedPetCount > 0 && (
+      {!emptyFilterQueryResponse && !isLoading && totalPostedPetCount > 0 && (
         <div className="flex items-center justify-center mt-5">
           <Pagination
             defaultCurrent={1}
