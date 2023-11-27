@@ -7,10 +7,12 @@ import PendingApplicationsCard from "./PendingApplicationsCard";
 import CountUp from "react-countup";
 import usePaginate from "../../../hooks/usePaginate";
 import { Pagination } from "antd";
+import { useState } from "react";
 
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =
     useFetchApplicationsByRecipientId();
+  const [selectedFilterStatus, setSelectedFilterStatus] = useState([]);
   const applicationDataTotalCount = applicationsData?.length;
   const pageData: AdoptionsData[] = applicationsData;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
@@ -47,26 +49,38 @@ const PetAdoption = () => {
   return (
     <div>
       {!isLoading && !isAdoptionsDataEmpty && (
-        <div className="flex flex-col items-center justify-center gap-3 mb-10">
-          <h1 className="text-lg">Applications Status:</h1>
-          <div className="flex items-center justify-center gap-4">
-            {applicationsStatus?.map((data) => (
-              <div
-                className="flex flex-col items-center justify-center"
-                key={data.status}
-              >
+        <div>
+          <div className="flex flex-col items-center justify-center gap-3 mb-10">
+            <h1 className="text-lg">Applications Status:</h1>
+            <div className="flex items-center justify-center gap-4">
+              {applicationsStatus?.map((data) => (
                 <div
-                  style={{ backgroundColor: data.bgColor }}
-                  className="py-2 px-5 text-white rounded-md shadow-md border-l border-l-black border-b border-b-black"
+                  className="flex flex-col items-center justify-center"
+                  key={data.status}
                 >
-                  <CountUp
-                    className="text-lg font-bold mb-2"
-                    end={data.count}
-                    duration={1}
-                  />
+                  <div
+                    style={{ backgroundColor: data.bgColor }}
+                    className="py-2 px-5 text-white rounded-md shadow-md border-l border-l-black border-b border-b-black"
+                  >
+                    <CountUp
+                      className="text-lg font-bold mb-2"
+                      end={data.count}
+                      duration={1}
+                    />
+                  </div>
+                  <p className="text-xs font-bold">{data.status}</p>
                 </div>
-                <p className="text-xs font-bold">{data.status}</p>
-              </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-start gap-2">
+            {applicationsStatus.map((data) => (
+              <p
+                key={data.status}
+                className="border rounded-full cursor-pointer py-2 px-3"
+              >
+                {data.status}
+              </p>
             ))}
           </div>
         </div>
