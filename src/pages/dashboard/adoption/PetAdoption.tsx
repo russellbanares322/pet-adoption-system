@@ -4,19 +4,24 @@ import {
 } from "../../../api/adoptions/adoptions";
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import PendingApplicationsCard from "./PendingApplicationsCard";
-import CountUp from "react-countup";
 import usePaginate from "../../../hooks/usePaginate";
 import { Pagination } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const PetAdoption = () => {
   const { data: applicationsData, isLoading } =
     useFetchApplicationsByRecipientId();
+  const [filteredApplicationsData, setFilteredApplicationsData] = useState<
+    AdoptionsData[]
+  >([]);
   const [selectedApplicationStatus, setSelectedApplicationStatus] = useState<
     string[]
   >([]);
+  const hasSelectedFilterStatus = selectedApplicationStatus.length > 0;
   const applicationDataTotalCount = applicationsData?.length;
-  const pageData: AdoptionsData[] = applicationsData;
+  const pageData: AdoptionsData[] = hasSelectedFilterStatus
+    ? filteredApplicationsData
+    : applicationsData;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
     usePaginate<AdoptionsData>({ pageData });
   const toBeReviewedApplicationTotalCount = applicationsData?.filter(
@@ -32,11 +37,7 @@ const PetAdoption = () => {
 
   const filterOptions = [
     {
-      title: "All",
-      count: applicationDataTotalCount,
-    },
-    {
-      title: "Pending",
+      title: "To be reviewed",
       count: toBeReviewedApplicationTotalCount,
     },
     {
@@ -70,12 +71,24 @@ const PetAdoption = () => {
     return false;
   };
 
+  useEffect(() => {
+    if (hasSelectedFilterStatus) {
+      const filteredData = applicationsData?.filter((data) =>
+        selectedApplicationStatus.includes(data.status)
+      );
+      setFilteredApplicationsData(filteredData);
+    }
+  }, [selectedApplicationStatus]);
+
   return (
     <div>
       {!isLoading && !isAdoptionsDataEmpty && (
         <div>
           <div className="flex flex-col items-center justify-center gap-3 mb-10">
-            <h1 className="text-lg">Adoption Applications</h1>
+            <h1 className="text-lg">
+              Total Adoption Applications:{" "}
+              <strong>{applicationDataTotalCount}</strong>
+            </h1>
           </div>
           <div>
             <p className="mb-2">Filter by status:</p>
