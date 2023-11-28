@@ -17,7 +17,7 @@ const AboutUsDataDisplay = ({
     <div
       className={`flex-1 justify-center md:flex ${
         wrapData ? "flex-row-reverse" : "flex-row"
-      } md:justify-start items-center gap-5 mb-2`}
+      } md:justify-start items-center gap-10 mb-3`}
     >
       <div>
         <p className="text-xl font-semibold text-maroon mb-2">{title}</p>

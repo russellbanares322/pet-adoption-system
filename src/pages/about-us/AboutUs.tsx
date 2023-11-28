@@ -1,4 +1,4 @@
-import { aboutUsData } from "./about-us-data";
+import { aboutUsData } from "../../data/about-us-data";
 import AboutUsDataDisplay from "./AboutUsDataDisplay";
 
 const AboutUs = () => {

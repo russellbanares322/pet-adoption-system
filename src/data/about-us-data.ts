@@ -1,6 +1,6 @@
-import aboutUsImg1 from '../../assets/about-us-1.jpg'
-import aboutUsImg2 from '../../assets/about-us-2.jpg'
-import aboutUsImg3 from '../../assets/about-us-3.jpg'
+import aboutUsImg1 from '../assets/about-us-1.jpg'
+import aboutUsImg2 from '../assets/about-us-2.jpg'
+import aboutUsImg3 from '../assets/about-us-3.jpg'
 
 export const aboutUsData = [
     {
