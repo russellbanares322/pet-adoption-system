@@ -56,7 +56,7 @@ const DashboardLandingPage = () => {
             <CountUp
               className="text-5xl font-bold mb-2"
               end={data.count}
-              duration={1}
+              duration={2}
             />
           </div>
         ))}
