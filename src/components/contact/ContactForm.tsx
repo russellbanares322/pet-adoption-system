@@ -37,6 +37,7 @@ const ContactForm = () => {
 
     if (someFormDataInputsAreEmpty) {
       setIsFormDirty(true);
+      setIsLoading(false);
     } else {
       try {
         await addDoc(suggestionsRef, {
