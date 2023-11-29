@@ -98,7 +98,7 @@ const PetAdoption = () => {
                   className={`border rounded-full py-2 px-3 flex items-center justify-start ${
                     data.count === 0
                       ? "cursor-not-allowed bg-slate-100 text-slate-400"
-                      : "cursor-pointer bg-white"
+                      : "cursor-pointer"
                   } gap-2 ${
                     checkIfStatusIsSelected(data.title)
                       ? "bg-blue text-white"
