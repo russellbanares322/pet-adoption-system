@@ -82,8 +82,7 @@ const UserSuggestions = () => {
                 <Button
                   size="small"
                   onClick={() => handleReplyUser(rec.email)}
-                  styleClass="primary-btn"
-                  type="primary"
+                  type="default"
                   icon={<FormOutlined />}
                 />
               </div>
@@ -100,7 +99,7 @@ const UserSuggestions = () => {
               >
                 <Button
                   size="small"
-                  type="primary"
+                  type="default"
                   danger={true}
                   icon={<DeleteOutlined />}
                 />

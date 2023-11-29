@@ -25,9 +25,10 @@ const Pets = () => {
   });
   const [searchInput, setSearchInput] = useState("");
   const emptySearchInput = searchInput.trim().length === 0;
-  const hasSelectedFilterOption =
-    Object.values(filterOptions).some((data) => data.length > 0) ||
-    !emptySearchInput;
+  const emptyFilterOptions = Object.values(filterOptions).every(
+    (data) => data.length === 0
+  );
+  const hasSelectedFilterOption = !emptyFilterOptions || !emptySearchInput;
   const pageData: PetsData[] = hasSelectedFilterOption
     ? filteredPetsData
     : petsData;
@@ -65,17 +66,14 @@ const Pets = () => {
   };
 
   useEffect(() => {
-    const filteredData = petsData?.filter(
+    const filteredDataByOptions = petsData?.filter(
       (data) =>
         filterOptions.color.some((color) => color === data.petColor) ||
         filterOptions.type.some((type) => type === data.petType) ||
         filterOptions.gender.some((gender) => gender === data.petGender)
     );
-    setFilteredPetsData(filteredData);
-  }, [filterOptions.color, filterOptions.gender, filterOptions.type]);
 
-  useEffect(() => {
-    const filteredData = petsData?.filter(
+    const filteredDataBySearch = petsData?.filter(
       (data) =>
         data.petColor.toLowerCase().includes(searchInput.toLowerCase()) ||
         data.petGender.toLowerCase().includes(searchInput.toLowerCase()) ||
@@ -83,8 +81,18 @@ const Pets = () => {
         data.petName.toLowerCase().includes(searchInput.toLowerCase())
     );
 
-    setFilteredPetsData(filteredData);
-  }, [searchInput]);
+    if (!emptyFilterOptions) {
+      setFilteredPetsData(filteredDataByOptions);
+    }
+    if (!emptySearchInput) {
+      setFilteredPetsData(filteredDataBySearch);
+    }
+  }, [
+    filterOptions.color,
+    filterOptions.gender,
+    filterOptions.type,
+    searchInput,
+  ]);
 
   return (
     <div className="py-24 w-full bg-whitesmoke min-h-screen h-full">
