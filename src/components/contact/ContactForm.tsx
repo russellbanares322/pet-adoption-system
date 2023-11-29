@@ -1,9 +1,4 @@
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  Timestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { HiOutlineUser, HiOutlineMail, HiOutlinePencil } from "react-icons/hi";
 import { ClipLoader } from "react-spinners";
