@@ -1,5 +1,7 @@
+import { Modal } from "antd";
+
 const NotificationDetailsModal = () => {
-  return <div>NotificationDetailsModal</div>;
+  return <Modal>NotificationDetailsModal</Modal>;
 };
 
 export default NotificationDetailsModal;
