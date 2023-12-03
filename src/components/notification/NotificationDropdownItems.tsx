@@ -1,4 +1,4 @@
-import { HiBell } from "react-icons/hi";
+import { HiBell, HiTrash } from "react-icons/hi";
 import { Badge, Empty, MenuProps } from "antd";
 import useViewNotification from "../../hooks/useViewNotification";
 import { useFetchPets } from "../../api/pets/pets";
@@ -27,23 +27,27 @@ const NotificationDropdownItems = () => {
     hasViewed: boolean
   ) => {
     return (
-      <div className="flex items-center gap-2">
-        <div className="flex items-center justify-start gap-3">
+      <div className="flex items-center justify-start gap-3 relative">
+        <div className="relative">
           <img
             className="h-11 w-11 object-cover rounded-md"
             src={getPetImage(petId)}
           />
-          <div>
-            <p className="text-sm">
-              Your application for <span className="font-bold">{petId}</span>{" "}
-              has been <span className="font-bold">{status}</span>
-            </p>
-            <p className="text-xs text-blue">
-              {moment(dateUpdated)?.fromNow()}
-            </p>
-          </div>
+          {!hasViewed && (
+            <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
+          )}
         </div>
-        {!hasViewed && <div className="bg-green p-[6px] rounded-full mt-6" />}
+        <div>
+          <p className="text-sm">
+            Your application for <span className="font-bold">{petId}</span> has
+            been <span className="font-bold">{status}</span>
+          </p>
+          <p className="text-xs text-blue">{moment(dateUpdated)?.fromNow()}</p>
+        </div>
+        <HiTrash
+          className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
+          size={16}
+        />
       </div>
     );
   };
