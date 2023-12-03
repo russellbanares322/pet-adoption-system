@@ -1,7 +1,15 @@
 import { Modal } from "antd";
+import { NotificationDetailsModalProps } from "./types";
 
-const NotificationDetailsModal = () => {
-  return <Modal>NotificationDetailsModal</Modal>;
+const NotificationDetailsModal = ({
+  open,
+  onCancel,
+}: NotificationDetailsModalProps) => {
+  return (
+    <Modal open={open} onCancel={onCancel}>
+      NotificationDetailsModal
+    </Modal>
+  );
 };
 
 export default NotificationDetailsModal;
