@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   HiBell,
   HiOutlineX,
@@ -7,7 +7,7 @@ import {
   HiOutlineLogout,
 } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
@@ -18,26 +18,19 @@ import MenuDropdown from "../dropdown/MenuDropdown";
 import { useFetchPets } from "../../api/pets/pets";
 import moment, { Moment } from "moment";
 import useViewNotification from "../../hooks/useViewNotification";
+import useActiveNavLink from "../../hooks/useActiveNavLink";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
-  const [activeNavLink, setActiveNavLink] = useState("");
   const { viewNotification } = useViewNotification();
   const { data: notificationsData } = useFetchNotifications();
   const { data: petsData } = useFetchPets();
+  const { checkIfNavLinkActive } = useActiveNavLink();
   const unViewedNotificationsCount = notificationsData?.filter(
     (data) => !data.hasViewed
   )?.length;
   const emptyNotificationsData = notificationsData?.length === 0;
-  const location = useLocation();
-  const isInLoginPage = location.pathname === "/login";
-  const isInSignupPage = location.pathname === "/sign-up";
-  const isInPetsPage = location.pathname === "/pets";
-  const isInDashboardPage = location.pathname.includes("/dashboard");
-  const isInAboutPage = location.pathname === "/about-us";
-  const isInMyPostPage = location.pathname === "/my-post";
-  const isInMyAdoptionsPage = location.pathname === "/my-adoptions";
-  const isInFavoritesPage = location.pathname === "/favorites";
+
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
@@ -146,28 +139,6 @@ const Navbar = () => {
         key: data?.notificationId,
       }));
 
-  useEffect(() => {
-    if (isInLoginPage) {
-      setActiveNavLink("Login");
-    } else if (isInSignupPage) {
-      setActiveNavLink("Signup");
-    } else if (isInPetsPage) {
-      setActiveNavLink("Pets");
-    } else if (isInDashboardPage) {
-      setActiveNavLink("Dashboard");
-    } else if (isInAboutPage) {
-      setActiveNavLink("About");
-    } else if (isInMyPostPage) {
-      setActiveNavLink("MyPost");
-    } else if (isInMyAdoptionsPage) {
-      setActiveNavLink("MyAdoptions");
-    } else if (isInFavoritesPage) {
-      setActiveNavLink("Favorites");
-    } else {
-      setActiveNavLink("Home");
-    }
-  }, [location]);
-
   return (
     <nav className="w-screen shadow-md">
       <div className="container py-4 text-maroon md:flex md:items-center md:justify-start">
@@ -190,7 +161,7 @@ const Navbar = () => {
           <li
             onClick={() => navigate("/")}
             className={`cursor-pointer relative ${
-              activeNavLink === "Home" && "active-nav-link"
+              checkIfNavLinkActive("Home") && "active-nav-link"
             }`}
           >
             Home
@@ -198,7 +169,7 @@ const Navbar = () => {
           <li
             onClick={() => navigate("/pets")}
             className={`cursor-pointer relative ${
-              activeNavLink === "Pets" && "active-nav-link"
+              checkIfNavLinkActive("Pets") && "active-nav-link"
             }`}
           >
             Pets
@@ -207,7 +178,7 @@ const Navbar = () => {
             <li
               onClick={() => navigate("/favorites")}
               className={`cursor-pointer relative ${
-                activeNavLink === "Favorites" && "active-nav-link"
+                checkIfNavLinkActive("Favorites") && "active-nav-link"
               }`}
             >
               Favorites
@@ -217,7 +188,7 @@ const Navbar = () => {
             <li
               onClick={() => navigate("/my-post")}
               className={`cursor-pointer relative ${
-                activeNavLink === "MyPost" && "active-nav-link"
+                checkIfNavLinkActive("MyPost") && "active-nav-link"
               }`}
             >
               My Post
@@ -227,7 +198,7 @@ const Navbar = () => {
             <li
               onClick={() => navigate("/my-adoptions")}
               className={`cursor-pointer relative ${
-                activeNavLink === "MyAdoptions" && "active-nav-link"
+                checkIfNavLinkActive("MyAdoptions") && "active-nav-link"
               }`}
             >
               My Adoptions
@@ -236,7 +207,7 @@ const Navbar = () => {
           <li
             onClick={() => navigate("/about-us")}
             className={`cursor-pointer relative ${
-              activeNavLink === "About" && "active-nav-link"
+              checkIfNavLinkActive("About") && "active-nav-link"
             }`}
           >
             What We Do
@@ -246,7 +217,7 @@ const Navbar = () => {
             <li
               onClick={() => navigate("/dashboard")}
               className={`cursor-pointer relative ${
-                activeNavLink === "Dashboard" && "active-nav-link"
+                checkIfNavLinkActive("Dashboard") && "active-nav-link"
               }`}
             >
               Dashboard
@@ -311,7 +282,7 @@ const Navbar = () => {
                 handleCloseNavbar();
               }}
               className={`cursor-pointer relative ${
-                activeNavLink === "Home" && "mobile-active-nav-link"
+                checkIfNavLinkActive("Home") && "mobile-active-nav-link"
               }`}
             >
               Home
@@ -322,7 +293,7 @@ const Navbar = () => {
                 handleCloseNavbar();
               }}
               className={`cursor-pointer relative ${
-                activeNavLink === "Pets" && "mobile-active-nav-link"
+                checkIfNavLinkActive("Pets") && "mobile-active-nav-link"
               }`}
             >
               Pets
@@ -334,7 +305,7 @@ const Navbar = () => {
                   handleCloseNavbar();
                 }}
                 className={`cursor-pointer relative ${
-                  activeNavLink === "Favorites" && "mobile-active-nav-link"
+                  checkIfNavLinkActive("Favorites") && "mobile-active-nav-link"
                 }`}
               >
                 Favorites
@@ -347,7 +318,7 @@ const Navbar = () => {
                   handleCloseNavbar();
                 }}
                 className={`cursor-pointer relative ${
-                  activeNavLink === "MyPost" && "mobile-active-nav-link"
+                  checkIfNavLinkActive("MyPost") && "mobile-active-nav-link"
                 }`}
               >
                 My Post
@@ -360,7 +331,8 @@ const Navbar = () => {
                   handleCloseNavbar();
                 }}
                 className={`cursor-pointer relative ${
-                  activeNavLink === "MyAdoptions" && "mobile-active-nav-link"
+                  checkIfNavLinkActive("MyAdoptions") &&
+                  "mobile-active-nav-link"
                 }`}
               >
                 My Adoptions
@@ -372,7 +344,7 @@ const Navbar = () => {
                 handleCloseNavbar();
               }}
               className={`cursor-pointer relative ${
-                activeNavLink === "About" && "mobile-active-nav-link"
+                checkIfNavLinkActive("About") && "mobile-active-nav-link"
               }`}
             >
               What We Do
@@ -384,7 +356,7 @@ const Navbar = () => {
                   handleCloseNavbar();
                 }}
                 className={`cursor-pointer relative ${
-                  activeNavLink === "Dashboard" && "mobile-active-nav-link"
+                  checkIfNavLinkActive("Dashboard") && "mobile-active-nav-link"
                 }`}
               >
                 Dashboard
