@@ -1,5 +1,5 @@
 import { HiBell, HiTrash } from "react-icons/hi";
-import { Badge, Empty, MenuProps } from "antd";
+import { Badge, Empty, MenuProps, Tooltip } from "antd";
 import useViewNotification from "../../hooks/useViewNotification";
 import { useFetchPets } from "../../api/pets/pets";
 import { useFetchNotifications } from "../../api/notifications/notifications";
@@ -7,7 +7,7 @@ import moment, { Moment } from "moment";
 import MenuDropdown from "../dropdown/MenuDropdown";
 
 const NotificationDropdownItems = () => {
-  const { viewNotification } = useViewNotification();
+  const { viewNotification, deleteNotification } = useViewNotification();
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
@@ -24,7 +24,8 @@ const NotificationDropdownItems = () => {
     petId: string,
     status: string,
     dateUpdated: Moment,
-    hasViewed: boolean
+    hasViewed: boolean,
+    notificationId: string
   ) => {
     return (
       <div className="flex items-center justify-start gap-3 relative">
@@ -44,10 +45,13 @@ const NotificationDropdownItems = () => {
           </p>
           <p className="text-xs text-blue">{moment(dateUpdated)?.fromNow()}</p>
         </div>
-        <HiTrash
-          className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
-          size={16}
-        />
+        <Tooltip placement="bottom" title="Remove notification">
+          <HiTrash
+            onClick={() => deleteNotification(notificationId)}
+            className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
+            size={16}
+          />
+        </Tooltip>
       </div>
     );
   };
@@ -83,7 +87,8 @@ const NotificationDropdownItems = () => {
           data?.petId,
           data?.status,
           data?.dateUpdated,
-          data?.hasViewed
+          data?.hasViewed,
+          data?.notificationId
         ),
         key: data?.notificationId,
       }));

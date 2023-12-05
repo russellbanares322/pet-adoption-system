@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
-import type { MenuProps } from "antd";
+import { MenuProps } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import useActiveNavLink from "../../hooks/useActiveNavLink";
 import NotificationDropdownItems from "../notification/NotificationDropdownItems";
