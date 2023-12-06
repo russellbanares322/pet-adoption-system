@@ -73,7 +73,7 @@ const AddEditPetFormModal = ({
         showAdoptButton: petDataForUpdate?.showAdoptButton,
         petDescription: petDataForUpdate?.petDescription,
       });
-      setImgFile(petDataForUpdate?.petImage);
+      setImgFile(petDataForUpdate?.petImage as string);
     }
   }, [selectedId, petDataForUpdate]);
 
@@ -147,8 +147,8 @@ const AddEditPetFormModal = ({
           status: isUserPosted ? "Pending" : "Approved",
           createdBy: user?.displayName,
           dateCreated: serverTimestamp(),
-          likes: petDataForUpdate.likes,
-          comments: petDataForUpdate.comments,
+          likes: petDataForUpdate?.likes,
+          comments: petDataForUpdate?.comments,
         });
         await deletePrevSelectedImgInStorage();
         setIsLoading(false);

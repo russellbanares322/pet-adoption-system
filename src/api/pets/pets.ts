@@ -69,7 +69,7 @@ const useFetchPets = () => {
 };
 
 const useFetchPet = (id: string) => {
-  const [data, setData] = useState<Record<string, any>>({});
+  const [data, setData] = useState<PetsData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const getSinglePet = async () => {
@@ -78,7 +78,7 @@ const useFetchPet = (id: string) => {
       const listedPetsRef = doc(db, "listed-pets", id);
       const snapshot = await getDoc(listedPetsRef);
       if (snapshot.exists()) {
-        setData({ ...snapshot.data() });
+        setData({ ...snapshot.data() as PetsData }) ;
         setIsLoading(false);
       }
     }
