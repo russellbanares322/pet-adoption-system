@@ -1,14 +1,15 @@
-import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase/firebase-config";
+import {NotificationData} from '../notifications/notifications'
 
 type TUsers = {
   id: string;
   dateCreated: Timestamp;
   email: string;
   savedFavoritePets: string[];
-  notifications: [];
+  notifications: NotificationData[];
 };
 
 const useFetchUsers = () => {
@@ -36,24 +37,20 @@ const useFetchUsers = () => {
   return { data, isLoading };
 };
 
-const useFetchUser = () => {
-  const [data, setData] = useState<TUsers[]>([]);
+const useFetchUser = (userEmail: string) => {
+  const [data, setData] = useState<TUsers | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [user] = useAuthState(auth)
 
-  const getUser = async () => {
+ const getUser = async() => {
     setIsLoading(true);
-    const listedUsersRef = collection(db, "users");
-    const q = query(listedUsersRef, where("email", "==" , user?.email + ""))
-    onSnapshot(q, (snapshot) => {
-      const usersData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as TUsers[];
-      setData(usersData);
+    const userDataRef = doc(db, "users", userEmail);
+    const snapshot = await getDoc(userDataRef);
+    
+    if (snapshot.exists()) {
+      setData({ ...snapshot.data() as TUsers });
       setIsLoading(false);
-    });
-  }
+    }
+ }
 
   useEffect(() => {
     getUser()

@@ -2,13 +2,15 @@ import {  doc, updateDoc } from "firebase/firestore"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { toast } from "react-toastify"
 import { useFetchNotifications } from "../api/notifications/notifications"
+import { useFetchUser } from "../api/users/users"
 import { auth, db } from "../firebase/firebase-config"
 
 const useViewNotification = () => {
   const [user] = useAuthState(auth)
+  const userEmail = user?.email + ""
     const { data: notificationsData } = useFetchNotifications();
-    const userDataRef = doc(db, "users", user?.email + "")
-
+    const { data: userData } = useFetchUser(userEmail);
+    const userDataRef = doc(db, "users", userEmail)
 
     const viewNotification = async(selectedNotificationId: string) => {
       try {
@@ -26,8 +28,11 @@ const useViewNotification = () => {
 
     const deleteNotification = async (selectedNotificationId: string) => {
       try {
-        const filteredNotifications = notificationsData?.filter((data) => data.notificationId !== selectedNotificationId)
-        await updateDoc(userDataRef, { notifications: filteredNotifications })
+        const filteredNotifications = userData?.notifications?.filter((data) => data.notificationId !== selectedNotificationId)
+        await updateDoc(userDataRef, {
+          ...userData,
+          notifications: filteredNotifications
+        })
 
         toast.success("Removed notification")
       } catch(err: any){

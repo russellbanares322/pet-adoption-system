@@ -47,7 +47,10 @@ const NotificationDropdownItems = () => {
         </div>
         <Tooltip placement="bottom" title="Remove notification">
           <HiTrash
-            onClick={() => deleteNotification(notificationId)}
+            onClick={(e) => {
+              deleteNotification(notificationId);
+              e.stopPropagation();
+            }}
             className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
             size={16}
           />
