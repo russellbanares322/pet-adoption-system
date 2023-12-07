@@ -4,10 +4,11 @@ import { NotificationDetailsModalProps } from "./types";
 const NotificationDetailsModal = ({
   open,
   onCancel,
+  notificationId,
 }: NotificationDetailsModalProps) => {
   return (
-    <Modal open={open} onCancel={onCancel}>
-      NotificationDetailsModal
+    <Modal closable={true} open={open} onCancel={onCancel}>
+      {notificationId}
     </Modal>
   );
 };

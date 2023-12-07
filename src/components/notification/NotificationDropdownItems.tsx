@@ -5,9 +5,19 @@ import { useFetchPets } from "../../api/pets/pets";
 import { useFetchNotifications } from "../../api/notifications/notifications";
 import moment, { Moment } from "moment";
 import MenuDropdown from "../dropdown/MenuDropdown";
+import { TNotificationInfoOptions } from "./types";
+import { useState } from "react";
+import NotificationDetailsModal from "./NotificationDetailsModal";
+
+//*TODO: Make sure that the dropdown doesn't close once it is clicked, to open notification details modal
 
 const NotificationDropdownItems = () => {
   const { viewNotification, deleteNotification } = useViewNotification();
+  const [notificationInfoOptions, setNotifcationInfoOptions] =
+    useState<TNotificationInfoOptions>({
+      openModal: false,
+      notificationId: null,
+    });
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
@@ -20,6 +30,22 @@ const NotificationDropdownItems = () => {
     return petImage;
   };
 
+  const handleOpenNotificationDetailsModal = (
+    selectedNotificationId: string
+  ) => {
+    setNotifcationInfoOptions({
+      openModal: true,
+      notificationId: selectedNotificationId,
+    });
+  };
+
+  const handleCloseNotificationDetailsModal = () => {
+    setNotifcationInfoOptions({
+      openModal: false,
+      notificationId: null,
+    });
+  };
+
   const renderNotificationDropdownItemsLabel = (
     petId: string,
     status: string,
@@ -28,33 +54,42 @@ const NotificationDropdownItems = () => {
     notificationId: string
   ) => {
     return (
-      <div className="flex items-center justify-start gap-3 relative">
-        <div className="relative">
-          <img
-            className="h-11 w-11 object-cover rounded-md"
-            src={getPetImage(petId)}
-          />
-          {!hasViewed && (
-            <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
-          )}
+      <div>
+        <div className="flex items-center justify-start gap-3 relative">
+          <div className="relative">
+            <img
+              className="h-11 w-11 object-cover rounded-md"
+              src={getPetImage(petId)}
+            />
+            {!hasViewed && (
+              <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
+            )}
+          </div>
+          <div>
+            <p className="text-sm">
+              Your application for <span className="font-bold">{petId}</span>{" "}
+              has been <span className="font-bold">{status}</span>
+            </p>
+            <p className="text-xs text-blue">
+              {moment(dateUpdated)?.fromNow()}
+            </p>
+          </div>
+          <Tooltip placement="bottom" title="Remove notification">
+            <HiTrash
+              onClick={(e) => {
+                deleteNotification(notificationId);
+                e.stopPropagation();
+              }}
+              className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
+              size={16}
+            />
+          </Tooltip>
         </div>
-        <div>
-          <p className="text-sm">
-            Your application for <span className="font-bold">{petId}</span> has
-            been <span className="font-bold">{status}</span>
-          </p>
-          <p className="text-xs text-blue">{moment(dateUpdated)?.fromNow()}</p>
-        </div>
-        <Tooltip placement="bottom" title="Remove notification">
-          <HiTrash
-            onClick={(e) => {
-              deleteNotification(notificationId);
-              e.stopPropagation();
-            }}
-            className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
-            size={16}
-          />
-        </Tooltip>
+        <NotificationDetailsModal
+          open={notificationInfoOptions.openModal}
+          onCancel={handleCloseNotificationDetailsModal}
+          notificationId={notificationInfoOptions.notificationId}
+        />
       </div>
     );
   };
@@ -76,6 +111,7 @@ const NotificationDropdownItems = () => {
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (!emptyNotificationsData) {
       viewNotification(key);
+      // handleOpenNotificationDetailsModal(key);
     }
   };
 

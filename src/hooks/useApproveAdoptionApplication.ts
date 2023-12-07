@@ -72,7 +72,7 @@ const useApproveAdoptionApplication = () => {
             validIdImg: applicationData.validIdImg,
           })
           await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
-          toast.success(`Successfully approved application for ${applicationData.id}`)
+          toast.success(`Successfully rejected application`)
           setIsLoading(false)
         } catch (err: any) {
           toast.error(err.message)
@@ -100,7 +100,7 @@ const useApproveAdoptionApplication = () => {
         notifications: arrayUnion(notificationToBeSent)
       })
     }
-  return {approveApplication,deleteApplication, rejectApplication, isLoading}
+  return { approveApplication, deleteApplication, rejectApplication, isLoading }
 }
 
 export default useApproveAdoptionApplication
