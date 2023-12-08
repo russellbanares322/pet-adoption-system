@@ -17,5 +17,4 @@ export type MenuDropdownProps = {
   trigger: TriggerOptions;
   isSelectable?: boolean;
   placement?: MenuDropdownPlacements;
-  open: boolean;
 };

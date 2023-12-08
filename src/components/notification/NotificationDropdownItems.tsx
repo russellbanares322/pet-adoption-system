@@ -16,7 +16,6 @@ const NotificationDropdownItems = () => {
       openModal: false,
       notificationId: null,
     });
-  const [openDropdown, setOpenDropdown] = useState(false);
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
@@ -27,10 +26,6 @@ const NotificationDropdownItems = () => {
   const getPetImage = (petId: string) => {
     const petImage = petsData?.find((data) => data.id === petId)?.petImage;
     return petImage;
-  };
-
-  const toggleDropdownVisiblity = () => {
-    setOpenDropdown(!openDropdown);
   };
 
   const handleOpenNotificationDetailsModal = (
@@ -58,42 +53,33 @@ const NotificationDropdownItems = () => {
     notificationId: string
   ) => {
     return (
-      <div>
-        <div className="flex items-center justify-start gap-3 relative">
-          <div className="relative">
-            <img
-              className="h-11 w-11 object-cover rounded-md"
-              src={getPetImage(petId)}
-            />
-            {!hasViewed && (
-              <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
-            )}
-          </div>
-          <div>
-            <p className="text-sm">
-              Your application for <span className="font-bold">{petId}</span>{" "}
-              has been <span className="font-bold">{status}</span>
-            </p>
-            <p className="text-xs text-blue">
-              {moment(dateUpdated)?.fromNow()}
-            </p>
-          </div>
-          <Tooltip placement="bottom" title="Remove notification">
-            <HiTrash
-              onClick={(e) => {
-                deleteNotification(notificationId);
-                e.stopPropagation();
-              }}
-              className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
-              size={16}
-            />
-          </Tooltip>
+      <div className="flex items-center justify-start gap-3 relative">
+        <div className="relative">
+          <img
+            className="h-11 w-11 object-cover rounded-md"
+            src={getPetImage(petId)}
+          />
+          {!hasViewed && (
+            <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
+          )}
         </div>
-        <NotificationDetailsModal
-          open={notificationInfoOptions.openModal}
-          onCancel={handleCloseNotificationDetailsModal}
-          notificationId={notificationInfoOptions.notificationId}
-        />
+        <div>
+          <p className="text-sm">
+            Your application for <span className="font-bold">{petId}</span> has
+            been <span className="font-bold">{status}</span>
+          </p>
+          <p className="text-xs text-blue">{moment(dateUpdated)?.fromNow()}</p>
+        </div>
+        <Tooltip placement="bottom" title="Remove notification">
+          <HiTrash
+            onClick={(e) => {
+              deleteNotification(notificationId);
+              e.stopPropagation();
+            }}
+            className="hover:text-red-600 duration-100 ease-out absolute bottom-0 -right-1"
+            size={16}
+          />
+        </Tooltip>
       </div>
     );
   };
@@ -137,24 +123,32 @@ const NotificationDropdownItems = () => {
       }));
 
   return (
-    <MenuDropdown
-      items={notificationDropdownItems}
-      itemActions={notificationsDropdownItemActions}
-      trigger="click"
-      open={openDropdown}
-    >
-      <div onClick={toggleDropdownVisiblity} className="cursor-pointer pt-1">
-        <Badge
-          color="#52C41A"
-          className="mr-2"
-          count={
-            unViewedNotificationsCount === 0 ? null : unViewedNotificationsCount
-          }
-        >
-          <HiBell className="cursor-pointer" size={21} />
-        </Badge>
-      </div>
-    </MenuDropdown>
+    <>
+      <MenuDropdown
+        items={notificationDropdownItems}
+        itemActions={notificationsDropdownItemActions}
+        trigger="click"
+      >
+        <div className="cursor-pointer pt-1">
+          <Badge
+            color="#52C41A"
+            className="mr-2"
+            count={
+              unViewedNotificationsCount === 0
+                ? null
+                : unViewedNotificationsCount
+            }
+          >
+            <HiBell className="cursor-pointer" size={21} />
+          </Badge>
+        </div>
+      </MenuDropdown>
+      <NotificationDetailsModal
+        open={notificationInfoOptions.openModal}
+        onCancel={handleCloseNotificationDetailsModal}
+        notificationId={notificationInfoOptions.notificationId}
+      />
+    </>
   );
 };
 

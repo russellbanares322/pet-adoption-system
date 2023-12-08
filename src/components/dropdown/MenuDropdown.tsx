@@ -8,14 +8,12 @@ const MenuDropdown = ({
   trigger,
   isSelectable = false,
   placement = "bottomRight",
-  open,
 }: MenuDropdownProps) => {
   return (
     <Dropdown
       menu={{ items, onClick: itemActions, selectable: isSelectable }}
       trigger={[trigger]}
       placement={placement}
-      open={open}
     >
       {children}
     </Dropdown>
