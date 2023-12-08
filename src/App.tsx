@@ -13,7 +13,7 @@ function App() {
   };
 
   return (
-    <div className="font-karla min-h-[100vh] h-full">
+    <div className="min-h-[100vh] h-full">
       <Navbar />
       <Routes>
         {routes.map((route: any) => {

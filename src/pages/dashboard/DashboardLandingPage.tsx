@@ -2,11 +2,16 @@ import CountUp from "react-countup";
 import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
 import { useFetchPendingPets, useFetchPets } from "../../api/pets/pets";
 import { useFetchUsers } from "../../api/users/users";
+import { IoPawOutline } from "react-icons/io5";
+import { LuFileClock } from "react-icons/lu";
+import { FiUsers } from "react-icons/fi";
+import { IoMdPaper } from "react-icons/io";
 
 type TDashboardLandingPageDatas = {
   id: number;
   title: string;
   count: number;
+  icon: React.ReactNode;
 };
 
 const DashboardLandingPage = () => {
@@ -22,23 +27,27 @@ const DashboardLandingPage = () => {
   const dashboardLandingPageDatas: TDashboardLandingPageDatas[] = [
     {
       id: 1,
-      title: "Total Number of Listed Pets",
+      title: "Listed Pets",
       count: listedPetsCount,
+      icon: <IoPawOutline size={25} />,
     },
     {
       id: 2,
-      title: "Total Number of Pending Post",
+      title: "Pending Post",
       count: pendingPetsCount,
+      icon: <LuFileClock size={25} />,
     },
     {
       id: 3,
-      title: "Total Number of Registered Users",
+      title: "Registered Users",
       count: registeredUsersCount,
+      icon: <FiUsers size={25} />,
     },
     {
       id: 4,
-      title: "Total Number of Adoption Applications",
+      title: "Adoption Applications",
       count: adoptionApplicationsCount,
+      icon: <IoMdPaper size={25} />,
     },
   ];
   return (
@@ -50,9 +59,14 @@ const DashboardLandingPage = () => {
         {dashboardLandingPageDatas.map((data) => (
           <div
             key={data.id}
-            className="bg-blue text-white rounded-md p-4 flex flex-col items-center justify-center gap-4 border border-l-2 border-l-dark-blue  border-b-2 border-b-dark-blue"
+            className="border-l border-l-dark-blue border-b border-b-dark-blue bg-gradient-to-l from-orange/40 to-blue text-white rounded-md mb-2 p-5 flex flex-col gap-4"
           >
-            <p className="text-lg text-center">{data.title}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-base font-semibold">
+                {data.title.toUpperCase()}
+              </p>
+              <div className="bg-orange rounded-full p-2">{data.icon}</div>
+            </div>
             <CountUp
               className="text-5xl font-bold mb-2"
               end={data.count}
