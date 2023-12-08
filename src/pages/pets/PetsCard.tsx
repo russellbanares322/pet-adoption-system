@@ -79,7 +79,7 @@ const PetsCard = ({
   };
 
   return (
-    <div className="border-l-4 border-b-4 border-b-maroon border-l-maroon rounded-lg bg-white">
+    <div className="border-l-4 border-b-4 border-b-maroon border-l-maroon rounded-lg bg-white hover:-translate-y-4 duration-300 ease-in-out">
       <div className="relative group">
         <img
           className="object-cover h-60 w-full bg-center rounded-tr-lg rounded-tl-lg"
