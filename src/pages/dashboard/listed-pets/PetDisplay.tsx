@@ -60,7 +60,7 @@ const PetDisplay = ({
   };
 
   return (
-    <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200">
+    <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200 hover:-translate-y-4 duration-300 ease-in-out">
       <div className="relative group">
         <img
           className="rounded-md object-cover h-60 w-full bg-center"
