@@ -18,12 +18,17 @@ import NotificationDropdownItems from "../notification/NotificationDropdownItems
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const { checkIfNavLinkActive } = useActiveNavLink();
+  const [openDropdown, setOpenDropdown] = useState(false);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
   const displayName = user?.displayName;
   const isAdminLoggedIn =
     user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+
+  const toggleDropdownVisiblity = () => {
+    setOpenDropdown(!openDropdown);
+  };
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);
@@ -160,8 +165,13 @@ const Navbar = () => {
                   items={navDropdownItems}
                   itemActions={dropdownItemActions}
                   trigger="click"
+                  open={openDropdown}
                 >
-                  <HiOutlineChevronDown className="cursor-pointer" size={23} />
+                  <HiOutlineChevronDown
+                    onClick={toggleDropdownVisiblity}
+                    className="cursor-pointer"
+                    size={23}
+                  />
                 </MenuDropdown>
               </li>
             </div>
@@ -285,8 +295,13 @@ const Navbar = () => {
                   items={navDropdownItems}
                   itemActions={dropdownItemActions}
                   trigger="click"
+                  open={openDropdown}
                 >
-                  <HiOutlineChevronDown className="cursor-pointer" size={23} />
+                  <HiOutlineChevronDown
+                    onClick={toggleDropdownVisiblity}
+                    className="cursor-pointer"
+                    size={23}
+                  />
                 </MenuDropdown>
               </li>
             )}

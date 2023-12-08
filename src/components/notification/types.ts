@@ -1,6 +1,6 @@
 export type NotificationDetailsModalProps = {
     open: boolean,
-    onCancel: () => void,
+    onCancel: (e: React.MouseEvent) => void,
     notificationId: string | null
 }
 

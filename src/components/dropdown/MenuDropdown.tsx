@@ -1,24 +1,5 @@
 import { Dropdown } from "antd";
-import type { MenuProps } from "antd";
-import React from "react";
-
-type TriggerOptions = "click" | "hover" | "contextMenu";
-type MenuDropdownPlacements =
-  | "bottom"
-  | "bottomLeft"
-  | "bottomRight"
-  | "top"
-  | "topLeft"
-  | "topRight";
-
-type MenuDropdownProps = {
-  children: React.ReactNode;
-  items: MenuProps["items"];
-  itemActions: MenuProps["onClick"];
-  trigger: TriggerOptions;
-  isSelectable?: boolean;
-  placement?: MenuDropdownPlacements;
-};
+import { MenuDropdownProps } from "./types";
 
 const MenuDropdown = ({
   children,
@@ -27,12 +8,14 @@ const MenuDropdown = ({
   trigger,
   isSelectable = false,
   placement = "bottomRight",
+  open,
 }: MenuDropdownProps) => {
   return (
     <Dropdown
       menu={{ items, onClick: itemActions, selectable: isSelectable }}
       trigger={[trigger]}
       placement={placement}
+      open={open}
     >
       {children}
     </Dropdown>

@@ -6,10 +6,8 @@ import { useFetchNotifications } from "../../api/notifications/notifications";
 import moment, { Moment } from "moment";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import { TNotificationInfoOptions } from "./types";
-import { useState } from "react";
+import React, { useState } from "react";
 import NotificationDetailsModal from "./NotificationDetailsModal";
-
-//*TODO: Make sure that the dropdown doesn't close once it is clicked, to open notification details modal
 
 const NotificationDropdownItems = () => {
   const { viewNotification, deleteNotification } = useViewNotification();
@@ -18,6 +16,7 @@ const NotificationDropdownItems = () => {
       openModal: false,
       notificationId: null,
     });
+  const [openDropdown, setOpenDropdown] = useState(false);
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
@@ -30,6 +29,10 @@ const NotificationDropdownItems = () => {
     return petImage;
   };
 
+  const toggleDropdownVisiblity = () => {
+    setOpenDropdown(!openDropdown);
+  };
+
   const handleOpenNotificationDetailsModal = (
     selectedNotificationId: string
   ) => {
@@ -39,7 +42,8 @@ const NotificationDropdownItems = () => {
     });
   };
 
-  const handleCloseNotificationDetailsModal = () => {
+  const handleCloseNotificationDetailsModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setNotifcationInfoOptions({
       openModal: false,
       notificationId: null,
@@ -111,7 +115,7 @@ const NotificationDropdownItems = () => {
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (!emptyNotificationsData) {
       viewNotification(key);
-      // handleOpenNotificationDetailsModal(key);
+      handleOpenNotificationDetailsModal(key);
     }
   };
 
@@ -137,8 +141,9 @@ const NotificationDropdownItems = () => {
       items={notificationDropdownItems}
       itemActions={notificationsDropdownItemActions}
       trigger="click"
+      open={openDropdown}
     >
-      <div className="cursor-pointer pt-1">
+      <div onClick={toggleDropdownVisiblity} className="cursor-pointer pt-1">
         <Badge
           color="#52C41A"
           className="mr-2"

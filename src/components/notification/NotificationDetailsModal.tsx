@@ -7,7 +7,7 @@ const NotificationDetailsModal = ({
   notificationId,
 }: NotificationDetailsModalProps) => {
   return (
-    <Modal closable={true} open={open} onCancel={onCancel}>
+    <Modal className="z-10" closable={true} open={open} onCancel={onCancel}>
       {notificationId}
     </Modal>
   );
