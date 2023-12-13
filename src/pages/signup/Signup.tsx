@@ -4,17 +4,14 @@ import { PiEyeClosed, PiEye } from "react-icons/pi";
 import { MdOutlinePassword } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  User,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
 import { auth, db } from "../../firebase/firebase-config";
 import { toast } from "react-toastify";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import { useFetchUsers } from "../../api/users/users";
+import useUpdateProfile from "../../hooks/useUpdateProfile";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,6 +26,8 @@ const Signup = () => {
   });
   const passwordsDontMatch = formData.confirmPassword !== formData.password;
   const [isLoading, setIsLoading] = useState(false);
+  const { updateUserProfile } = useUpdateProfile();
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -73,9 +72,7 @@ const Signup = () => {
             notifications: [],
           });
 
-          await updateProfile(auth?.currentUser as User, {
-            displayName: formData.fullName,
-          });
+          await updateUserProfile(formData.fullName, "", "");
 
           setFormData({
             fullName: "",

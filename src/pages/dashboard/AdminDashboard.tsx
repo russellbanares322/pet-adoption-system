@@ -12,8 +12,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const isInDashboardPage = location.pathname === "/dashboard";
-  const isAdminLoggedIn =
-    user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const isAdminLoggedIn = user?.uid === import.meta.env.VITE_APP_ADMIN_UID;
 
   const contentStyle = {
     margin: "18px 16px",

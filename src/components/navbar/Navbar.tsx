@@ -22,8 +22,7 @@ const Navbar = () => {
   const [user] = useAuthState(auth);
   const isLoggedIn = user;
   const displayName = user?.displayName;
-  const isAdminLoggedIn =
-    user?.email === import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const isAdminLoggedIn = user?.uid === import.meta.env.VITE_APP_ADMIN_UID;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);

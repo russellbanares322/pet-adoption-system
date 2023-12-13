@@ -1,3 +1,4 @@
+import { Alert } from "antd";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { HiOutlineMail, HiOutlineUser } from "react-icons/hi";
@@ -13,6 +14,7 @@ const ProfileForm = () => {
     newPassword: "",
   });
 
+  console.log(user?.uid);
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -23,7 +25,14 @@ const ProfileForm = () => {
 
   return (
     <form onSubmit={onSubmit} className="max-w-full w-96">
-      <div className="mt-10 flex flex-col gap-5">
+      <Alert
+        className="mt-5"
+        message="Successfully updated profile"
+        type="success"
+        showIcon
+        closable={true}
+      />
+      <div className="mt-3 flex flex-col gap-5">
         <div
           className={`flex items-center gap-3 border-b-2  border-b-gray-800 w-full py-1`}
         >
