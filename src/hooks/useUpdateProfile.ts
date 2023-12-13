@@ -1,10 +1,17 @@
 import { updateEmail, updatePassword, updateProfile, User } from "firebase/auth"
 import { useState } from "react"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { useNavigate } from "react-router-dom"
 import { auth } from "../firebase/firebase-config"
 import { isInputEmpty } from "../utils/isInputEmpty"
 
+type UpdateProfileConfigsData = {
+    isLoading: boolean;
+    showSuccessAlertMessage: boolean;
+    showErrorAlertMessage: boolean
+}
 const useUpdateProfile = () => {
-    const [updateProfileConfigs, setUpdateProfileConfigs] = useState({
+    const [updateProfileConfigs, setUpdateProfileConfigs] = useState<UpdateProfileConfigsData>({
         isLoading: false,
         showSuccessAlertMessage: false,
         showErrorAlertMessage: false
@@ -12,8 +19,20 @@ const useUpdateProfile = () => {
     const isLoading = updateProfileConfigs.isLoading;
     const showSuccessAlertMessage = updateProfileConfigs.showSuccessAlertMessage;
     const showErrorAlertMessage = updateProfileConfigs.showErrorAlertMessage;
+    const navigate = useNavigate()
+    const [user] = useAuthState(auth);
 
-    
+    const hideAlertMessage = (key: "showSuccessAlertMessage" | "showErrorAlertMessage" ) => {
+        const alertMessageTimeout = setTimeout(() => {
+            setUpdateProfileConfigs({
+                ...updateProfileConfigs,
+                [key]: false
+            })
+        }, 7000)
+
+        return () => clearTimeout(alertMessageTimeout)
+    }
+
     const updateUserProfile = async(fullName:string, email: string, newPassword: string) => {
         setUpdateProfileConfigs({
             ...updateProfileConfigs,
@@ -21,13 +40,16 @@ const useUpdateProfile = () => {
         })
         try {
             const currentUser = auth?.currentUser as User
-            if(!isInputEmpty(fullName)){
+            const providedDefaultEmail = user?.email === email;
+            const providedDefaultFullName = user?.displayName === fullName;
+
+            if(!isInputEmpty(fullName) && !providedDefaultFullName){
                 await updateProfile(currentUser, {
                     displayName: fullName
                 })
             }
 
-            if(!isInputEmpty(email)){
+            if(!isInputEmpty(email) && !providedDefaultEmail){
                 await updateEmail(currentUser, email);
             }
 
@@ -35,17 +57,22 @@ const useUpdateProfile = () => {
                 await updatePassword(currentUser, newPassword)
             }
 
+            navigate("/dashboard/profile")
             setUpdateProfileConfigs({
                 ...updateProfileConfigs,
-                isLoading: true,
+                isLoading: false,
                 showSuccessAlertMessage:true
             })
+            hideAlertMessage("showSuccessAlertMessage")
+
         } catch(err: any){
-        setUpdateProfileConfigs({
+            setUpdateProfileConfigs({
                 isLoading: false,
                 showSuccessAlertMessage:false,
                 showErrorAlertMessage: true
             })
+            hideAlertMessage("showErrorAlertMessage")
+
         }
     }
   return { isLoading, showSuccessAlertMessage, showErrorAlertMessage, updateUserProfile }
