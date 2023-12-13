@@ -1,7 +1,8 @@
-import { updateEmail, updatePassword, updateProfile, User } from "firebase/auth"
+import { signOut, updateEmail, updatePassword, updateProfile, User } from "firebase/auth"
 import { useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import { auth } from "../firebase/firebase-config"
 import { isInputEmpty } from "../utils/isInputEmpty"
 
@@ -55,9 +56,12 @@ const useUpdateProfile = () => {
 
             if(!isInputEmpty(newPassword)){
                 await updatePassword(currentUser, newPassword)
+                await signOut(auth);
+                navigate("/login");
+                toast.success("Successfully changed password, please re-login.")
+
             }
 
-            navigate("/dashboard/profile")
             setUpdateProfileConfigs({
                 ...updateProfileConfigs,
                 isLoading: false,
