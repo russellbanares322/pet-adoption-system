@@ -31,10 +31,10 @@ const RegisteredUsers = () => {
   ];
   return (
     <div>
-      <h1 className="text-center text-lg my-3">
-        Total Registered Users:{" "}
-        <span className="font-bold">{totalRegisteredUsersCount}</span>
+      <h1 className="text-center text-2xl my-3 font-bold">
+        Total Registered Users: {totalRegisteredUsersCount}
       </h1>
+
       <Table loading={isLoading} dataSource={dataSource} columns={columns} />
     </div>
   );

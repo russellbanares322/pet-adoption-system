@@ -112,9 +112,8 @@ const UserSuggestions = () => {
   ];
   return (
     <div>
-      <h1 className="text-center text-lg my-3">
-        Total Suggestions/Feedbacks:{" "}
-        <span className="font-bold">{totalSuggestionsCount}</span>
+      <h1 className="text-center text-2xl my-3 font-bold">
+        Total Suggestions/Feedbacks: {totalSuggestionsCount}
       </h1>
       <Table
         loading={isFetchSuggestionsPending}

@@ -85,7 +85,7 @@ const PetAdoption = () => {
       {!isLoading && !isAdoptionsDataEmpty && (
         <div>
           <div className="flex flex-col items-center justify-center gap-3 mb-10">
-            <h1 className="text-lg">
+            <h1 className="text-center text-2xl my-3 font-bold">
               Total Adoption Applications:{" "}
               <strong>{applicationDataTotalCount}</strong>
             </h1>

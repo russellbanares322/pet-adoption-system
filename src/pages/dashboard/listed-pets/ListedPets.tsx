@@ -60,7 +60,11 @@ const ListedPets = () => {
         <div className="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
           {petsData.length > 0 &&
             currentItems.map((pet) => (
-              <PetDisplay handleOpenEditModal={handleOpenEditModal} {...pet} />
+              <PetDisplay
+                key={pet.id}
+                handleOpenEditModal={handleOpenEditModal}
+                {...pet}
+              />
             ))}
         </div>
       )}

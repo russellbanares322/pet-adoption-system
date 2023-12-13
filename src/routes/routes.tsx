@@ -6,6 +6,7 @@ import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import PetAdoption from "../pages/dashboard/adoption/PetAdoption";
 import ListedPets from "../pages/dashboard/listed-pets/ListedPets";
 import PendingPosts from "../pages/dashboard/pending-posts/PendingPosts";
+import Profile from "../pages/dashboard/profile/Profile";
 import RegisteredUsers from "../pages/dashboard/registered-users/RegisteredUsers";
 import UserSuggestions from "../pages/dashboard/suggestions/UserSuggestions";
 import SavedFavoritePosts from "../pages/favorites/SavedFavoritePosts";
@@ -94,6 +95,12 @@ export const routes = [
       {
         path: "user-suggestions",
         element: <UserSuggestions />,
+        child: [],
+        isProtected: true,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
         child: [],
         isProtected: true,
       },
