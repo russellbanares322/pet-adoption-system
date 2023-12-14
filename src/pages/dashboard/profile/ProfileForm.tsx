@@ -1,14 +1,15 @@
 import { Alert } from "antd";
 import React, { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { HiOutlineMail, HiOutlineUser } from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
-import { auth } from "../../../firebase/firebase-config";
+import useLocalStorage from "../../../hooks/useLocalStorage";
 import useUpdateProfile from "../../../hooks/useUpdateProfile";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 const ProfileForm = () => {
-  const [user] = useAuthState(auth);
+  const { displayName, email, uid } = useUserInfo();
+  const { saveItemInLocalStorage } = useLocalStorage();
   const {
     updateUserProfile,
     isLoading,
@@ -17,8 +18,8 @@ const ProfileForm = () => {
   } = useUpdateProfile();
 
   const [formData, setFormData] = useState({
-    fullName: user?.displayName || "",
-    email: user?.email || "",
+    fullName: displayName || "",
+    email: email || "",
     newPassword: "",
   });
 
@@ -26,6 +27,19 @@ const ProfileForm = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const updateUserInfoInLocalStorage = () => {
+    const defaultFullName = formData.fullName === displayName;
+    const defaultEmail = formData.email === email;
+
+    const updatedUserData = {
+      displayName: !defaultFullName ? formData.fullName : displayName,
+      email: !defaultEmail ? formData.email : email,
+      uid: uid,
+    };
+    saveItemInLocalStorage("user-info", updatedUserData);
+  };
+
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     await updateUserProfile(
@@ -33,6 +47,7 @@ const ProfileForm = () => {
       formData.email,
       formData.newPassword
     );
+    updateUserInfoInLocalStorage();
   };
 
   return (

@@ -59,7 +59,6 @@ const useUpdateProfile = () => {
                 await signOut(auth);
                 navigate("/login");
                 toast.success("Successfully changed password, please re-login.")
-
             }
 
             setUpdateProfileConfigs({

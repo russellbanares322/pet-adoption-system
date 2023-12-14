@@ -7,22 +7,20 @@ import {
 } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import { MenuProps } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import useActiveNavLink from "../../hooks/useActiveNavLink";
 import NotificationDropdownItems from "../notification/NotificationDropdownItems";
+import useUserInfo from "../../hooks/useUserInfo";
+import { auth } from "../../firebase/firebase-config";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const { checkIfNavLinkActive } = useActiveNavLink();
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
-  const isLoggedIn = user;
-  const displayName = user?.displayName;
-  const isAdminLoggedIn = user?.uid === import.meta.env.VITE_APP_ADMIN_UID;
+  const { displayName, isLoggedIn, uid } = useUserInfo();
+  const isAdminLoggedIn = uid === import.meta.env.VITE_APP_ADMIN_UID;
 
   const handleToggleNavbar = () => {
     setOpenNav(!openNav);

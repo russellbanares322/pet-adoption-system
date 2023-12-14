@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import { useFetchUsers } from "../../api/users/users";
 import useUpdateProfile from "../../hooks/useUpdateProfile";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Signup = () => {
   const passwordsDontMatch = formData.confirmPassword !== formData.password;
   const [isLoading, setIsLoading] = useState(false);
   const { updateUserProfile } = useUpdateProfile();
+  const { saveItemInLocalStorage } = useLocalStorage();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,7 +61,7 @@ const Signup = () => {
     } else {
       if (!checkIfEmailIsAlreadyUsed()) {
         try {
-          await createUserWithEmailAndPassword(
+          const signUpResponse = await createUserWithEmailAndPassword(
             auth,
             formData.email,
             formData.password
@@ -73,7 +75,12 @@ const Signup = () => {
           });
 
           await updateUserProfile(formData.fullName, "", "");
-
+          const userData = {
+            displayName: signUpResponse?.user?.displayName,
+            email: signUpResponse?.user?.email,
+            uid: signUpResponse?.user?.uid,
+          };
+          saveItemInLocalStorage("user-info", userData);
           setFormData({
             fullName: "",
             email: "",

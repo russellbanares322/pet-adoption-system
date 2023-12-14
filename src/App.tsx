@@ -1,9 +1,17 @@
+import { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
+import { auth } from "./firebase/firebase-config";
+import useLocalStorage from "./hooks/useLocalStorage";
 import { routes } from "./routes/routes";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
+  const [user] = useAuthState(auth);
+  const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
+  const userInfo = getItemFromLocalStorage("user-info");
+
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
       return <ProtectedRoute>{element}</ProtectedRoute>;
@@ -11,6 +19,17 @@ function App() {
       return element;
     }
   };
+
+  useEffect(() => {
+    if (user && Object.values(userInfo).length === 0) {
+      const userData = {
+        displayName: user?.displayName,
+        email: user?.email,
+        uid: user?.uid,
+      };
+      saveItemInLocalStorage("user-info", userData);
+    }
+  }, [user, userInfo]);
 
   return (
     <div className="min-h-[100vh] h-full">

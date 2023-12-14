@@ -1,8 +1,7 @@
 import { Layout } from "antd";
 import { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { auth } from "../../firebase/firebase-config";
+import useUserInfo from "../../hooks/useUserInfo";
 import DashboardLandingPage from "./DashboardLandingPage";
 import DashboardLayout from "./DashboardLayout";
 
@@ -10,9 +9,9 @@ const AdminDashboard = () => {
   const { Content } = Layout;
   const location = useLocation();
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
+  const { uid } = useUserInfo();
   const isInDashboardPage = location.pathname === "/dashboard";
-  const isAdminLoggedIn = user?.uid === import.meta.env.VITE_APP_ADMIN_UID;
+  const isAdminLoggedIn = uid === import.meta.env.VITE_APP_ADMIN_UID;
 
   const contentStyle = {
     margin: "18px 16px",
@@ -27,7 +26,8 @@ const AdminDashboard = () => {
     if (!isAdminLoggedIn) {
       navigate("/");
     }
-  }, []);
+  }, [isAdminLoggedIn]);
+
   return (
     <DashboardLayout>
       <Content style={contentStyle}>

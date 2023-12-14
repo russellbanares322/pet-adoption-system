@@ -10,6 +10,8 @@ import { ClipLoader } from "react-spinners";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import useUserInfo from "../../hooks/useUserInfo";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,6 +23,8 @@ const Login = () => {
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [user] = useAuthState(auth);
+  const { isLoggedIn } = useUserInfo();
+  const { saveItemInLocalStorage } = useLocalStorage();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,11 +39,18 @@ const Login = () => {
       setIsLoading(false);
     } else {
       try {
-        await signInWithEmailAndPassword(
+        const signInResponse = await signInWithEmailAndPassword(
           auth,
           formData.email,
           formData.password
         );
+        const userData = {
+          displayName: signInResponse?.user?.displayName,
+          email: signInResponse?.user?.email,
+          uid: signInResponse?.user?.uid,
+        };
+        saveItemInLocalStorage("user-info", userData);
+
         navigate("/");
         toast.success("Login Succcessful");
         setFormData({
@@ -68,10 +79,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user || isLoggedIn) {
       navigate(-1);
     }
-  }, [user]);
+  }, [user, isLoggedIn]);
 
   return (
     <form
