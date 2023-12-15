@@ -11,6 +11,7 @@ function App() {
   const [user] = useAuthState(auth);
   const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
   const userInfo = getItemFromLocalStorage("user-info");
+  const saveUserData = user && Object.values(userInfo).length === 0;
 
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
@@ -21,7 +22,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (user && Object.values(userInfo).length === 0) {
+    if (saveUserData) {
       const userData = {
         displayName: user?.displayName,
         email: user?.email,
@@ -29,7 +30,7 @@ function App() {
       };
       saveItemInLocalStorage("user-info", userData);
     }
-  }, [user, userInfo]);
+  }, [user, saveUserData]);
 
   return (
     <div className="min-h-[100vh] h-full">
