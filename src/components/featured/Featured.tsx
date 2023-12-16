@@ -14,7 +14,7 @@ const Featured = () => {
         {!emptyPetsData && (
           <p
             onClick={() => navigate("/pets")}
-            className="text-medium py-3 flex items-center gap-2 justify-end cursor-pointer w-max ml-auto"
+            className="font-medium text-medium py-3 flex items-center gap-2 justify-end cursor-pointer w-max ml-auto hover:text-orange duration-300 ease-in-out"
           >
             View more <HiOutlineArrowNarrowRight />
           </p>

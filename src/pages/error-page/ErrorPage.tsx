@@ -1,8 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import errorImg from "../../assets/error-page.svg";
+import { HiOutlineArrowNarrowLeft } from "react-icons/hi";
 
 const ErrorPage = () => {
   const navigate = useNavigate();
+
+  const returnToHome = () => {
+    navigate("/");
+    window.location.reload();
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-screen min-h-1/2 w-1/2 mx-auto">
@@ -12,7 +18,11 @@ const ErrorPage = () => {
         The page you're trying to access doesn't exist, or you are not
         authorized.
       </p>
-      <button onClick={() => navigate("/")} className="button-filled mt-5">
+      <button
+        onClick={returnToHome}
+        className="button-filled mt-5 flex items-center gap-2"
+      >
+        <HiOutlineArrowNarrowLeft />
         Back To Home
       </button>
     </div>

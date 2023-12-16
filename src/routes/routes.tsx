@@ -1,4 +1,4 @@
-import ErrorPage from "../components/error-page/ErrorPage";
+import ErrorPage from "../pages/error-page/ErrorPage";
 import AuthLayout from "../layouts/auth-layout/AuthLayout";
 import AboutUs from "../pages/about-us/AboutUs";
 import MyAdoptions from "../pages/adoptions/MyAdoptions";
