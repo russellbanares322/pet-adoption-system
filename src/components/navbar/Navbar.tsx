@@ -58,7 +58,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-screen shadow-md">
-      <div className="container py-4 text-maroon md:flex md:items-center md:justify-start">
+      <div className="container py-3 text-maroon md:flex md:items-center md:justify-start">
         <div className="flex items-center justify-between mr-0 md:mr-6 text-xl">
           <h1
             onClick={() => navigate("/")}
