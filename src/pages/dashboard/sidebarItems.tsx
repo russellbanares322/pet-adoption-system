@@ -7,12 +7,15 @@ import {
   ReconciliationOutlined,
   WechatOutlined,
   UserOutlined,
+  RollbackOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 
 type SidebarItems = {
   key: string;
   icon: React.ReactNode;
   label: string;
+  danger?: boolean;
 };
 
 export const sidebarItems: SidebarItems[] = [
@@ -50,5 +53,16 @@ export const sidebarItems: SidebarItems[] = [
     key: "profile",
     icon: <UserOutlined />,
     label: "Profile",
+  },
+  {
+    key: "return-to-home",
+    icon: <RollbackOutlined />,
+    label: "Return to Home",
+  },
+  {
+    key: "logout",
+    icon: <LogoutOutlined />,
+    label: "Logout",
+    danger: true,
   },
 ];

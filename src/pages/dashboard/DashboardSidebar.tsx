@@ -1,7 +1,10 @@
 import { Badge, Layout, Menu } from "antd";
+import { signOut } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
 import { useFetchPendingPets } from "../../api/pets/pets";
+import { auth } from "../../firebase/firebase-config";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { sidebarItems } from "./sidebarItems";
 
 type DashboardSidebarProps = {
@@ -13,6 +16,7 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
   const { Item } = Menu;
   const { data: petsData } = useFetchPendingPets();
   const { data: applicationsData } = useFetchApplicationsByRecipientId();
+  const { removeItemFromLocalStorage } = useLocalStorage();
   const adoptionsApplicationsCount = applicationsData?.filter(
     (data) => data.status.toLowerCase() === "to be reviewed"
   ).length;
@@ -26,6 +30,15 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
       : `${convertedLocation[convertedLocation.length - 1]}`;
 
   const navigatePath = (selectedKey: string) => {
+    if (selectedKey === "return-to-home") {
+      return navigate("/");
+    }
+    if (selectedKey === "logout") {
+      signOut(auth);
+      removeItemFromLocalStorage("user-info");
+      navigate("/");
+    }
+
     return navigate(selectedKey);
   };
 
@@ -43,29 +56,37 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
         defaultSelectedKeys={["/dashboard"]}
         selectedKeys={[currentLocation]}
       >
-        {sidebarItems.map((item) => (
-          <Item
-            className="flex gap-2 items-center relative"
-            onClick={() => navigatePath(item.key)}
-            key={item.key}
-          >
-            {item.icon} <span>{item.label}</span>
-            {item.key === "pending-posts" && pendingPetsCount > 0 && (
-              <Badge
-                className="absolute top-2 right-2"
-                color="blue"
-                count={pendingPetsCount}
-              />
-            )}
-            {item.key === "pet-adoptions" && adoptionsApplicationsCount > 0 && (
-              <Badge
-                className="absolute top-2 right-2"
-                color="blue"
-                count={adoptionsApplicationsCount}
-              />
-            )}
-          </Item>
-        ))}
+        {sidebarItems.map((item) => {
+          const returnToHomeItem = item.key === "return-to-home";
+          const logoutItem = item.key === "logout";
+          const petAdoptionItem = item.key === "pet-adoptions";
+          const pendingPostsItem = item.key === "pending-posts";
+          return (
+            <Item
+              className={`flex gap-2 items-center relative ${
+                returnToHomeItem && logoutItem && "mt-96"
+              }`}
+              onClick={() => navigatePath(item.key)}
+              key={item.key}
+            >
+              {item.icon} <span>{item.label}</span>
+              {pendingPostsItem && pendingPetsCount > 0 && (
+                <Badge
+                  className="absolute top-2 right-2"
+                  color="blue"
+                  count={pendingPetsCount}
+                />
+              )}
+              {petAdoptionItem && adoptionsApplicationsCount > 0 && (
+                <Badge
+                  className="absolute top-2 right-2"
+                  color="blue"
+                  count={adoptionsApplicationsCount}
+                />
+              )}
+            </Item>
+          );
+        })}
       </Menu>
     </Sider>
   );

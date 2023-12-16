@@ -14,10 +14,12 @@ import useActiveNavLink from "../../hooks/useActiveNavLink";
 import NotificationDropdownItems from "../notification/NotificationDropdownItems";
 import useUserInfo from "../../hooks/useUserInfo";
 import { auth } from "../../firebase/firebase-config";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const { checkIfNavLinkActive } = useActiveNavLink();
+  const { removeItemFromLocalStorage } = useLocalStorage();
   const navigate = useNavigate();
   const { displayName, isLoggedIn, uid } = useUserInfo();
   const isAdminLoggedIn = uid === import.meta.env.VITE_APP_ADMIN_UID;
@@ -45,6 +47,7 @@ const Navbar = () => {
   const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (key === "logout") {
       signOut(auth);
+      removeItemFromLocalStorage("user-info");
       navigate("/");
     }
   };

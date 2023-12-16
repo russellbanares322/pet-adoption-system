@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import { auth } from "./firebase/firebase-config";
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -9,12 +9,14 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   const [user] = useAuthState(auth);
+  const location = useLocation();
   const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
   const userInfo = getItemFromLocalStorage("user-info");
   const userDataRemovedInLocalStorage =
     user && Object.values(userInfo).length === 0;
   const flattenRoutesPath = routes.flatMap((item) => item.path);
   const isRouteInvalid = !flattenRoutesPath.includes(location.pathname);
+  const isInDashboardRoute = location.pathname.includes("dashboard");
 
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
@@ -37,7 +39,7 @@ function App() {
 
   return (
     <div className="min-h-[100vh] h-full">
-      {!isRouteInvalid && <Navbar />}
+      {!isRouteInvalid && !isInDashboardRoute && <Navbar />}
       <Routes>
         {routes.map((route: any) => {
           const elementHasChild = route.child.length > 0;
