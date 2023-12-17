@@ -109,6 +109,7 @@ const Login = () => {
               className="appearance-none w-full outline-none"
               type="email"
               placeholder="Email Address*"
+              autoFocus
             />
           </div>
           {renderInputWarningMessage(formData.email, "Email Address")}

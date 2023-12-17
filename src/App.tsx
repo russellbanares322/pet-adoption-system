@@ -13,7 +13,7 @@ function App() {
   const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
   const userInfo = getItemFromLocalStorage("user-info");
   const userDataRemovedInLocalStorage =
-    user && Object.values(userInfo).length === 0;
+    user !== null && Object.values(userInfo).length === 0;
   const flattenRoutesPath = routes.flatMap((item) => item.path);
   const isRouteInvalid = !flattenRoutesPath.includes(location.pathname);
   const isInDashboardRoute = location.pathname.includes("dashboard");
@@ -25,6 +25,7 @@ function App() {
       return element;
     }
   };
+
 
   useEffect(() => {
     if (userDataRemovedInLocalStorage) {

@@ -46,9 +46,10 @@ const Navbar = () => {
 
   const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (key === "logout") {
-      signOut(auth);
       removeItemFromLocalStorage("user-info");
+      signOut(auth);
       navigate("/");
+      window.location.reload();
     }
   };
 

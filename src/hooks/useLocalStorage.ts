@@ -10,7 +10,7 @@ const useLocalStorage = () => {
     }
 
     const removeItemFromLocalStorage = (localStorageKey: string) => {
-        localStorage.removeItem(localStorageKey)
+      return  localStorage.removeItem(localStorageKey)
     }
 
   return {getItemFromLocalStorage, removeItemFromLocalStorage, saveItemInLocalStorage}

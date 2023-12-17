@@ -141,6 +141,7 @@ const Signup = () => {
               className="appearance-none w-full outline-none"
               type="text"
               placeholder="Full Name*"
+              autoFocus
             />
           </div>
           {renderInputWarningMessage(formData.fullName, "Full Name")}
