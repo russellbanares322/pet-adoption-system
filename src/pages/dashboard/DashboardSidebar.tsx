@@ -64,7 +64,7 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
           return (
             <Item
               className={`flex gap-2 items-center relative ${
-                returnToHomeItem && logoutItem && "mt-96"
+                returnToHomeItem && logoutItem && "pt-28"
               }`}
               onClick={() => navigatePath(item.key)}
               key={item.key}

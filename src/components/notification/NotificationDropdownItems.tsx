@@ -14,7 +14,7 @@ const NotificationDropdownItems = () => {
   const [notificationInfoOptions, setNotifcationInfoOptions] =
     useState<TNotificationInfoOptions>({
       openModal: false,
-      notificationId: null,
+      petId: null,
     });
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
@@ -28,12 +28,10 @@ const NotificationDropdownItems = () => {
     return petImage;
   };
 
-  const handleOpenNotificationDetailsModal = (
-    selectedNotificationId: string
-  ) => {
+  const handleOpenNotificationDetailsModal = (selectedPetId: string) => {
     setNotifcationInfoOptions({
       openModal: true,
-      notificationId: selectedNotificationId,
+      petId: selectedPetId,
     });
   };
 
@@ -41,7 +39,7 @@ const NotificationDropdownItems = () => {
     e.stopPropagation();
     setNotifcationInfoOptions({
       openModal: false,
-      notificationId: null,
+      petId: null,
     });
   };
 
@@ -100,8 +98,11 @@ const NotificationDropdownItems = () => {
 
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (!emptyNotificationsData) {
-      viewNotification(key);
-      handleOpenNotificationDetailsModal(key);
+      const splittedKey = key.split(",");
+      const selectedNotificationId = splittedKey[0];
+      const selectedPetId = splittedKey[1];
+      viewNotification(selectedNotificationId);
+      handleOpenNotificationDetailsModal(selectedPetId);
     }
   };
 
@@ -119,7 +120,7 @@ const NotificationDropdownItems = () => {
           data?.hasViewed,
           data?.notificationId
         ),
-        key: data?.notificationId,
+        key: `${data?.notificationId},${data?.petId}`,
       }));
 
   return (
@@ -146,7 +147,7 @@ const NotificationDropdownItems = () => {
       <NotificationDetailsModal
         open={notificationInfoOptions.openModal}
         onCancel={handleCloseNotificationDetailsModal}
-        notificationId={notificationInfoOptions.notificationId}
+        petId={notificationInfoOptions.petId}
       />
     </>
   );
