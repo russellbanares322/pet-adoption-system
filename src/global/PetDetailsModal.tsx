@@ -3,6 +3,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  DocumentReference,
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -28,7 +29,7 @@ import useAddToFavorites from "../hooks/useAddToFavorites";
 
 type PetDetailsModalProps = {
   open: boolean;
-  onCancel: () => void;
+  onCancel: (() => void) | ((e: React.MouseEvent) => void);
   id: string;
   petName: string;
   petAge: string;
@@ -71,7 +72,7 @@ const PetDetailsModal = ({
   const postIsSavedToFavorites = isPostAlreadyAdded(id);
   const likesCount = likes?.length;
   const commentsCount = comments?.length;
-  const commentsRef = doc(db, "listed-pets", id);
+  const commentsRef = id && doc(db, "listed-pets", id);
   const modalTitle =
     createdBy === user?.displayName ? "Your post" : `${createdBy}'s post`;
   const dataToBeAddedInFavorites = {
@@ -104,7 +105,7 @@ const PetDetailsModal = ({
 
   const handleSendComment = async () => {
     try {
-      await updateDoc(commentsRef, {
+      await updateDoc(commentsRef as DocumentReference, {
         comments: arrayUnion({
           userId: user?.uid,
           comment: commentInput,
@@ -135,7 +136,7 @@ const PetDetailsModal = ({
 
   const deleteComment = async (commentsData: Comments) => {
     try {
-      await updateDoc(commentsRef, {
+      await updateDoc(commentsRef as DocumentReference, {
         comments: arrayRemove(commentsData),
       });
       toast.success("Deleted comment successfully");

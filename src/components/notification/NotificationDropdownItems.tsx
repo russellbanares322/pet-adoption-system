@@ -1,13 +1,14 @@
 import { HiBell, HiTrash } from "react-icons/hi";
 import { Badge, Empty, MenuProps, Tooltip } from "antd";
 import useViewNotification from "../../hooks/useViewNotification";
-import { useFetchPets } from "../../api/pets/pets";
+import { Comments, useFetchPet, useFetchPets } from "../../api/pets/pets";
 import { useFetchNotifications } from "../../api/notifications/notifications";
 import moment, { Moment } from "moment";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import { TNotificationInfoOptions } from "./types";
 import React, { useState } from "react";
-import NotificationDetailsModal from "./NotificationDetailsModal";
+import PetDetailsModal from "../../global/PetDetailsModal";
+import { Timestamp } from "firebase/firestore";
 
 const NotificationDropdownItems = () => {
   const { viewNotification, deleteNotification } = useViewNotification();
@@ -16,6 +17,9 @@ const NotificationDropdownItems = () => {
       openModal: false,
       petId: null,
     });
+  const { data: petData } = useFetchPet(
+    notificationInfoOptions.petId as string
+  );
   const { data: petsData } = useFetchPets();
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
@@ -144,10 +148,21 @@ const NotificationDropdownItems = () => {
           </Badge>
         </div>
       </MenuDropdown>
-      <NotificationDetailsModal
+      <PetDetailsModal
         open={notificationInfoOptions.openModal}
         onCancel={handleCloseNotificationDetailsModal}
-        petId={notificationInfoOptions.petId}
+        id={notificationInfoOptions.petId as string}
+        petName={petData?.petName as string}
+        petAge={petData?.petAge as string}
+        petGender={petData?.petGender as string}
+        petColor={petData?.petColor as string}
+        petLocation={petData?.petLocation as string}
+        petDescription={petData?.petDescription as string}
+        likes={petData?.likes as string[]}
+        comments={petData?.comments as Comments[]}
+        petImage={petData?.petImage as string}
+        createdBy={petData?.createdBy as string}
+        dateCreated={petData?.dateCreated as Timestamp}
       />
     </>
   );
