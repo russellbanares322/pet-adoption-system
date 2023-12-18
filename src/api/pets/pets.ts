@@ -95,7 +95,7 @@ const useFetchPostedPet = (id: string | undefined) => {
   const [data, setData] = useState<PetsData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getPets = () => {
+  const getPet = () => {
     setIsLoading(true);
     const listedPetsRef = collection(db, "listed-pets");
     const q = query(listedPetsRef, where("userId", "==", id));
@@ -111,7 +111,7 @@ const useFetchPostedPet = (id: string | undefined) => {
   };
 
   useEffect(() => {
-    getPets();
+    getPet();
   }, [id]);
 
   return { data, isLoading };

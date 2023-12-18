@@ -104,4 +104,29 @@ const useFetchAdoptionsByUserId = () => {
     return { data, isLoading };
   };
 
-  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication}
+  const useFetchAdoptionsCount =  (petId: string) =>  {
+    const [adoptionCount, setAdoptionCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getAdoptions = () => {
+      setIsLoading(true);
+      const listedPetsRef = collection(db, "adoption-applications");
+      const q = query(listedPetsRef, where("petId", "==", petId))
+      onSnapshot(q, (snapshot) => {
+        const petsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as AdoptionsData[];
+        setAdoptionCount(petsData?.length);
+        setIsLoading(false);
+      });
+    };
+  
+    useEffect(() => {
+      getAdoptions();
+    }, [petId]);
+  
+    return { adoptionCount, isLoading };
+  }
+
+  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication, useFetchAdoptionsCount}

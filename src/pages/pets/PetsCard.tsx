@@ -6,7 +6,7 @@ import {
   HiOutlineChatAlt,
 } from "react-icons/hi";
 import { PiHandHeart, PiHandHeartFill } from "react-icons/pi";
-
+import { MdOutlinePendingActions } from "react-icons/md";
 import moment from "moment";
 import { PetsData } from "../../api/pets/pets";
 import { useState } from "react";
@@ -15,7 +15,10 @@ import useLikePost from "../../hooks/useLikePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase-config";
 import AdoptPetFormModal from "./AdoptPetFormModal";
-import { useFetchAdoptionsByUserId } from "../../api/adoptions/adoptions";
+import {
+  useFetchAdoptionsByUserId,
+  useFetchAdoptionsCount,
+} from "../../api/adoptions/adoptions";
 
 const PetsCard = ({
   id,
@@ -36,6 +39,7 @@ const PetsCard = ({
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [openAdoptPetFormModal, setOpenAdoptPetFormModal] = useState(false);
   const { data: adoptionsData } = useFetchAdoptionsByUserId();
+  const { adoptionCount } = useFetchAdoptionsCount(id);
   const [user] = useAuthState(auth);
   const isUserLoggedIn = user;
   const { likePost } = useLikePost();
@@ -94,6 +98,12 @@ const PetsCard = ({
         </div>
       </div>
       <div className="flex items-center justify-start gap-2 ml-4 mt-2">
+        <div className="flex items-center gap-1">
+          <Tooltip title="Sent Application">
+            <MdOutlinePendingActions className="cursor-pointer" size={20} />
+          </Tooltip>
+          <span className="font-bold text-md">{adoptionCount}</span>
+        </div>
         <div className="flex items-center gap-1">
           <Tooltip title="Add a comment">
             <HiOutlineChatAlt

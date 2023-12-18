@@ -7,11 +7,12 @@ import {
 import Button from "../../../global/Button";
 import { Image, Popconfirm, Space, Tag, Tooltip } from "antd";
 import { useState } from "react";
-import { useFetchPet } from "../../../api/pets/pets";
+import { Comments, useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import moment from "moment";
 import useApproveAdoptionApplication from "../../../hooks/useApproveAdoptionApplication";
 import RejectApplicationModal from "./RejectApplicationModal";
+import { Timestamp } from "firebase/firestore";
 
 const PendingApplicationsCard = ({
   id,
@@ -93,13 +94,13 @@ const PendingApplicationsCard = ({
 
   const getStatusTagColor = (status: string) => {
     const lowercasedStatus = status.toLowerCase();
-    if (lowercasedStatus === "to be reviewed") {
-      return "orange";
-    } else if (lowercasedStatus === "rejected") {
-      return "red";
-    } else {
-      return "green";
-    }
+    const colorEnum: Record<string, string> = {
+      "to be reviewed": "orange",
+      rejected: "red",
+      approved: "green",
+    };
+
+    return colorEnum[lowercasedStatus];
   };
 
   const handleOpenDetailsModal = () => {
@@ -176,17 +177,17 @@ const PendingApplicationsCard = ({
         open={openPetDetailsModal}
         onCancel={handleCloseDetailsModal}
         id={petId}
-        petName={petData?.petName}
-        petAge={petData?.petAge}
-        petGender={petData?.petGender}
-        petColor={petData?.petColor}
-        petLocation={petData?.petLocation}
-        petDescription={petData?.petDescription}
-        likes={petData?.likes}
-        comments={petData?.comments}
-        petImage={petData?.petImage}
-        createdBy={petData?.createdBy}
-        dateCreated={petData?.dateCreated}
+        petName={petData?.petName as string}
+        petAge={petData?.petAge as string}
+        petGender={petData?.petGender as string}
+        petColor={petData?.petColor as string}
+        petLocation={petData?.petLocation as string}
+        petDescription={petData?.petDescription as string}
+        likes={petData?.likes as string[]}
+        comments={petData?.comments as Comments[]}
+        petImage={petData?.petImage as string}
+        createdBy={petData?.createdBy as string}
+        dateCreated={petData?.dateCreated as Timestamp}
       />
       <Image
         width={200}

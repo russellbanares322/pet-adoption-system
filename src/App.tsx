@@ -36,7 +36,7 @@ function App() {
       };
       saveItemInLocalStorage("user-info", userData);
     }
-  }, [user, userDataRemovedInLocalStorage]);
+  }, [userDataRemovedInLocalStorage]);
 
   return (
     <div className="min-h-[100vh] h-full">
