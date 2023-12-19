@@ -49,7 +49,6 @@ const Navbar = () => {
       removeItemFromLocalStorage("user-info");
       signOut(auth);
       navigate("/");
-      window.location.reload();
     }
   };
 

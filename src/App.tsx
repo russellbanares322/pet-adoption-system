@@ -12,8 +12,7 @@ function App() {
   const location = useLocation();
   const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
   const userInfo = getItemFromLocalStorage("user-info");
-  const userDataRemovedInLocalStorage =
-    user !== null && Object.values(userInfo).length === 0;
+
   const flattenRoutesPath = routes.flatMap((item) => item.path);
   const isRouteInvalid = !flattenRoutesPath.includes(location.pathname);
   const isInDashboardRoute = location.pathname.includes("dashboard");
@@ -26,17 +25,22 @@ function App() {
     }
   };
 
-
   useEffect(() => {
+    const userDataRemovedInLocalStorage =
+      user !== null && Object.values(userInfo).length === 0;
+
     if (userDataRemovedInLocalStorage) {
-      const userData = {
-        displayName: user?.displayName,
-        email: user?.email,
-        uid: user?.uid,
-      };
-      saveItemInLocalStorage("user-info", userData);
+      const saveUserInfoTimeout = setTimeout(() => {
+        const userData = {
+          displayName: user?.displayName,
+          email: user?.email,
+          uid: user?.uid,
+        };
+        saveItemInLocalStorage("user-info", userData);
+      }, 500);
+      return () => clearTimeout(saveUserInfoTimeout);
     }
-  }, [userDataRemovedInLocalStorage]);
+  }, [user, userInfo]);
 
   return (
     <div className="min-h-[100vh] h-full">
