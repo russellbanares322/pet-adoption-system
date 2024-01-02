@@ -122,7 +122,9 @@ const PetDetailsModal = ({
   };
 
   const handleClickSendIcon = () => {
-    handleSendComment();
+    if (!isCommentInputEmpty) {
+      handleSendComment();
+    }
   };
 
   const handleEnterComment = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -260,17 +262,15 @@ const PetDetailsModal = ({
               isUserLoggedIn ? "cursor-pointer" : "cursor-not-allowed"
             } ${postIsSavedToFavorites ? "text-red-600" : "text-black"}`}
           >
-            {!postIsSavedToFavorites && (
-              <HiOutlineHeart className="mt-1" size={20} />
-            )}
-            {postIsSavedToFavorites && <HiHeart className="mt-1" size={20} />}
+            {!postIsSavedToFavorites && <HiOutlineHeart size={20} />}
+            {postIsSavedToFavorites && <HiHeart size={20} />}
             <p>Add to favorites</p>
           </div>
           <div
             onClick={focusCommentInput}
             className="flex justify-center items-center gap-2 text-[1rem] cursor-pointer hover:bg-gray-300 rounded-md w-full duration-150 py-1"
           >
-            <HiOutlineChatAlt className="mt-1" size={20} />
+            <HiOutlineChatAlt size={20} />
             <p>Comment</p>
           </div>
         </div>
