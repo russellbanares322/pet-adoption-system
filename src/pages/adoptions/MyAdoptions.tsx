@@ -22,7 +22,7 @@ const MyAdoptions = () => {
       <div className="container pt-10">
         {!isAdoptionsDataEmpty && (
           <h1 className="text-lg text-center">
-            Total Sent Adoptions Application:{" "}
+            Total Sent Adoption Application:{" "}
             <span className="font-bold">{adoptionsDataTotalCount}</span>
           </h1>
         )}

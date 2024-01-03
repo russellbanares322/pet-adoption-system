@@ -2,6 +2,7 @@ import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp, where }
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../firebase/firebase-config";
+import useUserInfo from "../../hooks/useUserInfo";
 
 export type AdoptionsData = {
     id:string,
@@ -23,15 +24,14 @@ export type AdoptionsData = {
 const useFetchAdoptionsByUserId = () => {
     const [data, setData] = useState<AdoptionsData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [user] = useAuthState(auth);
-  
+    const {uid, isLoggedIn} = useUserInfo()  
     const getAdoptionsByUserId = () => {
-      if(!user) return;
+      if(!isLoggedIn) return;
       setIsLoading(true);
       const adoptionsRef = collection(db, "adoption-applications");
       const q = query(
         adoptionsRef,
-        where("userId", "==", user?.uid),
+        where("userId", "==", uid),
       );
       onSnapshot(q, (snapshot) => {
         const adoptionsData = snapshot.docs.map((doc) => ({
@@ -45,7 +45,7 @@ const useFetchAdoptionsByUserId = () => {
   
     useEffect(() => {
       getAdoptionsByUserId();
-    }, []);
+    }, [uid]);
   
     return { data, isLoading };
   };
@@ -53,15 +53,15 @@ const useFetchAdoptionsByUserId = () => {
   const useFetchApplicationsByRecipientId = () => {
     const [data, setData] = useState<AdoptionsData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [user] = useAuthState(auth);
+    const {uid, isLoggedIn} = useUserInfo();
   
     const getAdoptionsByRecipientId = () => {
-      if(!user) return;
+      if(!isLoggedIn) return;
       setIsLoading(true);
       const adoptionsRef = collection(db, "adoption-applications");
       const q = query(
         adoptionsRef,
-        where("recipientId", "==", user?.uid),
+        where("recipientId", "==", uid),
         orderBy("dateCreated", "desc")
       );
       onSnapshot(q, (snapshot) => {
@@ -76,7 +76,7 @@ const useFetchAdoptionsByUserId = () => {
   
     useEffect(() => {
       getAdoptionsByRecipientId();
-    }, []);
+    }, [uid]);
   
     return { data, isLoading };
   };

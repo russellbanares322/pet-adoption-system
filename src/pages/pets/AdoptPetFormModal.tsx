@@ -60,7 +60,7 @@ const AdoptPetFormModal = ({
       });
       setImgFile(adoptionApplicationForUpdate?.validIdImg);
     }
-  }, [adoptionApplicationForUpdate, isDataForUpdate, openModal]);
+  }, [adoptionApplicationForUpdate, isDataForUpdate, openModal, selectedId]);
 
   const handleChangeCheckbox = (e: CheckboxChangeEvent) => {
     setIsDataReviewed(e.target.checked);
@@ -77,11 +77,15 @@ const AdoptPetFormModal = ({
   };
 
   const deletePrevSelectedImgInStorage = async () => {
-    if (typeof removedImg === "string") {
+    const convertedRemovedImg = removedImg as string;
+    const isRemovedImgFilled = convertedRemovedImg.trim().length > 0;
+
+    if (typeof removedImg === "string" && isRemovedImgFilled) {
       const imgUrl = ref(storage, removedImg);
       await deleteObject(imgUrl);
     }
   };
+
   const removeImg = () => {
     setRemovedImg(imgFile);
     setImgFile(null);
@@ -108,7 +112,7 @@ const AdoptPetFormModal = ({
             recipientId: recipientId,
             petId: selectedId,
             dateCreated: serverTimestamp(),
-            validIdImg: imgUrl,
+            validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
           });
           setIsLoading(false);
           toast.success(
@@ -135,6 +139,7 @@ const AdoptPetFormModal = ({
         await deletePrevSelectedImgInStorage();
         setIsLoading(false);
         toast.success("Successfully updated application");
+        handleCloseModal();
       }
     } catch (err: any) {
       toast.error(err.message);

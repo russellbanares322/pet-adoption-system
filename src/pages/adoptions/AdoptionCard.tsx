@@ -2,9 +2,10 @@ import { Tag, Tooltip } from "antd";
 import Button from "../../global/Button";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useFetchPet } from "../../api/pets/pets";
+import { Comments, useFetchPet } from "../../api/pets/pets";
 import PetDetailsModal from "../../global/PetDetailsModal";
 import AdoptPetFormModal from "../pets/AdoptPetFormModal";
+import { Timestamp } from "firebase/firestore";
 
 type AdoptionCardProps = {
   id: string;
@@ -20,6 +21,7 @@ const AdoptionCard = ({
   status,
 }: AdoptionCardProps) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const [openEditAdoptionModal, setOpenEditAdoptionModal] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
 
@@ -36,10 +38,12 @@ const AdoptionCard = ({
 
   const handleOpenEditAdoptionModal = () => {
     setOpenEditAdoptionModal(true);
+    setSelectedId(id);
   };
 
   const handleCloseEditAdoptionModal = () => {
     setOpenEditAdoptionModal(false);
+    setSelectedId("");
   };
 
   const handleOpenDetailsModal = () => {
@@ -86,26 +90,27 @@ const AdoptionCard = ({
           icon={<DeleteOutlined />}
         />
       </div>
+      {/* Needs to be refactored */}
       <PetDetailsModal
         open={openPetDetailsModal}
         onCancel={handleCloseDetailsModal}
         id={petId}
-        petName={petData?.petName}
-        petAge={petData?.petAge}
-        petGender={petData?.petGender}
-        petColor={petData?.petColor}
-        petLocation={petData?.petLocation}
-        petDescription={petData?.petDescription}
-        likes={petData?.likes}
-        comments={petData?.comments}
-        petImage={petData?.petImage}
-        createdBy={petData?.createdBy}
-        dateCreated={petData?.dateCreated}
+        petName={petData?.petName as string}
+        petAge={petData?.petAge as string}
+        petGender={petData?.petGender as string}
+        petColor={petData?.petColor as string}
+        petLocation={petData?.petLocation as string}
+        petDescription={petData?.petDescription as string}
+        likes={petData?.likes as string[]}
+        comments={petData?.comments as Comments[]}
+        petImage={petData?.petImage as string}
+        createdBy={petData?.createdBy as string}
+        dateCreated={petData?.dateCreated as Timestamp}
       />
       <AdoptPetFormModal
         openModal={openEditAdoptionModal}
         onCancel={handleCloseEditAdoptionModal}
-        selectedId={id}
+        selectedId={selectedId}
         recipientId={recipientId}
         isDataForUpdate={true}
       />
