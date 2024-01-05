@@ -1,6 +1,10 @@
 import { Tag, Tooltip } from "antd";
 import Button from "../../global/Button";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import { Comments, useFetchPet } from "../../api/pets/pets";
 import PetDetailsModal from "../../global/PetDetailsModal";
@@ -85,9 +89,16 @@ const AdoptionCard = ({
         <Button
           size="small"
           type="primary"
-          danger={true}
+          danger
           title="Delete"
           icon={<DeleteOutlined />}
+        />
+        <Button
+          size="small"
+          type="primary"
+          ghost
+          title="Print"
+          icon={<PrinterOutlined />}
         />
       </div>
       {/* Needs to be refactored */}

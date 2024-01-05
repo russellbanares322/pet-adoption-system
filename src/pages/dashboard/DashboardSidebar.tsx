@@ -57,14 +57,13 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
         selectedKeys={[currentLocation]}
       >
         {sidebarItems.map((item) => {
-          const returnToHomeItem = item.key === "return-to-home";
           const logoutItem = item.key === "logout";
           const petAdoptionItem = item.key === "pet-adoptions";
           const pendingPostsItem = item.key === "pending-posts";
           return (
             <Item
               className={`flex gap-2 items-center relative ${
-                returnToHomeItem && logoutItem && "pt-28"
+                logoutItem && "text-red-500"
               }`}
               onClick={() => navigatePath(item.key)}
               key={item.key}

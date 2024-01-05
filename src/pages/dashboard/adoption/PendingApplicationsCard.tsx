@@ -3,6 +3,7 @@ import {
   CheckCircleOutlined,
   DeleteOutlined,
   FileImageOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import Button from "../../../global/Button";
 import { Image, Popconfirm, Space, Tag, Tooltip } from "antd";
@@ -145,7 +146,7 @@ const PendingApplicationsCard = ({
           icon={<FileImageOutlined />}
         />
       </div>
-      <div className="flex justify-center items-center gap-2 mt-4">
+      <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
         <Popconfirm
           title="Approve Application"
           description="Did you already reviewed the application properly before approving?"
@@ -172,6 +173,7 @@ const PendingApplicationsCard = ({
           title="Reject"
           icon={<DeleteOutlined />}
         />
+        <Button type="primary" title="Print" ghost icon={<PrinterOutlined />} />
       </div>
       <PetDetailsModal
         open={openPetDetailsModal}

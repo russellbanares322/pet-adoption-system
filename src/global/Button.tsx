@@ -12,6 +12,7 @@ type ButtonProps = {
   styleClass?: string;
   disabled?: boolean;
   onClick?: () => void;
+  ghost?: boolean;
 };
 const Button = ({
   type,
@@ -22,6 +23,7 @@ const Button = ({
   styleClass,
   disabled = false,
   onClick,
+  ghost = false,
 }: ButtonProps) => {
   return (
     <AntdButton
@@ -32,6 +34,7 @@ const Button = ({
       icon={icon}
       size={size}
       disabled={disabled}
+      ghost={ghost}
     >
       {title}
     </AntdButton>
