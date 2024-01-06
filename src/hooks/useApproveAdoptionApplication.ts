@@ -22,6 +22,7 @@ const useApproveAdoptionApplication = () => {
       toast.error(err.message);
     }
   }
+
   const approveApplication = async (applicationData: AdoptionsData) => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
       setIsLoading(true)
@@ -80,7 +81,7 @@ const useApproveAdoptionApplication = () => {
         }
     }
 
-    const sendNotification = async(userDataRef: DocumentReference, petId:string, id: string, status:string, rejectionReason?:string) => {
+  const sendNotification = async(userDataRef: DocumentReference, petId:string, id: string, status:string, rejectionReason?:string) => {
       const notificationToBeSent =  {
         notificationId: uuidv4(),
         petId: petId,
