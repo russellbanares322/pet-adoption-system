@@ -7,13 +7,20 @@ import {
 } from "@ant-design/icons";
 import Button from "../../../global/Button";
 import { Image, Popconfirm, Space, Tag, Tooltip } from "antd";
-import { useState } from "react";
+import {
+  MutableRefObject,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Comments, useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import moment from "moment";
 import useApproveAdoptionApplication from "../../../hooks/useApproveAdoptionApplication";
 import RejectApplicationModal from "./RejectApplicationModal";
 import { Timestamp } from "firebase/firestore";
+import { useReactToPrint } from "react-to-print";
 
 const PendingApplicationsCard = ({
   id,
@@ -38,6 +45,10 @@ const PendingApplicationsCard = ({
     openModal: false,
     rejectInput: "",
   });
+  const elementToBePrintedRef = useRef<HTMLDivElement>(null);
+  const printPromiseRef: MutableRefObject<any> =
+    useRef<() => void | null>(null);
+  const [showElementToBePrinted, setShowElementToBePrinted] = useState(false);
   const { approveApplication } = useApproveAdoptionApplication();
 
   const applicationData = {
@@ -56,6 +67,32 @@ const PendingApplicationsCard = ({
     validIdImg,
     rejectionReason,
   };
+
+  useEffect(() => {
+    if (showElementToBePrinted && printPromiseRef.current) {
+      printPromiseRef.current();
+    }
+  }, [showElementToBePrinted]);
+
+  const onBeforePrint = () => {
+    return new Promise((resolve) => {
+      printPromiseRef.current = resolve;
+      setShowElementToBePrinted(true);
+    });
+  };
+
+  const onAfterPrint = () => {
+    return new Promise((resolve) => {
+      printPromiseRef.current = resolve;
+      setShowElementToBePrinted(false);
+    });
+  };
+
+  const printPage = useReactToPrint({
+    content: () => elementToBePrintedRef.current,
+    onBeforeGetContent: onBeforePrint,
+    onAfterPrint: onAfterPrint,
+  });
 
   const handleOpenRejectApplicationModal = () => {
     setRejectApplicationOptions({
@@ -173,7 +210,14 @@ const PendingApplicationsCard = ({
           title="Reject"
           icon={<DeleteOutlined />}
         />
-        <Button type="primary" title="Print" ghost icon={<PrinterOutlined />} />
+        <Button
+          disabled
+          onClick={printPage}
+          type="primary"
+          title="Print"
+          ghost
+          icon={<PrinterOutlined />}
+        />
       </div>
       <PetDetailsModal
         open={openPetDetailsModal}
