@@ -7,13 +7,7 @@ import {
 } from "@ant-design/icons";
 import Button from "../../../global/Button";
 import { Image, Popconfirm, Space, Tag, Tooltip } from "antd";
-import {
-  MutableRefObject,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Comments, useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import moment from "moment";
@@ -21,6 +15,7 @@ import useApproveAdoptionApplication from "../../../hooks/useApproveAdoptionAppl
 import RejectApplicationModal from "./RejectApplicationModal";
 import { Timestamp } from "firebase/firestore";
 import { useReactToPrint } from "react-to-print";
+import AdoptionApplicationLayoutModal from "../../../layouts/print-layout/AdoptionApplicationLayoutModal";
 
 const PendingApplicationsCard = ({
   id,
@@ -74,6 +69,10 @@ const PendingApplicationsCard = ({
     }
   }, [showElementToBePrinted]);
 
+  const hideElementToBePrinted = () => {
+    setShowElementToBePrinted(false);
+  };
+
   const onBeforePrint = () => {
     return new Promise((resolve) => {
       printPromiseRef.current = resolve;
@@ -84,7 +83,7 @@ const PendingApplicationsCard = ({
   const onAfterPrint = () => {
     return new Promise((resolve) => {
       printPromiseRef.current = resolve;
-      setShowElementToBePrinted(false);
+      hideElementToBePrinted();
     });
   };
 
@@ -107,6 +106,7 @@ const PendingApplicationsCard = ({
       openModal: false,
     });
   };
+
   const handleRejectApplicationInputChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -115,6 +115,7 @@ const PendingApplicationsCard = ({
       rejectInput: e.target.value,
     });
   };
+
   const handleShowImgPreview = () => {
     setShowImgPreview(true);
   };
@@ -253,6 +254,12 @@ const PendingApplicationsCard = ({
         open={rejectApplicationOptions.openModal}
         onCancel={handleCloseRejectApplicationModal}
         applicationData={applicationData}
+      />
+      <AdoptionApplicationLayoutModal
+        open={showElementToBePrinted}
+        onCancel={hideElementToBePrinted}
+        data={applicationData}
+        elementToBePrintedRef={elementToBePrintedRef}
       />
     </div>
   );

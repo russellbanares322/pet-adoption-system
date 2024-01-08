@@ -1,7 +1,6 @@
 import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../../firebase/firebase-config";
+import { db } from "../../firebase/firebase-config";
 import useUserInfo from "../../hooks/useUserInfo";
 
 export type AdoptionsData = {
