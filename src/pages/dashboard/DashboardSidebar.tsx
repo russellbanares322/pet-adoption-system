@@ -34,9 +34,11 @@ const DashboardSidebar = ({ collapsed }: DashboardSidebarProps) => {
       return navigate("/");
     }
     if (selectedKey === "logout") {
-      signOut(auth);
-      removeItemFromLocalStorage("user-info");
-      navigate("/");
+      return [
+        signOut(auth),
+        removeItemFromLocalStorage("user-info"),
+        navigate("/"),
+      ];
     }
 
     return navigate(selectedKey);
