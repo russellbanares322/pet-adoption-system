@@ -1,7 +1,7 @@
 import { AdoptionsData } from "../../../api/adoptions/adoptions";
 import {
   CheckCircleOutlined,
-  DeleteOutlined,
+  CloseCircleOutlined,
   FileImageOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
@@ -207,9 +207,9 @@ const PendingApplicationsCard = ({
           onClick={handleOpenRejectApplicationModal}
           disabled={status === "Rejected"}
           type="primary"
-          danger={true}
+          danger
           title="Reject"
-          icon={<DeleteOutlined />}
+          icon={<CloseCircleOutlined />}
         />
         <Button
           disabled

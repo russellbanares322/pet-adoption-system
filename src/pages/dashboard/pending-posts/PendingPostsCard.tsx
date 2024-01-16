@@ -1,5 +1,5 @@
 import { Popconfirm, Tag } from "antd";
-import { CheckCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { PetsData } from "../../../api/pets/pets";
 import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -124,7 +124,7 @@ const PendingPostsCard = ({
               type="primary"
               danger={true}
               title="Reject"
-              icon={<DeleteOutlined />}
+              icon={<CloseCircleOutlined />}
             />
           </Popconfirm>
         </div>

@@ -2,14 +2,17 @@ import { Collapse, Image, Modal, Popconfirm, Space, Tag } from "antd";
 import { AdoptionsData } from "../../api/adoptions/adoptions";
 import {
   CheckCircleOutlined,
-  DeleteOutlined,
+  CloseCircleOutlined,
   FileImageOutlined,
+  PrinterOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import Button from "../../global/Button";
 import { useState } from "react";
 import moment from "moment";
 import useApproveAdoptionApplication from "../../hooks/useApproveAdoptionApplication";
 import RejectApplicationModal from "../dashboard/adoption/RejectApplicationModal";
+import { isAdoptionApplicationRejected } from "../../utils/isAdoptionApplicationRejected";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
@@ -82,10 +85,7 @@ const ApplicationsToBeReviewedModal = ({
   const renderCollapseChildrenText = (label: string, value: string) => {
     return (
       <Space>
-        {label}:{" "}
-        <Tag color={label === "Status" ? getStatusTagColor(value) : ""}>
-          {value}
-        </Tag>
+        {label}: <Tag color="default">{value}</Tag>
       </Space>
     );
   };
@@ -94,13 +94,15 @@ const ApplicationsToBeReviewedModal = ({
     const selectedApplicationsData = {
       ...data,
     };
+
+    const disableButtons = isAdoptionApplicationRejected(data.status);
+
     return (
       <div>
         <p className="text-center my-1 italic">
           {moment(data.dateCreated?.toDate())?.fromNow()}
         </p>
         <div className="flex flex-col items-start justify-start gap-2">
-          {renderCollapseChildrenText("Status", data?.status)}
           {renderCollapseChildrenText("First Name", data?.firstName)}
           {renderCollapseChildrenText("Middle Name", data?.middleName)}
           {renderCollapseChildrenText("Last Name", data?.lastName)}
@@ -127,6 +129,7 @@ const ApplicationsToBeReviewedModal = ({
             }}
           >
             <Button
+              disabled={disableButtons}
               type="primary"
               size="small"
               styleClass="bg-green"
@@ -135,12 +138,21 @@ const ApplicationsToBeReviewedModal = ({
             />
           </Popconfirm>
           <Button
+            disabled={disableButtons}
             onClick={() => handleOpenRejectApplicationModal(data)}
             type="primary"
             size="small"
-            danger={true}
+            danger
             title="Reject Application"
-            icon={<DeleteOutlined />}
+            icon={<CloseCircleOutlined />}
+          />
+          <Button
+            disabled
+            type="primary"
+            size="small"
+            ghost
+            title="Print"
+            icon={<PrinterOutlined />}
           />
         </div>
         <Image
@@ -158,9 +170,29 @@ const ApplicationsToBeReviewedModal = ({
     );
   };
 
+  const renderCollapseTitle = (applicationStatus: string, index: number) => {
+    return (
+      <div className="flex items-center justify-between">
+        <span className="font-bold">
+          Application # {index + 1} -{" "}
+          <Tag color={getStatusTagColor(applicationStatus)}>
+            {applicationStatus}
+          </Tag>
+        </span>
+        <Button
+          size="small"
+          disabled
+          type="primary"
+          danger
+          icon={<DeleteOutlined />}
+        />
+      </div>
+    );
+  };
+
   const collapseItems = applicationsData?.map((data, index) => ({
     key: index + 1,
-    label: <span className="font-bold">Application # {index + 1}</span>,
+    label: renderCollapseTitle(data.status, index),
     children: renderCollapseItemChildren(data),
   }));
   return (
