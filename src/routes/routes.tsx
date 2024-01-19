@@ -13,11 +13,18 @@ import SavedFavoritePosts from "../pages/favorites/SavedFavoritePosts";
 import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 import MyPost from "../pages/post/MyPost";
+import Blogs from "../pages/blogs/Blogs";
 
 export const routes = [
   {
     path: "/",
     element: <Home />,
+    isProtected: false,
+    child: [],
+  },
+  {
+    path: "/blogs",
+    element: <Blogs />,
     isProtected: false,
     child: [],
   },
