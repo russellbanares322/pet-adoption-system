@@ -87,6 +87,14 @@ const Navbar = () => {
             Home
           </li>
           <li
+            onClick={() => navigate("/blogs")}
+            className={`cursor-pointer relative ${
+              checkIfNavLinkActive("Blogs") && "active-nav-link"
+            }`}
+          >
+            Blogs
+          </li>
+          <li
             onClick={() => navigate("/pets")}
             className={`cursor-pointer relative ${
               checkIfNavLinkActive("Pets") && "active-nav-link"

@@ -7,4 +7,5 @@ export type NavLinkRouteOptions = "Login" |
 "MyAdoptions" |
 "Favorites" |
 "Home" |
+"Blogs" |
 ""
