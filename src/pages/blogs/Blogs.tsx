@@ -1,6 +1,5 @@
-import { Modal } from "antd";
 import { useState } from "react";
-import AddEditBlogForm from "../../global/AddEditBlogForm";
+import AddEditBlogFormModal from "../../global/AddEditBlogFormModal";
 
 const Blogs = () => {
   const [openBlogFormModal, setOpenBlogFormModal] = useState(false);
@@ -29,16 +28,10 @@ const Blogs = () => {
         </div>
         <div className="mt-4">Content here</div>
       </div>
-      <Modal
-        footer={null}
-        closable
-        width={500}
+      <AddEditBlogFormModal
         open={openBlogFormModal}
         onCancel={handleCloseBlogFormModal}
-        title="ADD BLOG"
-      >
-        <AddEditBlogForm />
-      </Modal>
+      />
     </div>
   );
 };
