@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, StorageError, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import { storage } from "../firebase/firebase-config";
 
@@ -15,11 +15,32 @@ const useUploadFileToDb = () => {
        
         } catch (error: any) {
           toast.error(error.message);
-          throw error;
+          throw new Error(error.message);
         }
       };
 
-  return {uploadImgToStorage}
+      const uploadImgsToStorage =  async(files: File[]) => {
+        try {
+          const uploadTasks = files.map(async(file) => {
+            const imageRef = ref(storage, `/images/${Date.now()}/${file?.name}`);
+  
+            const uploadTaskSnapshot = await uploadBytes(imageRef, file);
+            return getDownloadURL(uploadTaskSnapshot.ref);
+          });
+
+          const imgUrls = await Promise.all(uploadTasks);
+
+          return [...imgUrls]
+
+
+        } catch(error: any){
+          toast.error(error.message);
+          throw new Error(error.message);
+        }
+
+      }
+
+  return { uploadImgToStorage, uploadImgsToStorage }
 }
 
 export default useUploadFileToDb
