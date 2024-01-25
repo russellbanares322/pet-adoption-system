@@ -50,8 +50,13 @@ const Login = () => {
           uid: signInResponse?.user?.uid,
         };
         saveItemInLocalStorage("user-info", userData);
-
-        navigate("/");
+        const isAdmin =
+          import.meta.env.VITE_APP_ADMIN_UID === signInResponse?.user?.uid;
+        if (isAdmin) {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
         toast.success("Login Succcessful");
         setFormData({
           email: "",
