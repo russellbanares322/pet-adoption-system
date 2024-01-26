@@ -114,7 +114,7 @@ const AddEditBlogFormModal = ({
             maxCount={5}
             name="pet-pictures"
             listType="picture"
-            accept=".png,.jpeg"
+            accept="image/png, image/jpeg"
           >
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
