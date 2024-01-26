@@ -7,6 +7,7 @@ import { auth } from "../../firebase/firebase-config";
 import { ClipLoader } from "react-spinners";
 import { sendPasswordResetEmail } from "firebase/auth";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
+import { currentURLPath } from "../../utils/currentURLPath";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const ForgotPassword = () => {
     } else {
       try {
         await sendPasswordResetEmail(auth, email, {
-          url: "https://adoptapetportal-muntinlupa.onrender.com/login",
+          url: currentURLPath,
         });
         toast.success(
           `Reset password link is sent to ${email}, please check your email`

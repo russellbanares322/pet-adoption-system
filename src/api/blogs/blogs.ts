@@ -2,12 +2,14 @@ import { collection, onSnapshot, orderBy, query, Timestamp } from "firebase/fire
 import { useEffect, useState } from "react"
 import { db } from "../../firebase/firebase-config";
 
-type BlogsData = {
-    id: string,
-    title: string,
-    story:string,
-    images: string[],
+export type BlogsData = {
+    createdBy: string
+    id: string
+    title: string
+    story:string
+    images: string[]
     dateCreated: Timestamp
+    userId: string
 }
 
 const useFetchBlogs = () => {

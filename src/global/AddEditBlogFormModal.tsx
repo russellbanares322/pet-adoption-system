@@ -1,10 +1,11 @@
 import { Form, Input, Modal, Upload, UploadProps } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { addDoc, arrayUnion, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/firebase-config";
 import useUploadFileToDb from "../hooks/useUploadFileToDb";
 import { toast } from "react-toastify";
+import useUserInfo from "../hooks/useUserInfo";
 
 type AddEditBlogFormModalProps = {
   open: boolean;
@@ -30,6 +31,7 @@ const AddEditBlogFormModal = ({
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const { uploadImgsToStorage } = useUploadFileToDb();
+  const { displayName } = useUserInfo();
 
   const uploadProps: UploadProps = {
     multiple: true,
@@ -53,9 +55,11 @@ const AddEditBlogFormModal = ({
 
       if (isUploadCompleted) {
         await addDoc(blogsRef, {
+          createdBy: displayName,
           title: values.title,
           story: values.story,
           images: imgURLs,
+          dateCreated: serverTimestamp(),
         });
         setIsLoading(false);
         toast.success("Successfully published blog");

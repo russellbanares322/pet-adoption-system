@@ -3,10 +3,9 @@ import { PetsData, useFetchPostedPet } from "../../../api/pets/pets";
 import LoadingSpinner from "../../../global/LoadingSpinner";
 import AddEditPetFormModal from "../../../global/AddEditPetFormModal";
 import PetDisplay from "./PetDisplay";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase/firebase-config";
 import usePaginate from "../../../hooks/usePaginate";
 import { Pagination } from "antd";
+import useUserInfo from "../../../hooks/useUserInfo";
 
 type DataForUpdate = {
   openEditModal: boolean;
@@ -14,9 +13,9 @@ type DataForUpdate = {
 };
 
 const ListedPets = () => {
-  const [user] = useAuthState(auth);
+  const { uid } = useUserInfo();
   const [openModal, setOpenModal] = useState(false);
-  const { data: petsData, isLoading } = useFetchPostedPet(user?.uid);
+  const { data: petsData, isLoading } = useFetchPostedPet(uid);
   const totalPostedPetCount = petsData?.length;
   const pageData: PetsData[] = petsData;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =

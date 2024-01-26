@@ -58,7 +58,7 @@ const AddEditPetFormModal = ({
   const [removedImg, setRemovedImg] = useState<File | null | string>("");
   const { data: petDataForUpdate } = useFetchPet(selectedId as string);
   const isDataForUpdate = selectedId;
-  const isUserPosted = user?.email !== import.meta.env.VITE_APP_ADMIN_ACCOUNT;
+  const isUserPosted = user?.uid !== import.meta.env.VITE_APP_ADMIN_UID;
   const { uploadImgToStorage } = useUploadFileToDb();
 
   useEffect(() => {

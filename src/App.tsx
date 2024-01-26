@@ -7,7 +7,6 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import { routes } from "./routes/routes";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
-//*TODO: Add button in users table, allowing admin to disable registered user
 function App() {
   const [user] = useAuthState(auth);
   const location = useLocation();
