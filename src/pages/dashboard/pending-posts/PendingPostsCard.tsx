@@ -27,6 +27,7 @@ const PendingPostsCard = ({
   const isPostStatusPending = status === "Pending";
   const postStatus = isPostStatusPending ? "Pending" : "Approved";
 
+  console.log(id);
   const approvePost = async () => {
     try {
       await updateDoc(doc(db, "listed-pets", id), {
@@ -43,6 +44,8 @@ const PendingPostsCard = ({
         dateCreated: serverTimestamp(),
         likes: likes,
         comments: comments,
+      }).then((res) => {
+        console.log(res);
       });
       toast.success("Successfully approved post");
     } catch (err: any) {

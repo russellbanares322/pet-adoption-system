@@ -73,6 +73,7 @@ const useApproveAdoptionApplication = () => {
             validIdImg: applicationData.validIdImg,
           })
           await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
+          await deleteDoc(doc(db, "listed-pets", applicationData.id))
           toast.success(`Successfully rejected application`)
           setIsLoading(false)
         } catch (err: any) {

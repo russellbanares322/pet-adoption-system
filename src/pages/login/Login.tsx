@@ -12,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useUserInfo from "../../hooks/useUserInfo";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,13 +23,19 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
   const [user] = useAuthState(auth);
   const { isLoggedIn } = useUserInfo();
   const { saveItemInLocalStorage } = useLocalStorage();
+  const { VITE_APP_RECAPTCHA_SITE_KEY } = import.meta.env;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const onCheckCaptcha = () => {
+    setIsCaptchaChecked(true);
   };
 
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -159,8 +166,17 @@ const Login = () => {
       >
         Forgot password?
       </p>
+      <div className="w-full flex items-center justify-center mb-2">
+        <ReCAPTCHA
+          style={{ width: "max-content" }}
+          sitekey={VITE_APP_RECAPTCHA_SITE_KEY}
+          onChange={onCheckCaptcha}
+          onExpired={() => setIsCaptchaChecked(false)}
+          size="normal"
+        />
+      </div>
       <button
-        disabled={isLoading}
+        disabled={isLoading || !isCaptchaChecked}
         type="submit"
         className="button-filled w-full mb-2 flex justify-center items-center gap-1"
       >
