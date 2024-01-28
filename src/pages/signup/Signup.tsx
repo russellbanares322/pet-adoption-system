@@ -4,7 +4,7 @@ import { PiEyeClosed, PiEye } from "react-icons/pi";
 import { MdOutlinePassword } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { ClipLoader } from "react-spinners";
 import { auth, db } from "../../firebase/firebase-config";
@@ -13,6 +13,7 @@ import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import { useFetchUsers } from "../../api/users/users";
 import useUpdateProfile from "../../hooks/useUpdateProfile";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import Captcha from "../../components/captcha/Captcha";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,12 +30,16 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { updateUserProfile } = useUpdateProfile();
   const { saveItemInLocalStorage } = useLocalStorage();
+  const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const onCheckCaptcha = () => {
+    setIsCaptchaChecked(true);
+  };
   //Check if the gmail is already present in database
   const checkIfEmailIsAlreadyUsed = () => {
     const isEmailAlreadyPresent = registeredUsersData?.some(
@@ -231,8 +236,12 @@ const Signup = () => {
       >
         Forgot password?
       </p>
+      <Captcha
+        onCheckCaptcha={onCheckCaptcha}
+        onExpired={() => setIsCaptchaChecked(false)}
+      />
       <button
-        disabled={isLoading}
+        disabled={isLoading || !isCaptchaChecked}
         type="submit"
         className="button-filled w-full mb-2 flex items-center gap-1 justify-center"
       >

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import usePaginate from "../../hooks/usePaginate";
 import { Pagination } from "antd";
 import NoResultsFound from "../../global/NoResultsFound";
+import { useFetchAdoptionApplications } from "../../api/adoptions/adoptions";
 
 type FilterOptions = {
   color: string[];
@@ -16,7 +17,8 @@ type FilterOptions = {
 export type FilterOptionKey = keyof FilterOptions;
 
 const Pets = () => {
-  const { data: petsData, isLoading } = useFetchPets();
+  const { data: petsData, isLoading: isPetsDataBeingFetched } = useFetchPets();
+  const { data: adoptionApplicationsData } = useFetchAdoptionApplications();
   const [filteredPetsData, setFilteredPetsData] = useState<PetsData[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
     color: [],
@@ -29,15 +31,20 @@ const Pets = () => {
     (data) => data.length === 0
   );
   const hasSelectedFilterOption = !emptyFilterOptions || !emptySearchInput;
-  const pageData: PetsData[] = hasSelectedFilterOption
+  const conditionallyRederedPageData: PetsData[] = hasSelectedFilterOption
     ? filteredPetsData
     : petsData;
+  const filteredPageData = conditionallyRederedPageData.filter(
+    (item) =>
+      adoptionApplicationsData.find((data) => item.id === data.petId)
+        ?.status !== "Approved"
+  );
   const totalPostedPetCount = petsData.length;
   const totalFilteredPetsDataCount = filteredPetsData.length;
   const emptyFilterQueryResponse =
     hasSelectedFilterOption && filteredPetsData.length === 0;
   const { pageSize, currentItems, onPageChange, totalItemsCount } =
-    usePaginate<PetsData>({ pageData });
+    usePaginate<PetsData>({ pageData: filteredPageData });
   const [expandFilterOptions, setExpandFilterOptions] = useState(true);
 
   const handleExpandFilterOptions = () => {
@@ -110,7 +117,7 @@ const Pets = () => {
             <NoResultsFound title="No results found" />
           )}
           {!emptyFilterQueryResponse &&
-            !isLoading &&
+            !isPetsDataBeingFetched &&
             totalPostedPetCount > 0 && (
               <div className="text-center mt-3 md:mt-0 mb-2">
                 <p className="font-semibold">
@@ -131,11 +138,11 @@ const Pets = () => {
                 currentItems.map((pet) => <PetsCard key={pet.id} {...pet} />)}
             </div>
           )}
-          {!emptyFilterQueryResponse && isLoading && (
+          {!emptyFilterQueryResponse && isPetsDataBeingFetched && (
             <LoadingSpinner title="Fetching pets..." size="large" />
           )}
           {!emptyFilterQueryResponse &&
-            !isLoading &&
+            !isPetsDataBeingFetched &&
             totalPostedPetCount === 0 && (
               <h1 className="flex justify-center items-center h-96 font-bold text-lg">
                 No added pets yet...
@@ -143,18 +150,20 @@ const Pets = () => {
             )}
         </div>
       </div>
-      {!emptyFilterQueryResponse && !isLoading && totalPostedPetCount > 0 && (
-        <div className="flex items-center justify-center mt-5">
-          <Pagination
-            defaultCurrent={1}
-            onChange={onPageChange}
-            size="default"
-            total={totalItemsCount}
-            pageSize={pageSize}
-            showSizeChanger={false}
-          />
-        </div>
-      )}
+      {!emptyFilterQueryResponse &&
+        !isPetsDataBeingFetched &&
+        totalPostedPetCount > 0 && (
+          <div className="flex items-center justify-center mt-5">
+            <Pagination
+              defaultCurrent={1}
+              onChange={onPageChange}
+              size="default"
+              total={totalItemsCount}
+              pageSize={pageSize}
+              showSizeChanger={false}
+            />
+          </div>
+        )}
     </div>
   );
 };

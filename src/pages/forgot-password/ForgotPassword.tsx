@@ -8,16 +8,22 @@ import { ClipLoader } from "react-spinners";
 import { sendPasswordResetEmail } from "firebase/auth";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import { currentURLPath } from "../../utils/currentURLPath";
+import Captcha from "../../components/captcha/Captcha";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setEmail(value);
+  };
+
+  const onCheckCaptcha = () => {
+    setIsCaptchaChecked(true);
   };
 
   const onSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -80,8 +86,12 @@ const ForgotPassword = () => {
           {renderInputWarningMessage(email, "Email Address")}
         </div>
       </div>
+      <Captcha
+        onCheckCaptcha={onCheckCaptcha}
+        onExpired={() => setIsCaptchaChecked(false)}
+      />
       <button
-        disabled={isLoading}
+        disabled={isLoading || !isCaptchaChecked}
         type="submit"
         className="button-filled w-full mb-2"
       >

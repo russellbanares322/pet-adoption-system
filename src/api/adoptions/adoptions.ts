@@ -128,4 +128,28 @@ const useFetchAdoptionsByUserId = () => {
     return { adoptionCount, isLoading };
   }
 
-  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication, useFetchAdoptionsCount}
+  const useFetchAdoptionApplications =  () =>  {
+    const [data, setData] = useState<AdoptionsData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getAdoptionApplications = () => {
+      setIsLoading(true);
+      const listedPetsRef = collection(db, "adoption-applications");
+      onSnapshot(listedPetsRef, (snapshot) => {
+        const petsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as AdoptionsData[];
+        setData(petsData);
+        setIsLoading(false);
+      });
+    };
+  
+    useEffect(() => {
+      getAdoptionApplications();
+    }, []);
+  
+    return { data, isLoading };
+  }
+
+  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication, useFetchAdoptionsCount, useFetchAdoptionApplications}
