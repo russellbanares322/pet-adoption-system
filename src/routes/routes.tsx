@@ -14,6 +14,7 @@ import Home from "../pages/home/Home";
 import Pets from "../pages/pets/Pets";
 import MyPost from "../pages/post/MyPost";
 import Blogs from "../pages/blogs/Blogs";
+import BlogDetails from "../pages/blogs/BlogDetails";
 
 export const routes = [
   {
@@ -25,6 +26,12 @@ export const routes = [
   {
     path: "/blogs",
     element: <Blogs />,
+    isProtected: false,
+    child: [],
+  },
+  {
+    path: "/blogs/:id",
+    element: <BlogDetails />,
     isProtected: false,
     child: [],
   },

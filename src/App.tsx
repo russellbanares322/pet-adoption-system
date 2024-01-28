@@ -15,8 +15,9 @@ function App() {
 
   const flattenRoutesPath = routes.flatMap((item) => item.path);
   const isRouteInvalid = !flattenRoutesPath.includes(location.pathname);
+  const isInBlogsRoute = location.pathname.includes("blogs");
   const isInDashboardRoute = location.pathname.includes("dashboard");
-
+  const showNavbar = (!isRouteInvalid && !isInDashboardRoute) || isInBlogsRoute;
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
       return <ProtectedRoute>{element}</ProtectedRoute>;
@@ -44,7 +45,7 @@ function App() {
 
   return (
     <div className="min-h-[100vh] h-full">
-      {!isRouteInvalid && !isInDashboardRoute && <Navbar />}
+      {showNavbar && <Navbar />}
       <Routes>
         {routes.map((route: any) => {
           const elementHasChild = route.child.length > 0;

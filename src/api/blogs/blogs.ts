@@ -1,4 +1,4 @@
-import { collection, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react"
 import { db } from "../../firebase/firebase-config";
 
@@ -41,4 +41,27 @@ const useFetchBlogs = () => {
     return { data, isLoading }
 }
 
-export {useFetchBlogs}
+const useFetchBlog = (id: string) => {
+    const [data, setData] = useState<BlogsData | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+  
+    const getSingleBlog = async () => {
+      if (id !== null) {
+        setIsLoading(true);
+        const blogsRef = doc(db, "blogs", id);
+        const snapshot = await getDoc(blogsRef);
+        if (snapshot.exists()) {
+          setData({ ...snapshot.data() as BlogsData }) ;
+          setIsLoading(false);
+        }
+      }
+    };
+  
+    useEffect(() => {
+      getSingleBlog();
+    }, [id]);
+  
+    return { data, isLoading };
+  };
+
+export {useFetchBlogs, useFetchBlog}

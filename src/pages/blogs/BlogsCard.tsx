@@ -2,6 +2,7 @@ import moment from "moment";
 import { BlogsData } from "../../api/blogs/blogs";
 import useUserInfo from "../../hooks/useUserInfo";
 import { EllipsisOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const BlogsCard = ({
   dateCreated,
@@ -14,6 +15,7 @@ const BlogsCard = ({
 }: BlogsData) => {
   const { uid } = useUserInfo();
   const isPostOwnedByLoggedUser = userId === uid;
+  const navigate = useNavigate();
 
   const renderCreatedByName = () => {
     if (isPostOwnedByLoggedUser) {
@@ -41,13 +43,16 @@ const BlogsCard = ({
         <p className="mt-2 font-semibold">{title}</p>
         <p className="text-lg">
           {story.substring(0, 7)}...{" "}
-          <span className="text-blue italic text-sm cursor-pointer hover:underline">
+          <span
+            onClick={() => navigate(`/blogs/${id}`)}
+            className="text-blue italic text-sm cursor-pointer hover:underline"
+          >
             Read more
           </span>
         </p>
       </div>
       <p className="text-center mt-3 italic text-sm">
-        {moment(dateCreated.toDate()).fromNow()}
+        {moment(dateCreated?.toDate()).fromNow()}
       </p>
     </div>
   );
