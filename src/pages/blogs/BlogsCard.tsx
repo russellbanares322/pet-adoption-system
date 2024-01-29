@@ -1,8 +1,12 @@
 import moment from "moment";
 import { BlogsData } from "../../api/blogs/blogs";
 import useUserInfo from "../../hooks/useUserInfo";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import Button from "../../global/Button";
+import { Popconfirm } from "antd";
+import AddEditBlogFormModal from "../../global/AddEditBlogFormModal";
+import { useState } from "react";
 
 const BlogsCard = ({
   dateCreated,
@@ -15,6 +19,7 @@ const BlogsCard = ({
 }: BlogsData) => {
   const { uid } = useUserInfo();
   const isPostOwnedByLoggedUser = userId === uid;
+  const [openEditBlogModal, setOpenEditBlogModal] = useState(false);
   const navigate = useNavigate();
 
   const renderCreatedByName = () => {
@@ -24,17 +29,19 @@ const BlogsCard = ({
     return createdBy;
   };
 
+  const handleOpenEditBlogModal = () => {
+    setOpenEditBlogModal(true);
+  };
+  const handleCloseEditBlogModal = () => {
+    setOpenEditBlogModal(false);
+  };
+
   return (
     <div className="border-l rounded-md pb-5 border-l-dark-blue shadow-lg bg-slate-200 hover:-translate-y-2 duration-300 ease-in-out relative">
       <img
         className="rounded-md object-cover h-60 w-full bg-center"
         src={images[0]}
       />
-      {isPostOwnedByLoggedUser && (
-        <button className="absolute top-1 right-2 hover:bg-black/20 hover:text-white text-black rounded-full">
-          <EllipsisOutlined className="text-4xl" />
-        </button>
-      )}
       <div className="flex flex-col gap-2 items-center">
         <p className="text-sm">
           Posted by:{" "}
@@ -54,6 +61,38 @@ const BlogsCard = ({
       <p className="text-center mt-3 italic text-sm">
         {moment(dateCreated?.toDate()).fromNow()}
       </p>
+      {isPostOwnedByLoggedUser && (
+        <div className="flex items-center justify-center gap-2 mt-5 text-white">
+          <Button
+            type="primary"
+            title="Update"
+            icon={<EditOutlined />}
+            onClick={handleOpenEditBlogModal}
+            styleClass="primary-btn"
+          />
+          <Popconfirm
+            title="Remove pet from list"
+            description="Are you sure to delete this data?"
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{
+              className: "primary-btn",
+            }}
+          >
+            <Button
+              type="primary"
+              danger={true}
+              title="Delete"
+              icon={<DeleteOutlined />}
+            />
+          </Popconfirm>
+        </div>
+      )}
+      <AddEditBlogFormModal
+        open={openEditBlogModal}
+        onCancel={handleCloseEditBlogModal}
+        idForUpdate={id}
+      />
     </div>
   );
 };

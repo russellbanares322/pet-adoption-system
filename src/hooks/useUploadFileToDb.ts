@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, StorageError, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
 import { storage } from "../firebase/firebase-config";
 
