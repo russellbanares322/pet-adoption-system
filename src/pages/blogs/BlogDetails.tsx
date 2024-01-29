@@ -72,7 +72,7 @@ const BlogDetails = () => {
                 <ImageSlider images={data?.images} />
               </div>
               <div className="mt-3">
-                <div className="flex justify-between">
+                <div className="flex justify-between flex-wrap">
                   <div>
                     <p className="text-sm">
                       Posted {moment(data?.dateCreated?.toDate()).format("LLL")}
