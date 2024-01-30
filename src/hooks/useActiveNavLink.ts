@@ -50,7 +50,7 @@ const useActiveNavLink = () => {
     const [activeNavLink, setActiveNavLink] = useState<NavLinkRouteOptions>("");
 
     const handleSetActiveNavLink = () => {
-    const activeRouteName  = navItemRoutes.find((route) => route.name === "Dashboard" ? currentLocationPath.includes(route.path) : currentLocationPath === route.path)?.name;
+    const activeRouteName  = navItemRoutes.find((route) => (route.name === "Dashboard" || route.name === "Blogs") ? currentLocationPath.includes(route.path) : currentLocationPath === route.path)?.name;
     setActiveNavLink(activeRouteName as NavLinkRouteOptions)
     }
 
