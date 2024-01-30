@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes, useLocation } from "react-router-dom";
+import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
 import { auth } from "./firebase/firebase-config";
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -73,6 +74,7 @@ function App() {
           );
         })}
       </Routes>
+      <Footer />
     </div>
   );
 }
