@@ -7,6 +7,10 @@ import Button from "../../global/Button";
 import { Popconfirm } from "antd";
 import AddEditBlogFormModal from "../../global/AddEditBlogFormModal";
 import { useState } from "react";
+import { deleteObject, ref } from "firebase/storage";
+import { db, storage } from "../../firebase/firebase-config";
+import { deleteDoc, doc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const BlogsCard = ({
   dateCreated,
@@ -34,6 +38,21 @@ const BlogsCard = ({
   };
   const handleCloseEditBlogModal = () => {
     setOpenEditBlogModal(false);
+  };
+
+  const deleteBlog = async () => {
+    try {
+      const deleteImagesInStorage = images.map(async (image) => {
+        const imgToBeDeleted = ref(storage, image);
+        await deleteObject(imgToBeDeleted);
+      });
+      await Promise.all([deleteImagesInStorage]).then(async (_) => {
+        await deleteDoc(doc(db, "blogs", id));
+        toast.success("Successfully deleted post");
+      });
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   };
 
   return (
@@ -78,6 +97,7 @@ const BlogsCard = ({
             okButtonProps={{
               className: "primary-btn",
             }}
+            onConfirm={deleteBlog}
           >
             <Button
               type="primary"

@@ -129,25 +129,49 @@ const NotificationDropdownItems = () => {
 
   return (
     <>
-      <MenuDropdown
-        items={notificationDropdownItems}
-        itemActions={notificationsDropdownItemActions}
-        trigger="click"
-      >
-        <div className="cursor-pointer pt-1">
-          <Badge
-            color="#52C41A"
-            className="mr-2"
-            count={
-              unViewedNotificationsCount === 0
-                ? null
-                : unViewedNotificationsCount
-            }
-          >
-            <HiBell className="cursor-pointer" size={21} />
-          </Badge>
-        </div>
-      </MenuDropdown>
+      <div className="hidden md:block">
+        <MenuDropdown
+          items={notificationDropdownItems}
+          itemActions={notificationsDropdownItemActions}
+          trigger="click"
+        >
+          <div className="cursor-pointer pt-1">
+            <Badge
+              color="#52C41A"
+              className="mr-2"
+              count={
+                unViewedNotificationsCount === 0
+                  ? null
+                  : unViewedNotificationsCount
+              }
+            >
+              <HiBell className="cursor-pointer" size={21} />
+            </Badge>
+          </div>
+        </MenuDropdown>
+      </div>
+      <div className="block md:hidden">
+        <MenuDropdown
+          items={notificationDropdownItems}
+          itemActions={notificationsDropdownItemActions}
+          trigger="click"
+        >
+          <div className="cursor-pointer pt-1 flex items-center justify-start gap-1">
+            Notifications
+            <Badge
+              color="#52C41A"
+              className="mr-2"
+              count={
+                unViewedNotificationsCount === 0
+                  ? null
+                  : unViewedNotificationsCount
+              }
+            >
+              <HiBell className="cursor-pointer" size={21} />
+            </Badge>
+          </div>
+        </MenuDropdown>
+      </div>
       <PetDetailsModal
         open={notificationInfoOptions.openModal}
         onCancel={handleCloseNotificationDetailsModal}

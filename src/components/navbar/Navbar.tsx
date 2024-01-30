@@ -160,7 +160,7 @@ const Navbar = () => {
             </li>
           )}
           {isLoggedIn && (
-            <div className="flex items-center justify-start ml-auto gap-2  py-2 pr-2">
+            <div className="flex items-center justify-start ml-auto gap-2 py-2 pr-2">
               <NotificationDropdownItems />
               <li className="flex items-center gap-2 relative">
                 Hi, {displayName}
@@ -196,6 +196,17 @@ const Navbar = () => {
               }`}
             >
               Home
+            </li>
+            <li
+              onClick={() => {
+                navigate("/blogs");
+                handleCloseNavbar();
+              }}
+              className={`cursor-pointer relative ${
+                checkIfNavLinkActive("Blogs") && "mobile-active-nav-link"
+              }`}
+            >
+              Blogs
             </li>
             <li
               onClick={() => {
@@ -272,9 +283,11 @@ const Navbar = () => {
                 Dashboard
               </li>
             )}
-            <li className="flex items-center justify-start gap-2 cursor-pointer">
-              {isLoggedIn && <NotificationDropdownItems />}
-            </li>
+            {isLoggedIn && (
+              <li>
+                <NotificationDropdownItems />
+              </li>
+            )}
             {!isLoggedIn && (
               <li
                 onClick={() => {
