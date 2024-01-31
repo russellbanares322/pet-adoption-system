@@ -26,7 +26,6 @@ const ProfileForm = () => {
     fullName: displayName || "",
     email: email || "",
     newPassword: "",
-    confirmNewPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const isPasswordEmpty = formData.newPassword.trim().length === 0;
@@ -56,6 +55,10 @@ const ProfileForm = () => {
       formData.newPassword
     );
     updateUserInfoInLocalStorage();
+    setFormData({
+      ...formData,
+      newPassword: "",
+    });
   };
 
   const togglePasswordVisibility = () => {
