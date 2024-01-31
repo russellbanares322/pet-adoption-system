@@ -4,21 +4,24 @@ import {
   HiMenu,
   HiOutlineChevronDown,
   HiOutlineLogout,
+  HiOutlineUser,
 } from "react-icons/hi";
 import { FaPaw } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { MenuProps } from "antd";
+import { MenuProps, Modal } from "antd";
 import MenuDropdown from "../dropdown/MenuDropdown";
 import useActiveNavLink from "../../hooks/useActiveNavLink";
 import NotificationDropdownItems from "../notification/NotificationDropdownItems";
 import useUserInfo from "../../hooks/useUserInfo";
 import { auth } from "../../firebase/firebase-config";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import ProfileForm from "../../global/ProfileForm";
 
 const Navbar = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const { checkIfNavLinkActive } = useActiveNavLink();
+  const [openUpdateProfileModal, setOpenUpdateProfileModal] = useState(false);
   const { removeItemFromLocalStorage } = useLocalStorage();
   const navigate = useNavigate();
   const { displayName, isLoggedIn, uid } = useUserInfo();
@@ -44,15 +47,35 @@ const Navbar = () => {
     );
   };
 
+  const handleOpenUpdateProfileModal = () => {
+    setOpenUpdateProfileModal(true);
+  };
+
+  const handleCloseUpdateProfileModal = () => {
+    setOpenUpdateProfileModal(false);
+  };
+
   const dropdownItemActions: MenuProps["onClick"] = ({ key }) => {
-    if (key === "logout") {
-      removeItemFromLocalStorage("user-info");
-      signOut(auth);
-      navigate("/");
-    }
+    const menuPropActionsMap: Record<string, () => void> = {
+      logout: async () => {
+        removeItemFromLocalStorage("user-info");
+        await signOut(auth);
+        navigate("/");
+      },
+      profile: () => {
+        handleOpenUpdateProfileModal();
+      },
+    };
+
+    const selectedAction = menuPropActionsMap[key];
+    return selectedAction();
   };
 
   const navDropdownItems: MenuProps["items"] = [
+    {
+      label: renderNavDropdownItemsLabel("Profile", <HiOutlineUser />),
+      key: "profile",
+    },
     {
       label: renderNavDropdownItemsLabel("Logout", <HiOutlineLogout />),
       key: "logout",
@@ -319,6 +342,14 @@ const Navbar = () => {
           />
         </div>
       </div>
+      <Modal
+        title="Update Profile"
+        footer={false}
+        open={openUpdateProfileModal}
+        onCancel={handleCloseUpdateProfileModal}
+      >
+        <ProfileForm />
+      </Modal>
     </nav>
   );
 };

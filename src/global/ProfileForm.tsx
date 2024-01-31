@@ -1,11 +1,16 @@
 import { Alert } from "antd";
 import React, { useState } from "react";
-import { HiOutlineMail, HiOutlineUser } from "react-icons/hi";
+import {
+  HiOutlineMail,
+  HiOutlineUser,
+  HiOutlineEye,
+  HiOutlineEyeOff,
+} from "react-icons/hi";
 import { MdOutlinePassword } from "react-icons/md";
 import { ClipLoader } from "react-spinners";
-import useLocalStorage from "../../../hooks/useLocalStorage";
-import useUpdateProfile from "../../../hooks/useUpdateProfile";
-import useUserInfo from "../../../hooks/useUserInfo";
+import useLocalStorage from "../hooks/useLocalStorage";
+import useUpdateProfile from "../hooks/useUpdateProfile";
+import useUserInfo from "../hooks/useUserInfo";
 
 const ProfileForm = () => {
   const { displayName, email, uid } = useUserInfo();
@@ -21,7 +26,10 @@ const ProfileForm = () => {
     fullName: displayName || "",
     email: email || "",
     newPassword: "",
+    confirmNewPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const isPasswordEmpty = formData.newPassword.trim().length === 0;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,8 +58,12 @@ const ProfileForm = () => {
     updateUserInfoInLocalStorage();
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <form onSubmit={onSubmit} className="max-w-full w-96">
+    <form onSubmit={onSubmit} className="w-full">
       {showSuccessAlertMessage && (
         <Alert
           className="mt-5"
@@ -72,7 +84,7 @@ const ProfileForm = () => {
       )}
       <div className="mt-3 flex flex-col gap-5">
         <div
-          className={`flex items-center gap-3 border-b-2  border-b-gray-800 w-full py-1`}
+          className={`flex items-center gap-3 border-b-2 border-b-gray-800 w-full py-1`}
         >
           <HiOutlineUser size={25} />
           <input
@@ -85,7 +97,7 @@ const ProfileForm = () => {
           />
         </div>
         <div
-          className={`flex items-center gap-3 border-b-2  border-b-gray-800 w-full py-1`}
+          className={`flex items-center gap-3 border-b-2 border-b-gray-800 w-full py-1`}
         >
           <HiOutlineMail size={25} />
           <input
@@ -98,17 +110,31 @@ const ProfileForm = () => {
           />
         </div>
         <div
-          className={`flex items-center gap-3 border-b-2  border-b-gray-800 w-full py-1`}
+          className={`flex items-center gap-3 border-b-2 border-b-gray-800 w-full py-1 relative`}
         >
           <MdOutlinePassword size={25} />
           <input
             onChange={onChange}
             name="newPassword"
             className="appearance-none w-full outline-none"
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="New Password"
             value={formData.newPassword}
           />
+          {!isPasswordEmpty && !showPassword && (
+            <HiOutlineEyeOff
+              onClick={togglePasswordVisibility}
+              className="absolute top-2 right-3 cursor-pointer"
+              size={19}
+            />
+          )}
+          {!isPasswordEmpty && showPassword && (
+            <HiOutlineEye
+              onClick={togglePasswordVisibility}
+              className="absolute top-2 right-3 cursor-pointer"
+              size={19}
+            />
+          )}
         </div>
         <button
           disabled={isLoading}
