@@ -17,7 +17,7 @@ const AboutUsDataDisplay = ({
     <div
       className={`flex-1 justify-center md:flex ${
         wrapData ? "flex-row-reverse" : "flex-row"
-      } md:justify-start items-center gap-10 mb-3`}
+      } md:justify-start items-center gap-10 mb-3 relative`}
     >
       <div>
         <p className="text-xl font-semibold text-maroon mb-2">{title}</p>
@@ -30,6 +30,9 @@ const AboutUsDataDisplay = ({
         src={image}
         alt="about-us"
       />
+      {title === "Our Story" && (
+        <div className="absolute top-9 right-2 h-20 max-w-7xl w-96 bg-neutral-300 blur-md" />
+      )}
     </div>
   );
 };
