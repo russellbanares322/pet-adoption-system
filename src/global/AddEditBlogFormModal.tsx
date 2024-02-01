@@ -46,6 +46,8 @@ const AddEditBlogFormModal = ({
   const { data } = useFetchBlog(idForUpdate);
   const { displayName, uid } = useUserInfo();
   const isBlogForUpdate = idForUpdate !== null;
+  const unRequireImageUpload =
+    isBlogForUpdate && imgUrls && imgUrls?.length > 0;
 
   useEffect(() => {
     if (isBlogForUpdate) {
@@ -62,8 +64,10 @@ const AddEditBlogFormModal = ({
     beforeUpload: () => false,
   };
 
-  const saveImgsToBeRemoved = (imgUrl: string) => {
+  const savedImgsToBeRemoved = (imgUrl: string) => {
     setRemovedImgs([...removedImgs, imgUrl]);
+    const filteredImgUrls = imgUrls?.filter((img) => img !== imgUrl);
+    setImgUrls(filteredImgUrls);
   };
 
   const clearInputFields = () => {
@@ -90,13 +94,18 @@ const AddEditBlogFormModal = ({
 
   const onFinish = async (values: BlogsFormInputFieldsType) => {
     setIsLoading(true);
-    const extractedImages = values?.images.fileList.map(
-      (image) => image.originFileObj
-    );
+    const hasPreviousImages = imgUrls && imgUrls?.length > 0;
+    const noNewImagesAdded = !values.images;
+    const avoidImageUpload = isBlogForUpdate && noNewImagesAdded;
+
+    const extractedImages =
+      !avoidImageUpload &&
+      values?.images.fileList.map((image) => image.originFileObj);
 
     try {
       const blogsRef = collection(db, "blogs");
-      const imgURLs = await uploadImgsToStorage(extractedImages);
+      const imgURLs =
+        !avoidImageUpload && (await uploadImgsToStorage(extractedImages));
       const isUploadCompleted = imgURLs.length === extractedImages.length;
 
       if (isUploadCompleted) {
@@ -112,26 +121,34 @@ const AddEditBlogFormModal = ({
           setIsLoading(false);
           toast.success("Successfully published blog");
           closeModal();
-        } else {
-          const filteredDefaultImgs = data?.images?.filter((img) =>
-            removedImgs.some((removedImg) => img !== removedImg)
-          );
-          const imagesToBeSaved = imgURLs.push(
-            ...(filteredDefaultImgs as string[])
-          );
-          await updateDoc(doc(db, "blogs", idForUpdate), {
-            userId: uid,
-            createdBy: displayName,
-            title: values.title,
-            story: values.story,
-            images: imagesToBeSaved,
-            dateCreated: data?.dateCreated,
-          });
-          await deletePrevSelectedImgInStorage();
-          setIsLoading(false);
-          toast.success("Successfully updated blog");
-          closeModal();
         }
+      }
+
+      if (isBlogForUpdate) {
+        let imagesToBeSaved;
+
+        if (hasPreviousImages) {
+          if (noNewImagesAdded) {
+            imagesToBeSaved = imgUrls;
+          } else {
+            imagesToBeSaved = Array(...imgURLs, ...(imgUrls as string[]));
+          }
+        } else {
+          imagesToBeSaved = imgURLs;
+        }
+
+        await updateDoc(doc(db, "blogs", idForUpdate), {
+          userId: uid,
+          createdBy: displayName,
+          title: values.title,
+          story: values.story,
+          images: imagesToBeSaved,
+          dateCreated: data?.dateCreated,
+        });
+        await deletePrevSelectedImgInStorage();
+        setIsLoading(false);
+        toast.success("Successfully updated blog");
+        closeModal();
       }
     } catch (err: any) {
       setIsLoading(false);
@@ -178,7 +195,12 @@ const AddEditBlogFormModal = ({
         <Form.Item<BlogsFormInputFieldsType>
           label="Images"
           name="images"
-          rules={[{ required: true, message: "Please insert atleast 1 image" }]}
+          rules={[
+            {
+              required: !unRequireImageUpload,
+              message: "Please insert atleast 1 image",
+            },
+          ]}
         >
           <Dragger
             {...uploadProps}
@@ -214,7 +236,7 @@ const AddEditBlogFormModal = ({
                 </div>
                 <div className="flex items-center justify-center">
                   <DeleteOutlined
-                    onClick={() => saveImgsToBeRemoved(img)}
+                    onClick={() => savedImgsToBeRemoved(img)}
                     className="pr-1 cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-black duration-150 ease-in-out p-1 rounded-md"
                   />
                 </div>
