@@ -6,16 +6,16 @@ import {
   PrinterOutlined,
 } from "@ant-design/icons";
 import Button from "../../../global/Button";
-import { Image, Popconfirm, Space, Tag, Tooltip } from "antd";
+import { Image, Space, Tag, Tooltip } from "antd";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Comments, useFetchPet } from "../../../api/pets/pets";
 import PetDetailsModal from "../../../global/PetDetailsModal";
 import moment from "moment";
-import useApproveAdoptionApplication from "../../../hooks/useApproveAdoptionApplication";
 import RejectApplicationModal from "./RejectApplicationModal";
 import { Timestamp } from "firebase/firestore";
 import { useReactToPrint } from "react-to-print";
 import AdoptionApplicationLayoutModal from "../../../layouts/print-layout/AdoptionApplicationLayoutModal";
+import AdoptionDateSelector from "../../../global/AdoptionDateSelector";
 
 const PendingApplicationsCard = ({
   id,
@@ -32,8 +32,12 @@ const PendingApplicationsCard = ({
   dateCreated,
   validIdImg,
   rejectionReason,
+  reasonForAdopting,
+  petImage,
 }: AdoptionsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
+  const [openAdoptionDateSelectorModal, setOpenAdoptionDateselectorModal] =
+    useState(false);
   const [showImgPreview, setShowImgPreview] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
   const [rejectApplicationOptions, setRejectApplicationOptions] = useState({
@@ -44,7 +48,6 @@ const PendingApplicationsCard = ({
   const printPromiseRef: MutableRefObject<any> =
     useRef<() => void | null>(null);
   const [showElementToBePrinted, setShowElementToBePrinted] = useState(false);
-  const { approveApplication } = useApproveAdoptionApplication();
 
   const applicationData = {
     id,
@@ -61,6 +64,8 @@ const PendingApplicationsCard = ({
     dateCreated,
     validIdImg,
     rejectionReason,
+    reasonForAdopting,
+    petImage,
   };
 
   useEffect(() => {
@@ -176,6 +181,7 @@ const PendingApplicationsCard = ({
         {applicationsText("Email", userEmail)}
         {applicationsText("Address", address)}
         {applicationsText("Contact Number", contactNumber)}
+        {applicationsText("Reason for Adopting", reasonForAdopting)}
         <Button
           onClick={handleShowImgPreview}
           size="small"
@@ -185,24 +191,14 @@ const PendingApplicationsCard = ({
         />
       </div>
       <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
-        <Popconfirm
-          title="Approve Application"
-          description="Did you already reviewed the application properly before approving?"
-          okText="Yes"
-          cancelText="No"
-          onConfirm={() => approveApplication(applicationData)}
-          okButtonProps={{
-            className: "primary-btn",
-          }}
-        >
-          <Button
-            disabled={status === "Approved"}
-            type="primary"
-            styleClass="bg-green"
-            title="Approve"
-            icon={<CheckCircleOutlined />}
-          />
-        </Popconfirm>
+        <Button
+          onClick={() => setOpenAdoptionDateselectorModal(true)}
+          disabled={status === "Approved"}
+          type="primary"
+          styleClass="bg-green"
+          title="Approve"
+          icon={<CheckCircleOutlined />}
+        />
         <Button
           onClick={handleOpenRejectApplicationModal}
           disabled={status === "Rejected"}
@@ -260,6 +256,11 @@ const PendingApplicationsCard = ({
         onCancel={hideElementToBePrinted}
         data={applicationData}
         elementToBePrintedRef={elementToBePrintedRef}
+      />
+      <AdoptionDateSelector
+        applicationData={applicationData}
+        open={openAdoptionDateSelectorModal}
+        onCancel={() => setOpenAdoptionDateselectorModal(false)}
       />
     </div>
   );

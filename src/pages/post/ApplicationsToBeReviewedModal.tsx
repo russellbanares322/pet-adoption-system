@@ -1,4 +1,4 @@
-import { Collapse, Image, Modal, Popconfirm, Space, Tag } from "antd";
+import { Collapse, Image, Modal, Space, Tag } from "antd";
 import { AdoptionsData } from "../../api/adoptions/adoptions";
 import {
   CheckCircleOutlined,
@@ -10,9 +10,9 @@ import {
 import Button from "../../global/Button";
 import { useState } from "react";
 import moment from "moment";
-import useApproveAdoptionApplication from "../../hooks/useApproveAdoptionApplication";
 import RejectApplicationModal from "../dashboard/adoption/RejectApplicationModal";
 import { isAdoptionApplicationRejected } from "../../utils/isAdoptionApplicationRejected";
+import AdoptionDateSelector from "../../global/AdoptionDateSelector";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
@@ -35,7 +35,11 @@ const ApplicationsToBeReviewedModal = ({
 }: ApplicationsToBeReviewedModalProps) => {
   const enableModalScroll = applicationsDataTotalCount > 1;
   const [showImgPreview, setShowImgPreview] = useState(false);
-  const { approveApplication } = useApproveAdoptionApplication();
+  const [openAdoptionDateSelectorModal, setOpenAdoptionDateSelectorModal] =
+    useState(false);
+  const [adoptionsData, setAdoptionsData] = useState<AdoptionsData | null>(
+    null
+  );
   const [rejectApplicationOptions, setRejectApplicationOptions] =
     useState<RejectApplicationOptionItems>({
       openModal: false,
@@ -91,12 +95,10 @@ const ApplicationsToBeReviewedModal = ({
   };
 
   const renderCollapseItemChildren = (data: AdoptionsData) => {
-    const selectedApplicationsData = {
+    const disableButtons = isAdoptionApplicationRejected(data.status);
+    const applicationDatas = {
       ...data,
     };
-
-    const disableButtons = isAdoptionApplicationRejected(data.status);
-
     return (
       <div>
         <p className="text-center my-1 italic">
@@ -118,25 +120,18 @@ const ApplicationsToBeReviewedModal = ({
           />
         </div>
         <div className="flex justify-center items-center gap-2 mt-4">
-          <Popconfirm
-            title="Approve Application"
-            description="Did you already reviewed the application properly before approving?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => approveApplication(selectedApplicationsData)}
-            okButtonProps={{
-              className: "primary-btn",
+          <Button
+            onClick={() => {
+              setAdoptionsData(applicationDatas);
+              setOpenAdoptionDateSelectorModal(true);
             }}
-          >
-            <Button
-              disabled={disableButtons}
-              type="primary"
-              size="small"
-              styleClass="bg-green"
-              title="Approve Application"
-              icon={<CheckCircleOutlined />}
-            />
-          </Popconfirm>
+            disabled={disableButtons}
+            type="primary"
+            size="small"
+            styleClass="bg-green"
+            title="Approve"
+            icon={<CheckCircleOutlined />}
+          />
           <Button
             disabled={disableButtons}
             onClick={() => handleOpenRejectApplicationModal(data)}
@@ -219,6 +214,11 @@ const ApplicationsToBeReviewedModal = ({
         applicationData={
           rejectApplicationOptions.selectedAdoptionsData as AdoptionsData
         }
+      />
+      <AdoptionDateSelector
+        open={openAdoptionDateSelectorModal}
+        onCancel={() => setOpenAdoptionDateSelectorModal(false)}
+        applicationData={adoptionsData!}
       />
     </Modal>
   );

@@ -1,17 +1,21 @@
-import { Tag, Tooltip } from "antd";
+import { Popconfirm, Tag, Tooltip } from "antd";
 import Button from "../../global/Button";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Comments, useFetchPet } from "../../api/pets/pets";
 import PetDetailsModal from "../../global/PetDetailsModal";
 import AdoptPetFormModal from "../pets/AdoptPetFormModal";
-import { Timestamp } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { db, storage } from "../../firebase/firebase-config";
+import { deleteObject, ref } from "firebase/storage";
+import { toast } from "react-toastify";
 
 type AdoptionCardProps = {
   id: string;
   recipientId: string;
   petId: string;
   status: string;
+  validIdImg: string;
 };
 
 const AdoptionCard = ({
@@ -19,12 +23,12 @@ const AdoptionCard = ({
   recipientId,
   petId,
   status,
+  validIdImg,
 }: AdoptionCardProps) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [openEditAdoptionModal, setOpenEditAdoptionModal] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
-  const disableCardButtons = status === "Rejected" || status === "Approved";
 
   const getTagColor = () => {
     const upperCasedStatus = status.toUpperCase();
@@ -57,6 +61,17 @@ const AdoptionCard = ({
     setOpenPetDetailsModal(false);
   };
 
+  const deleteAdoptionApplication = async () => {
+    try {
+      const imgToBeDeleted = ref(storage, validIdImg);
+      await deleteDoc(doc(db, "adoption-applications", id));
+      await deleteObject(imgToBeDeleted);
+      toast.success("Successfully deleted adoption application");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
   return (
     <div className="shadow-md rounded-md p-2 border bg-white">
       <h1 className="text-center flex flex-col items-center">
@@ -76,7 +91,6 @@ const AdoptionCard = ({
       </p>
       <div className="flex items-center justify-center mt-5 mb-2 gap-2">
         <Button
-          disabled={disableCardButtons}
           onClick={handleOpenEditAdoptionModal}
           size="small"
           type="primary"
@@ -84,16 +98,26 @@ const AdoptionCard = ({
           icon={<EditOutlined />}
           styleClass="primary-btn"
         />
-        <Button
-          disabled={disableCardButtons}
-          size="small"
-          type="primary"
-          danger={true}
-          title="Delete"
-          icon={<DeleteOutlined />}
-        />
+        <Popconfirm
+          title="Delete Adoption Application"
+          description="Are you sure you want to delete your adoption application?"
+          okText="Yes"
+          cancelText="No"
+          placement="right"
+          onConfirm={deleteAdoptionApplication}
+          okButtonProps={{
+            className: "primary-btn",
+          }}
+        >
+          <Button
+            size="small"
+            type="primary"
+            danger={true}
+            title="Delete"
+            icon={<DeleteOutlined />}
+          />
+        </Popconfirm>
       </div>
-      {/* Needs to be refactored */}
       <PetDetailsModal
         open={openPetDetailsModal}
         onCancel={handleCloseDetailsModal}
@@ -116,6 +140,7 @@ const AdoptionCard = ({
         selectedId={selectedId}
         recipientId={recipientId}
         isDataForUpdate={true}
+        petImage={petData?.petImage as string}
       />
     </div>
   );

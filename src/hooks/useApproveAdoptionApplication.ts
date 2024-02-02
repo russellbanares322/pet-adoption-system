@@ -23,7 +23,7 @@ const useApproveAdoptionApplication = () => {
     }
   }
 
-  const approveApplication = async (applicationData: AdoptionsData) => {
+  const approveApplication = async (applicationData: AdoptionsData, dateOfAdoption: string) => {
       const userDataRef = doc(db, "users", applicationData.userEmail + "")
       setIsLoading(true)
         try {
@@ -42,8 +42,10 @@ const useApproveAdoptionApplication = () => {
             dateCreated: applicationData.dateCreated,
             dateUpdated: serverTimestamp(),
             validIdImg: applicationData.validIdImg,
+            petImage: applicationData.petImage,
+            dateOfAdoption: dateOfAdoption
           })
-          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Approved")
+          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Approved", applicationData.petImage, dateOfAdoption, "")
           toast.success(`Successfully approved application for ${applicationData.id}`)
           setIsLoading(false)
         } catch (err: any) {
@@ -71,8 +73,10 @@ const useApproveAdoptionApplication = () => {
             dateCreated: applicationData.dateCreated,
             dateUpdated: serverTimestamp(),
             validIdImg: applicationData.validIdImg,
+            petImage: applicationData.petImage,
+            dateOfAdoption: null
           })
-          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected", rejectionReason)
+          await sendNotification(userDataRef, applicationData.petId, applicationData.id, "Rejected",applicationData.petImage, "", rejectionReason)
           await deleteDoc(doc(db, "listed-pets", applicationData.id))
           toast.success(`Successfully rejected application`)
           setIsLoading(false)
@@ -82,12 +86,14 @@ const useApproveAdoptionApplication = () => {
         }
     }
 
-  const sendNotification = async(userDataRef: DocumentReference, petId:string, id: string, status:string, rejectionReason?:string) => {
+  const sendNotification = async(userDataRef: DocumentReference, petId:string, id: string, status:string,petImage: string, dateOfAdoption?: string, rejectionReason?:string) => {
       const notificationToBeSent =  {
         notificationId: uuidv4(),
         petId: petId,
+        petImage: petImage,
         applicationId: id,
         status: status,
+        dateOfAdoption: status === "Rejected" ? null : dateOfAdoption,
         rejectionReason: status === "Rejected" ? rejectionReason : "",
         userPerformedAction: {
           userEmail: user?.email,

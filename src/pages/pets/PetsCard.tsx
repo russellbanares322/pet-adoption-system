@@ -200,6 +200,7 @@ const PetsCard = ({
       <AdoptPetFormModal
         openModal={openAdoptPetFormModal}
         onCancel={handleCloseAdoptionModal}
+        petImage={petImage}
         selectedId={id}
         recipientId={userId}
         isDataForUpdate={false}

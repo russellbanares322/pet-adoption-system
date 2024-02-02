@@ -1,76 +1,86 @@
 import { HiBell, HiTrash } from "react-icons/hi";
 import { Badge, Empty, MenuProps, Tooltip } from "antd";
 import useViewNotification from "../../hooks/useViewNotification";
-import { Comments, useFetchPet, useFetchPets } from "../../api/pets/pets";
 import { useFetchNotifications } from "../../api/notifications/notifications";
 import moment, { Moment } from "moment";
 import MenuDropdown from "../dropdown/MenuDropdown";
-import { TNotificationInfoOptions } from "./types";
 import React, { useState } from "react";
-import PetDetailsModal from "../../global/PetDetailsModal";
-import { Timestamp } from "firebase/firestore";
+import AdoptionApplicationNotificationDetailsModal from "../../global/AdoptionApplicationNotificationDetailsModal";
+
+type TNotificationDetailsData = {
+  petId: string;
+  dateOfAdoption: string;
+  petImage: string;
+  status: string;
+  dateUpdated: Moment;
+  hasViewed: boolean;
+  notificationId: string;
+};
 
 const NotificationDropdownItems = () => {
   const { viewNotification, deleteNotification } = useViewNotification();
-  const [notificationInfoOptions, setNotifcationInfoOptions] =
-    useState<TNotificationInfoOptions>({
-      openModal: false,
-      petId: null,
-    });
-  const { data: petData } = useFetchPet(
-    notificationInfoOptions.petId as string
-  );
-  const { data: petsData } = useFetchPets();
+  const [openNotificationDetailsModal, setOpenNotificationDetailsModal] =
+    useState(false);
+  const [notificationDetailsData, setNotificationDetailsData] =
+    useState<TNotificationDetailsData | null>(null);
   const { data: notificationsData } = useFetchNotifications();
   const unViewedNotificationsCount = notificationsData?.filter(
     (data) => !data.hasViewed
   )?.length;
   const emptyNotificationsData = notificationsData?.length === 0;
 
-  const getPetImage = (petId: string) => {
-    const petImage = petsData?.find((data) => data.id === petId)?.petImage;
-    return petImage;
-  };
-
-  const handleOpenNotificationDetailsModal = (selectedPetId: string) => {
-    setNotifcationInfoOptions({
-      openModal: true,
-      petId: selectedPetId,
-    });
+  const handleOpenNotificationDetailsModal = (
+    data: TNotificationDetailsData
+  ) => {
+    setOpenNotificationDetailsModal(true);
+    setNotificationDetailsData(data);
   };
 
   const handleCloseNotificationDetailsModal = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setNotifcationInfoOptions({
-      openModal: false,
-      petId: null,
-    });
+    setOpenNotificationDetailsModal(false);
+    setNotificationDetailsData(null);
   };
 
   const renderNotificationDropdownItemsLabel = (
     petId: string,
+    dateOfAdoption: string,
+    petImage: string,
     status: string,
     dateUpdated: Moment,
     hasViewed: boolean,
     notificationId: string
   ) => {
+    const details = {
+      petId,
+      dateOfAdoption,
+      petImage,
+      status,
+      dateUpdated,
+      hasViewed,
+      notificationId,
+    };
     return (
       <div className="flex items-center justify-start gap-3 relative">
-        <div className="relative">
-          <img
-            className="h-11 w-11 object-cover rounded-md"
-            src={getPetImage(petId)}
-          />
-          {!hasViewed && (
-            <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
-          )}
-        </div>
-        <div>
-          <p className="text-sm">
-            Your application for <span className="font-bold">{petId}</span> has
-            been <span className="font-bold">{status}</span>
-          </p>
-          <p className="text-xs text-blue">{moment(dateUpdated)?.fromNow()}</p>
+        <div
+          onClick={() => handleOpenNotificationDetailsModal(details)}
+          className="flex gap-3"
+        >
+          <div className="relative">
+            <img className="h-11 w-11 object-cover rounded-md" src={petImage} />
+            {!hasViewed && (
+              <div className="bg-green p-[6px] rounded-full absolute -top-1 -right-1" />
+            )}
+          </div>
+          <div>
+            <p className="text-sm">
+              Your application for <span className="font-bold">{petId}</span>{" "}
+              has been <span className="font-bold">{status}</span>
+            </p>
+            <p className="text-xs text-blue">
+              {moment(dateUpdated)?.fromNow()}
+            </p>
+          </div>
         </div>
         <Tooltip placement="bottom" title="Remove notification">
           <HiTrash
@@ -102,11 +112,7 @@ const NotificationDropdownItems = () => {
 
   const notificationsDropdownItemActions: MenuProps["onClick"] = ({ key }) => {
     if (!emptyNotificationsData) {
-      const splittedKey = key.split(",");
-      const selectedNotificationId = splittedKey[0];
-      const selectedPetId = splittedKey[1];
-      viewNotification(selectedNotificationId);
-      handleOpenNotificationDetailsModal(selectedPetId);
+      viewNotification(key);
     }
   };
 
@@ -119,12 +125,14 @@ const NotificationDropdownItems = () => {
     : notificationsData?.map((data) => ({
         label: renderNotificationDropdownItemsLabel(
           data?.petId,
+          data?.dateOfAdoption,
+          data?.petImage,
           data?.status,
           data?.dateUpdated,
           data?.hasViewed,
           data?.notificationId
         ),
-        key: `${data?.notificationId},${data?.petId}`,
+        key: data?.notificationId,
       }));
 
   return (
@@ -172,21 +180,10 @@ const NotificationDropdownItems = () => {
           </div>
         </MenuDropdown>
       </div>
-      <PetDetailsModal
-        open={notificationInfoOptions.openModal}
+      <AdoptionApplicationNotificationDetailsModal
+        notificationDetailsData={notificationDetailsData}
+        open={openNotificationDetailsModal}
         onCancel={handleCloseNotificationDetailsModal}
-        id={notificationInfoOptions.petId as string}
-        petName={petData?.petName as string}
-        petAge={petData?.petAge as string}
-        petGender={petData?.petGender as string}
-        petColor={petData?.petColor as string}
-        petLocation={petData?.petLocation as string}
-        petDescription={petData?.petDescription as string}
-        likes={petData?.likes as string[]}
-        comments={petData?.comments as Comments[]}
-        petImage={petData?.petImage as string}
-        createdBy={petData?.createdBy as string}
-        dateCreated={petData?.dateCreated as Timestamp}
       />
     </>
   );

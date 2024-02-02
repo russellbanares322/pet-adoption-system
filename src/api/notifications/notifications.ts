@@ -7,9 +7,11 @@ import { auth, db } from "../../firebase/firebase-config"
 export type NotificationData = {
     notificationId: string,
     petId: string,
+    petImage: string,
     applicationId: string,
     status: string,
     rejectionReason: string,
+    dateOfAdoption: string,
     userPerformedAction: {
       userEmail: string,
       userId: string,

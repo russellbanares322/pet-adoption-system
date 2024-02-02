@@ -12,6 +12,7 @@ export type AdoptionsData = {
     lastName: string,
     address: string,
     contactNumber: string,
+    reasonForAdopting: string,
     status: string,
     recipientId:string,
     rejectionReason:string,
@@ -19,6 +20,7 @@ export type AdoptionsData = {
     dateUpdated?:Timestamp,
     dateCreated:Timestamp,
     validIdImg: string
+    petImage: string
 }
 const useFetchAdoptionsByUserId = () => {
     const [data, setData] = useState<AdoptionsData[]>([]);
@@ -31,6 +33,7 @@ const useFetchAdoptionsByUserId = () => {
       const q = query(
         adoptionsRef,
         where("userId", "==", uid),
+        where("status", "==", "To be reviewed"),
       );
       onSnapshot(q, (snapshot) => {
         const adoptionsData = snapshot.docs.map((doc) => ({

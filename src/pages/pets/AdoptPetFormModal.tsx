@@ -22,6 +22,7 @@ type AdoptPetFormModalProps = {
   selectedId: string;
   recipientId: string;
   isDataForUpdate: boolean;
+  petImage: string;
 };
 
 type FormInputs = {
@@ -30,7 +31,9 @@ type FormInputs = {
   lastName: string;
   address: string;
   contactNumber: string;
+  reasonForAdopting: string;
 };
+const { TextArea } = Input;
 
 const AdoptPetFormModal = ({
   openModal,
@@ -38,6 +41,7 @@ const AdoptPetFormModal = ({
   selectedId,
   recipientId,
   isDataForUpdate,
+  petImage,
 }: AdoptPetFormModalProps) => {
   const [imgFile, setImgFile] = useState<File | null | string>(null);
   const [removedImg, setRemovedImg] = useState<File | null | string>("");
@@ -57,6 +61,7 @@ const AdoptPetFormModal = ({
         lastName: adoptionApplicationForUpdate?.lastName,
         address: adoptionApplicationForUpdate?.address,
         contactNumber: adoptionApplicationForUpdate?.contactNumber,
+        reasonForAdopting: adoptionApplicationForUpdate?.reasonForAdopting,
       });
       setImgFile(adoptionApplicationForUpdate?.validIdImg);
     }
@@ -107,12 +112,14 @@ const AdoptPetFormModal = ({
             lastName: values.lastName,
             address: values.address,
             contactNumber: values.contactNumber,
+            reasonForAdopting: values.reasonForAdopting,
             status: "To be reviewed",
             rejectionReason: "",
             recipientId: recipientId,
             petId: selectedId,
             dateCreated: serverTimestamp(),
             validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
+            petImage: petImage,
           });
           setIsLoading(false);
           toast.success(
@@ -129,12 +136,14 @@ const AdoptPetFormModal = ({
           lastName: values.lastName,
           address: values.address,
           contactNumber: values.contactNumber,
+          reasonForAdopting: values.reasonForAdopting,
           status: adoptionApplicationForUpdate?.status,
           rejectionReason: "",
           recipientId: recipientId,
           petId: adoptionApplicationForUpdate?.petId,
           dateCreated: serverTimestamp(),
           validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
+          petImage: petImage,
         });
         await deletePrevSelectedImgInStorage();
         setIsLoading(false);
@@ -238,6 +247,22 @@ const AdoptPetFormModal = ({
           ]}
         >
           <Input placeholder="Enter your contact number..." />
+        </Form.Item>
+        {/* Reason for Adopting */}
+        <Form.Item
+          label="Reason for Adopting"
+          name="reasonForAdopting"
+          rules={[
+            {
+              required: true,
+              message: "Please input your reason...",
+            },
+          ]}
+        >
+          <TextArea
+            placeholder="Enter your reason..."
+            autoSize={{ minRows: 3, maxRows: 5 }}
+          />
         </Form.Item>
         {/* Valid Id */}
         <Form.Item
