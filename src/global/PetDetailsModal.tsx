@@ -220,10 +220,10 @@ const PetDetailsModal = ({
           <p>
             Pet Color: <span className="font-bold">{petColor}</span>
           </p>
-          <p>
+          <p className="whitespace-wrap">
             Pet Location: <span className="font-bold">{petLocation}</span>
           </p>
-          <p className="w-max">
+          <p className="whitespace-wrap">
             Pet Description: <span className="font-bold">{petDescription}</span>
           </p>
         </div>

@@ -55,8 +55,6 @@ const useAddToFavorites = () => {
         }
     }
 
-
-
   return {addPostToFavorites, isPostAlreadyAdded, removePostToFavorites}
 }
 
