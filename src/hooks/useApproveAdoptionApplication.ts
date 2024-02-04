@@ -8,7 +8,6 @@ import { useState } from "react"
 import moment from "moment"
 import { deleteObject, ref } from "firebase/storage"
 
-//*TODO: Allow user that will adopt the pet set the date when they will pickup the pet
 const useApproveAdoptionApplication = () => {
   const [user] = useAuthState(auth)
   const [isLoading, setIsLoading] = useState(false);
