@@ -33,7 +33,6 @@ const useFetchAdoptionsByUserId = () => {
       const q = query(
         adoptionsRef,
         where("userId", "==", uid),
-        where("status", "==", "To be reviewed"),
       );
       onSnapshot(q, (snapshot) => {
         const adoptionsData = snapshot.docs.map((doc) => ({

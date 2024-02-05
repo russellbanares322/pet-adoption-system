@@ -3,7 +3,7 @@ import moment from "moment";
 import { AdoptionsData } from "../api/adoptions/adoptions";
 import useApproveAdoptionApplication from "../hooks/useApproveAdoptionApplication";
 
-type AdoptionDateSelector = {
+type TAdoptionDateSelector = {
   applicationData: AdoptionsData;
   open: boolean;
   onCancel: () => void;
@@ -13,7 +13,7 @@ const AdoptionDateSelector = ({
   open,
   onCancel,
   applicationData,
-}: AdoptionDateSelector) => {
+}: TAdoptionDateSelector) => {
   const [form] = Form.useForm();
   const { approveApplication, isLoading } = useApproveAdoptionApplication();
 

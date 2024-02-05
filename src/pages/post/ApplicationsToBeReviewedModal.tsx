@@ -11,7 +11,6 @@ import Button from "../../global/Button";
 import { useState } from "react";
 import moment from "moment";
 import RejectApplicationModal from "../dashboard/adoption/RejectApplicationModal";
-import { isAdoptionApplicationRejected } from "../../utils/isAdoptionApplicationRejected";
 import AdoptionDateSelector from "../../global/AdoptionDateSelector";
 
 type ApplicationsToBeReviewedModalProps = {
@@ -95,7 +94,8 @@ const ApplicationsToBeReviewedModal = ({
   };
 
   const renderCollapseItemChildren = (data: AdoptionsData) => {
-    const disableButtons = isAdoptionApplicationRejected(data.status);
+    const disableButtons =
+      data.status === "Rejected" || data.status === "Approved";
     const applicationDatas = {
       ...data,
     };

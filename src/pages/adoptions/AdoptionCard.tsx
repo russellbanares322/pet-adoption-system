@@ -29,6 +29,7 @@ const AdoptionCard = ({
   const [selectedId, setSelectedId] = useState("");
   const [openEditAdoptionModal, setOpenEditAdoptionModal] = useState(false);
   const { data: petData, isLoading } = useFetchPet(petId);
+  const disableButton = status === "Approved";
 
   const getTagColor = () => {
     const upperCasedStatus = status.toUpperCase();
@@ -91,6 +92,7 @@ const AdoptionCard = ({
       </p>
       <div className="flex items-center justify-center mt-5 mb-2 gap-2">
         <Button
+          disabled={disableButton}
           onClick={handleOpenEditAdoptionModal}
           size="small"
           type="primary"
