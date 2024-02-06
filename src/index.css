@@ -13,6 +13,18 @@
 .ant-btn-primary.bg-green:disabled:hover {
   background-color: unset !important;
 }
+body
+  > div:nth-child(9)
+  > div
+  > div
+  > div
+  > div
+  > div.ant-picker-footer
+  > ul
+  > li.ant-picker-ok
+  > button {
+  background-color: blue;
+}
 body {
   background-color: #fdfdfd;
   overflow-x: hidden;

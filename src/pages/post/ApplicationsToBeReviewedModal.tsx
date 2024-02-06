@@ -11,7 +11,7 @@ import Button from "../../global/Button";
 import { useState } from "react";
 import moment from "moment";
 import RejectApplicationModal from "../dashboard/adoption/RejectApplicationModal";
-import AdoptionDateSelector from "../../global/AdoptionDateSelector";
+import AdoptionDateSelector from "../../global/AdoptionApprovalNote";
 
 type ApplicationsToBeReviewedModalProps = {
   openModal: boolean;
@@ -111,6 +111,23 @@ const ApplicationsToBeReviewedModal = ({
           {renderCollapseChildrenText("Email", data?.userEmail)}
           {renderCollapseChildrenText("Address", data?.address)}
           {renderCollapseChildrenText("Contact Number", data?.contactNumber)}
+          {renderCollapseChildrenText(
+            "Reason for Adopting",
+            data?.reasonForAdopting
+          )}
+          {renderCollapseChildrenText(
+            "Living Situation",
+            data?.livingSituation
+          )}
+          {renderCollapseChildrenText("Pet Experience", data?.petExperience)}
+          {renderCollapseChildrenText(
+            "Date of Receiving Pet",
+            data?.dateOfReceivingPet
+          )}
+          {renderCollapseChildrenText(
+            "Time of Receiving Pet",
+            data?.timeOfReceivingPet
+          )}
           <Button
             onClick={handleShowImgPreview}
             size="small"

@@ -1,11 +1,15 @@
 import CountUp from "react-countup";
-import { useFetchApplicationsByRecipientId } from "../../api/adoptions/adoptions";
 import { useFetchPendingPets, useFetchPets } from "../../api/pets/pets";
 import { useFetchUsers } from "../../api/users/users";
 import { IoPawOutline } from "react-icons/io5";
 import { LuFileClock } from "react-icons/lu";
 import { FiUsers } from "react-icons/fi";
 import { IoMdPaper } from "react-icons/io";
+import { HiOutlineCheckCircle } from "react-icons/hi";
+import {
+  useFetchAdoptionApplicationByStatus,
+  useFetchAdoptionApplications,
+} from "../../api/adoptions/adoptions";
 
 type TDashboardLandingPageDatas = {
   id: number;
@@ -18,11 +22,14 @@ const DashboardLandingPage = () => {
   const { data: listedPetsData } = useFetchPets();
   const { data: pendingPetsData } = useFetchPendingPets();
   const { data: registeredUsersData } = useFetchUsers();
-  const { data: applicationsData } = useFetchApplicationsByRecipientId();
+  const { data: applicationsData } = useFetchAdoptionApplications();
+  const { data: approvedApplicationData } =
+    useFetchAdoptionApplicationByStatus("Approved");
   const listedPetsCount = listedPetsData?.length;
   const pendingPetsCount = pendingPetsData?.length;
   const registeredUsersCount = registeredUsersData?.length;
   const adoptionApplicationsCount = applicationsData?.length;
+  const approvedAdoptionApplicationsCount = approvedApplicationData?.length;
 
   const dashboardLandingPageDatas: TDashboardLandingPageDatas[] = [
     {
@@ -45,9 +52,15 @@ const DashboardLandingPage = () => {
     },
     {
       id: 4,
-      title: "Adoption Applications",
+      title: "Total Sent Adoption Applications",
       count: adoptionApplicationsCount,
       icon: <IoMdPaper size={25} />,
+    },
+    {
+      id: 5,
+      title: "Total Approved Adoption Applications",
+      count: approvedAdoptionApplicationsCount,
+      icon: <HiOutlineCheckCircle size={25} />,
     },
   ];
   return (

@@ -9,7 +9,7 @@ import AdoptionApplicationNotificationDetailsModal from "../../global/AdoptionAp
 
 type TNotificationDetailsData = {
   petId: string;
-  dateOfAdoption: string;
+  approvalNote: string | null;
   petImage: string;
   status: string;
   dateUpdated: Moment;
@@ -44,7 +44,7 @@ const NotificationDropdownItems = () => {
 
   const renderNotificationDropdownItemsLabel = (
     petId: string,
-    dateOfAdoption: string,
+    approvalNote: string | null,
     petImage: string,
     status: string,
     dateUpdated: Moment,
@@ -53,7 +53,7 @@ const NotificationDropdownItems = () => {
   ) => {
     const details = {
       petId,
-      dateOfAdoption,
+      approvalNote,
       petImage,
       status,
       dateUpdated,
@@ -125,7 +125,7 @@ const NotificationDropdownItems = () => {
     : notificationsData?.map((data) => ({
         label: renderNotificationDropdownItemsLabel(
           data?.petId,
-          data?.dateOfAdoption,
+          data?.approvalNote,
           data?.petImage,
           data?.status,
           data?.dateUpdated,

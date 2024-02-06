@@ -25,6 +25,8 @@ const PetsCard = ({
   petName,
   petAge,
   petGender,
+  contactNumber,
+  facebookLink,
   petColor,
   petLocation,
   showAdoptButton,
@@ -188,6 +190,8 @@ const PetsCard = ({
         petName={petName}
         petAge={petAge}
         petGender={petGender}
+        contactNumber={contactNumber}
+        facebookLink={facebookLink}
         petColor={petColor}
         petLocation={petLocation}
         petDescription={petDescription}

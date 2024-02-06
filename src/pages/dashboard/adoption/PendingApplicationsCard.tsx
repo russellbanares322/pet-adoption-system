@@ -15,7 +15,7 @@ import RejectApplicationModal from "./RejectApplicationModal";
 import { Timestamp } from "firebase/firestore";
 import { useReactToPrint } from "react-to-print";
 import AdoptionApplicationLayoutModal from "../../../layouts/print-layout/AdoptionApplicationLayoutModal";
-import AdoptionDateSelector from "../../../global/AdoptionDateSelector";
+import AdoptionDateSelector from "../../../global/AdoptionApprovalNote";
 
 const PendingApplicationsCard = ({
   id,
@@ -34,6 +34,10 @@ const PendingApplicationsCard = ({
   rejectionReason,
   reasonForAdopting,
   petImage,
+  livingSituation,
+  petExperience,
+  dateOfReceivingPet,
+  timeOfReceivingPet,
 }: AdoptionsData) => {
   const [openPetDetailsModal, setOpenPetDetailsModal] = useState(false);
   const [openAdoptionDateSelectorModal, setOpenAdoptionDateselectorModal] =
@@ -48,6 +52,7 @@ const PendingApplicationsCard = ({
   const printPromiseRef: MutableRefObject<any> =
     useRef<() => void | null>(null);
   const [showElementToBePrinted, setShowElementToBePrinted] = useState(false);
+  const disableButtons = status === "Approved" || status === "Rejected";
 
   const applicationData = {
     id,
@@ -66,6 +71,10 @@ const PendingApplicationsCard = ({
     rejectionReason,
     reasonForAdopting,
     petImage,
+    livingSituation,
+    petExperience,
+    dateOfReceivingPet,
+    timeOfReceivingPet,
   };
 
   useEffect(() => {
@@ -182,6 +191,10 @@ const PendingApplicationsCard = ({
         {applicationsText("Address", address)}
         {applicationsText("Contact Number", contactNumber)}
         {applicationsText("Reason for Adopting", reasonForAdopting)}
+        {applicationsText("Living Situation", livingSituation)}
+        {applicationsText("Pet Experience", petExperience)}
+        {applicationsText("Date of Receiving Pet", dateOfReceivingPet)}
+        {applicationsText("Time of Receiving Pet", timeOfReceivingPet)}
         <Button
           onClick={handleShowImgPreview}
           size="small"
@@ -193,7 +206,7 @@ const PendingApplicationsCard = ({
       <div className="flex flex-wrap justify-center items-center gap-2 mt-4">
         <Button
           onClick={() => setOpenAdoptionDateselectorModal(true)}
-          disabled={status === "Approved"}
+          disabled={disableButtons}
           type="primary"
           styleClass="bg-green"
           title="Approve"
@@ -201,7 +214,7 @@ const PendingApplicationsCard = ({
         />
         <Button
           onClick={handleOpenRejectApplicationModal}
-          disabled={status === "Rejected"}
+          disabled={disableButtons}
           type="primary"
           danger
           title="Reject"
@@ -223,6 +236,8 @@ const PendingApplicationsCard = ({
         petName={petData?.petName as string}
         petAge={petData?.petAge as string}
         petGender={petData?.petGender as string}
+        contactNumber={petData?.contactNumber as string}
+        facebookLink={petData?.facebookLink as string | null}
         petColor={petData?.petColor as string}
         petLocation={petData?.petLocation as string}
         petDescription={petData?.petDescription as string}

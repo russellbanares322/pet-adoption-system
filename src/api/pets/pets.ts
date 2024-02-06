@@ -26,6 +26,8 @@ export type PetsData = {
   petAge: string;
   petType: string;
   petGender: string;
+  contactNumber: string,
+  facebookLink: string | null,
   petColor: string;
   petLocation: string;        
   showAdoptButton: boolean;

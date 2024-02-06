@@ -1,5 +1,4 @@
-import { DatePicker, Form, Modal } from "antd";
-import moment from "moment";
+import { Input, Form, Modal } from "antd";
 import { AdoptionsData } from "../api/adoptions/adoptions";
 import useApproveAdoptionApplication from "../hooks/useApproveAdoptionApplication";
 
@@ -9,6 +8,8 @@ type TAdoptionDateSelector = {
   onCancel: () => void;
 };
 
+const { TextArea } = Input;
+
 const AdoptionDateSelector = ({
   open,
   onCancel,
@@ -17,11 +18,13 @@ const AdoptionDateSelector = ({
   const [form] = Form.useForm();
   const { approveApplication, isLoading } = useApproveAdoptionApplication();
 
-  const onFinish = (values: { dateOfAdoption: string }) => {
-    approveApplication(
-      applicationData,
-      moment(values.dateOfAdoption).format("LL")
-    );
+  const onFinish = (values: { approvalNote: string }) => {
+    const checkedApprovalNote =
+      values.approvalNote === "" || values.approvalNote === undefined
+        ? null
+        : values.approvalNote;
+
+    approveApplication(applicationData, checkedApprovalNote);
     if (!isLoading) {
       setTimeout(() => {
         onCancel();
@@ -49,15 +52,13 @@ const AdoptionDateSelector = ({
         name="approve-application"
         initialValues={{ remember: true }}
         onFinish={onFinish}
+        layout="vertical"
       >
-        <Form.Item
-          label="Receiving of pet schedule"
-          name="dateOfAdoption"
-          rules={[
-            { required: true, message: "Please select date of adoption" },
-          ]}
-        >
-          <DatePicker format="MM/DD/YYYY" />
+        <Form.Item label="Approval Note" name="approvalNote">
+          <TextArea
+            placeholder="Please specify if the provided date and time of retrieval is good..."
+            autoSize={{ minRows: 3, maxRows: 5 }}
+          />
         </Form.Item>
       </Form>
     </Modal>

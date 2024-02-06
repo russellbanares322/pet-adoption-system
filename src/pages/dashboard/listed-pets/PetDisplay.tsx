@@ -20,6 +20,8 @@ const PetDisplay = ({
   petName,
   petAge,
   petGender,
+  contactNumber,
+  facebookLink,
   petColor,
   petLocation,
   petDescription,
@@ -148,6 +150,8 @@ const PetDisplay = ({
         petName={petName}
         petAge={petAge}
         petGender={petGender}
+        contactNumber={contactNumber}
+        facebookLink={facebookLink}
         petColor={petColor}
         petLocation={petLocation}
         petDescription={petDescription}

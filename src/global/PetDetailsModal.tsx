@@ -34,6 +34,8 @@ type PetDetailsModalProps = {
   petName: string;
   petAge: string;
   petGender: string;
+  contactNumber: string;
+  facebookLink: string | null;
   petColor: string;
   petLocation: string;
   petDescription: string;
@@ -51,6 +53,8 @@ const PetDetailsModal = ({
   petName,
   petAge,
   petGender,
+  contactNumber,
+  facebookLink,
   petColor,
   petLocation,
   petDescription,
@@ -195,7 +199,7 @@ const PetDetailsModal = ({
       open={open}
       footer={[commentInputElement]}
       onCancel={onCancel}
-      width={700}
+      width={800}
     >
       <hr />
       <div className="h-[34rem] overflow-y-scroll px-2">
@@ -220,6 +224,18 @@ const PetDetailsModal = ({
           <p>
             Pet Color: <span className="font-bold">{petColor}</span>
           </p>
+          <p className="whitespace-wrap">
+            Owner Contact Number:{" "}
+            <span className="font-bold">{contactNumber}</span>
+          </p>
+          {facebookLink !== null && (
+            <p className="whitespace-wrap">
+              Facebook Link:{" "}
+              <a className="cursor-pointer" href={facebookLink} target="_blank">
+                <span className="font-bold">{facebookLink}</span>
+              </a>
+            </p>
+          )}
           <p className="whitespace-wrap">
             Pet Location: <span className="font-bold">{petLocation}</span>
           </p>

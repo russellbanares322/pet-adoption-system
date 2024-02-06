@@ -11,7 +11,7 @@ export type NotificationData = {
     applicationId: string,
     status: string,
     rejectionReason: string,
-    dateOfAdoption: string,
+    approvalNote: string | null,
     userPerformedAction: {
       userEmail: string,
       userId: string,

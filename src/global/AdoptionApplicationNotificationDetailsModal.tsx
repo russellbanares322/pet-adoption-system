@@ -3,7 +3,7 @@ import { Moment } from "moment";
 
 type TNotificationDetailsData = {
   petId: string;
-  dateOfAdoption: string;
+  approvalNote: string | null;
   petImage: string;
   status: string;
   dateUpdated: Moment;
@@ -50,11 +50,13 @@ const AdoptionApplicationNotificationDetailsModal = ({
       open={open}
       onCancel={onCancel}
     >
-      {applicationsText("Status", notificationDetailsData?.status as string)}
-      {applicationsText(
-        "Receiving of pet schedule",
-        notificationDetailsData?.dateOfAdoption as string
-      )}
+      <div className="flex flex-col gap-2">
+        {applicationsText("Status", notificationDetailsData?.status as string)}
+        {applicationsText(
+          "Approval Note",
+          notificationDetailsData?.approvalNote as string
+        )}
+      </div>
     </Modal>
   );
 };

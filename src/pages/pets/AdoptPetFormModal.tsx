@@ -1,4 +1,12 @@
-import { Button, Checkbox, Form, Input, Modal } from "antd";
+import {
+  Button,
+  Checkbox,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  TimePicker,
+} from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Key, useEffect, useState } from "react";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
@@ -15,6 +23,7 @@ import useUploadFileToDb from "../../hooks/useUploadFileToDb";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchAdoptionApplication } from "../../api/adoptions/adoptions";
 import { deleteObject, ref } from "firebase/storage";
+import moment from "moment";
 
 type AdoptPetFormModalProps = {
   openModal: boolean;
@@ -32,6 +41,10 @@ type FormInputs = {
   address: string;
   contactNumber: string;
   reasonForAdopting: string;
+  livingSituation: string;
+  petExperience: string;
+  dateOfReceivingPet: string;
+  timeOfReceivingPet: string;
 };
 const { TextArea } = Input;
 
@@ -62,6 +75,8 @@ const AdoptPetFormModal = ({
         address: adoptionApplicationForUpdate?.address,
         contactNumber: adoptionApplicationForUpdate?.contactNumber,
         reasonForAdopting: adoptionApplicationForUpdate?.reasonForAdopting,
+        livingSituation: adoptionApplicationForUpdate?.livingSituation,
+        petExperience: adoptionApplicationForUpdate?.petExperience,
       });
       setImgFile(adoptionApplicationForUpdate?.validIdImg);
     }
@@ -119,6 +134,13 @@ const AdoptPetFormModal = ({
             petId: selectedId,
             dateCreated: serverTimestamp(),
             validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
+            livingSituation: values.livingSituation,
+            petExperience: values.petExperience,
+            dateOfReceivingPet: moment(values.dateOfReceivingPet).format("LL"),
+            timeOfReceivingPet: moment(
+              values.timeOfReceivingPet,
+              "HH:mm"
+            ).format("hh:mm A"),
             petImage: petImage,
           });
           setIsLoading(false);
@@ -143,6 +165,12 @@ const AdoptPetFormModal = ({
           petId: adoptionApplicationForUpdate?.petId,
           dateCreated: serverTimestamp(),
           validIdImg: typeof imgFile === "object" ? imgUrl : imgFile,
+          livingSituation: values.livingSituation,
+          petExperience: values.petExperience,
+          dateOfReceivingPet: moment(values.dateOfReceivingPet).format("LL"),
+          timeOfReceivingPet: moment(values.timeOfReceivingPet, "HH:mm").format(
+            "hh:mm A"
+          ),
           petImage: petImage,
         });
         await deletePrevSelectedImgInStorage();
@@ -167,7 +195,7 @@ const AdoptPetFormModal = ({
       open={openModal}
       onCancel={handleCloseModal}
       title={isDataForUpdate ? "Edit Application" : "Adopt Pet"}
-      width={500}
+      width={600}
       footer={[
         <Button key="cancel" onClick={handleCloseModal} type="default">
           Cancel
@@ -186,7 +214,7 @@ const AdoptPetFormModal = ({
       ]}
     >
       <Form
-        className="my-10"
+        className="my-10 h-96 px-2 overflow-y-scroll"
         name="adopt-pet"
         initialValues={{ remember: true }}
         onFinish={onFinish}
@@ -263,6 +291,58 @@ const AdoptPetFormModal = ({
             placeholder="Enter your reason..."
             autoSize={{ minRows: 3, maxRows: 5 }}
           />
+        </Form.Item>
+        {/* Living Situation */}
+        <Form.Item
+          label="Living Situation"
+          name="livingSituation"
+          rules={[
+            {
+              required: true,
+              message: "Please input your living situation...",
+            },
+          ]}
+        >
+          <TextArea
+            placeholder="Enter your living situation..."
+            autoSize={{ minRows: 3, maxRows: 5 }}
+          />
+        </Form.Item>
+        {/* Pet Experience */}
+        <Form.Item
+          label="Pet Experience"
+          name="petExperience"
+          rules={[
+            {
+              required: true,
+              message: "Please input your experience in pets...",
+            },
+          ]}
+        >
+          <TextArea
+            placeholder="Enter your experience in pets..."
+            autoSize={{ minRows: 3, maxRows: 5 }}
+          />
+        </Form.Item>
+        {/* Receiving of pet date */}
+        <Form.Item
+          label="Receiving of pet date"
+          name="dateOfReceivingPet"
+          rules={[
+            { required: true, message: "Please select retrieval date of pet" },
+          ]}
+        >
+          <DatePicker format="MM/DD/YYYY" />
+        </Form.Item>
+        {/* Receiving of pet time */}
+        <Form.Item
+          label="Receiving of pet time"
+          name="timeOfReceivingPet"
+          rules={[
+            { required: true, message: "Please select retrieval time of pet" },
+          ]}
+        >
+          <TimePicker use12Hours format="h:mm a" />
         </Form.Item>
         {/* Valid Id */}
         <Form.Item

@@ -39,7 +39,7 @@ const Pets = () => {
       adoptionApplicationsData.find((data) => item.id === data.petId)
         ?.status !== "Approved"
   );
-  const totalPostedPetCount = petsData.length;
+  const totalPostedPetCount = filteredPageData.length;
   const totalFilteredPetsDataCount = filteredPetsData.length;
   const emptyFilterQueryResponse =
     hasSelectedFilterOption && filteredPetsData.length === 0;

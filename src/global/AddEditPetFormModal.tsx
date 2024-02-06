@@ -25,6 +25,8 @@ type FormInputs = {
   petName: string;
   petAge: string;
   petGender: string;
+  contactNumber: string;
+  facebookLink?: string;
   petColor: string;
   petType: string;
   petLocation: string;
@@ -72,6 +74,8 @@ const AddEditPetFormModal = ({
         petLocation: petDataForUpdate?.petLocation,
         showAdoptButton: petDataForUpdate?.showAdoptButton,
         petDescription: petDataForUpdate?.petDescription,
+        contactNumber: petDataForUpdate?.contactNumber,
+        facebookLink: petDataForUpdate?.facebookLink,
       });
       setImgFile(petDataForUpdate?.petImage as string);
     }
@@ -106,6 +110,10 @@ const AddEditPetFormModal = ({
   const onFinish = async (values: FormInputs) => {
     setIsLoading(true);
     try {
+      const facebookLinkValue =
+        values.facebookLink === "" || values.facebookLink === undefined
+          ? null
+          : values.facebookLink;
       const listedPetsRef = collection(db, dbName);
       const imgUrl = await uploadImgToStorage(imgFile as File);
 
@@ -116,6 +124,8 @@ const AddEditPetFormModal = ({
             petName: values.petName,
             petAge: values.petAge,
             petGender: values.petGender,
+            contactNumber: values.contactNumber,
+            facebookLink: facebookLinkValue,
             petColor: values.petColor,
             petType: values.petType,
             petLocation: values.petLocation,
@@ -138,6 +148,8 @@ const AddEditPetFormModal = ({
           petName: values.petName,
           petAge: values.petAge,
           petGender: values.petGender,
+          contactNumber: values.contactNumber,
+          facebookLink: facebookLinkValue,
           petColor: values.petColor,
           petType: values.petType,
           petLocation: values.petLocation,
@@ -200,7 +212,7 @@ const AddEditPetFormModal = ({
         initialValues={{ remember: true }}
         onFinish={onFinish}
         form={form}
-        className="my-10"
+        className="my-10 h-96 px-2 overflow-y-scroll"
       >
         {/* Pet's Name */}
         <Form.Item
@@ -267,8 +279,34 @@ const AddEditPetFormModal = ({
             ))}
           </Select>
         </Form.Item>
+        {/* Contact Number */}
+        <Form.Item
+          label="Contact Number"
+          name="contactNumber"
+          rules={[
+            {
+              required: true,
+              message: "Please input your contact number.",
+            },
+          ]}
+        >
+          <Input placeholder="Enter your contact number..." />
+        </Form.Item>
         {/* Pet's Location */}
-        <Form.Item label="Location" name="petLocation">
+        <Form.Item label="Facebook Link" name="facebookLink">
+          <Input placeholder="Enter your facebook link..." />
+        </Form.Item>
+        {/* Pet's Location */}
+        <Form.Item
+          label="Location"
+          name="petLocation"
+          rules={[
+            {
+              required: true,
+              message: "Please input the your location.",
+            },
+          ]}
+        >
           <Input placeholder="Enter where your pet is located..." />
         </Form.Item>
         {/*For showing adopt pet button*/}

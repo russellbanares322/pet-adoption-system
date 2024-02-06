@@ -20,9 +20,13 @@ export type AdoptionsData = {
     dateUpdated?:Timestamp,
     dateCreated:Timestamp,
     validIdImg: string
+    livingSituation: string;
+    petExperience: string;
+    dateOfReceivingPet: string,
+    timeOfReceivingPet: string
     petImage: string
 }
-const useFetchAdoptionsByUserId = () => {
+  const useFetchAdoptionsByUserId = () => {
     const [data, setData] = useState<AdoptionsData[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const {uid, isLoggedIn} = useUserInfo()  
@@ -154,4 +158,32 @@ const useFetchAdoptionsByUserId = () => {
     return { data, isLoading };
   }
 
-  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication, useFetchAdoptionsCount, useFetchAdoptionApplications}
+  const useFetchAdoptionApplicationByStatus = (status: "Approved" | "Rejected" | "To be reviewed") => {
+    const [data, setData] = useState<AdoptionsData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const getAdoptionsByStatus = () => {
+      setIsLoading(true);
+      const adoptionsRef = collection(db, "adoption-applications");
+      const q = query(
+        adoptionsRef,
+        where("status", "==", status),
+      );
+      onSnapshot(q, (snapshot) => {
+        const adoptionsData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as AdoptionsData[];
+        setData(adoptionsData);
+        setIsLoading(false);
+      });
+    };
+  
+    useEffect(() => {
+      getAdoptionsByStatus();
+    }, [status]);
+  
+    return { data, isLoading };
+  };
+
+  export {useFetchAdoptionsByUserId, useFetchApplicationsByRecipientId, useFetchAdoptionApplication, useFetchAdoptionsCount, useFetchAdoptionApplications, useFetchAdoptionApplicationByStatus}
