@@ -25,9 +25,17 @@ body
   > button {
   background-color: blue;
 }
+
 body {
   background-color: #fdfdfd;
   overflow-x: hidden;
+}
+
+.ant-switch {
+  background-color: red !important;
+}
+.ant-switch.ant-switch-checked {
+  background-color: #389e0d !important;
 }
 
 /* Page layout */

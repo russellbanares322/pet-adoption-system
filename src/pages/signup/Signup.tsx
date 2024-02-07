@@ -77,6 +77,8 @@ const Signup = () => {
             email: formData.email,
             savedFavoritePets: [],
             notifications: [],
+            isActive: true,
+            isAdmin: false,
           });
 
           await updateUserProfile(formData.fullName, "", "");

@@ -7,12 +7,13 @@ import { toast } from "react-toastify";
 import GoogleSignin from "../../components/google-signin/GoogleSignin";
 import { auth } from "../../firebase/firebase-config";
 import { ClipLoader } from "react-spinners";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import AuthDivider from "../../layouts/auth-layout/AuthDivider";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useUserInfo from "../../hooks/useUserInfo";
 import Captcha from "../../components/captcha/Captcha";
+import { isUserDisabled } from "../../utils/isUserDisabled";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,7 +27,8 @@ const Login = () => {
   const [isCaptchaChecked, setIsCaptchaChecked] = useState(false);
   const [user] = useAuthState(auth);
   const { isLoggedIn } = useUserInfo();
-  const { saveItemInLocalStorage } = useLocalStorage();
+  const { saveItemInLocalStorage, removeItemFromLocalStorage } =
+    useLocalStorage();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,25 +52,37 @@ const Login = () => {
           formData.email,
           formData.password
         );
+        const userEmail = signInResponse?.user?.email;
         const userData = {
           displayName: signInResponse?.user?.displayName,
-          email: signInResponse?.user?.email,
+          email: userEmail,
           uid: signInResponse?.user?.uid,
         };
-        saveItemInLocalStorage("user-info", userData);
-        const isAdmin =
-          import.meta.env.VITE_APP_ADMIN_UID === signInResponse?.user?.uid;
-        if (isAdmin) {
-          navigate("/dashboard");
+        const disabledUserAccount = await isUserDisabled(userEmail as string);
+        if (disabledUserAccount) {
+          removeItemFromLocalStorage("user-info");
+          await signOut(auth);
+          navigate("/login");
+          toast.error(
+            "Your account has been disabled, please contact administrator regarding this."
+          );
+          setIsLoading(false);
         } else {
-          navigate("/");
+          saveItemInLocalStorage("user-info", userData);
+          const isAdmin =
+            import.meta.env.VITE_APP_ADMIN_UID === signInResponse?.user?.uid;
+          if (isAdmin) {
+            navigate("/dashboard");
+          } else {
+            navigate("/");
+          }
+          toast.success("Login Succcessful");
+          setFormData({
+            email: "",
+            password: "",
+          });
+          setIsLoading(false);
         }
-        toast.success("Login Succcessful");
-        setFormData({
-          email: "",
-          password: "",
-        });
-        setIsLoading(false);
       } catch (err: any) {
         toast.error(err?.message);
         setIsLoading(false);
