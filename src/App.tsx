@@ -1,24 +1,33 @@
+import { signOut } from "firebase/auth";
 import { useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "./components/footer/Footer";
 import Navbar from "./components/navbar/Navbar";
 import { auth } from "./firebase/firebase-config";
 import useLocalStorage from "./hooks/useLocalStorage";
+import useUserInfo from "./hooks/useUserInfo";
 import { routes } from "./routes/routes";
+import { isUserDisabled } from "./utils/isUserDisabled";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   const [user] = useAuthState(auth);
   const location = useLocation();
-  const { saveItemInLocalStorage, getItemFromLocalStorage } = useLocalStorage();
+  const {
+    saveItemInLocalStorage,
+    getItemFromLocalStorage,
+    removeItemFromLocalStorage,
+  } = useLocalStorage();
   const userInfo = getItemFromLocalStorage("user-info");
-
   const flattenRoutesPath = routes.flatMap((item) => item.path);
   const isRouteInvalid = !flattenRoutesPath.includes(location.pathname);
   const isInBlogsRoute = location.pathname.includes("blogs");
   const isInDashboardRoute = location.pathname.includes("dashboard");
   const showNavbar = (!isRouteInvalid && !isInDashboardRoute) || isInBlogsRoute;
+  const { email, isLoggedIn } = useUserInfo();
+  const disabledUserAccount = isUserDisabled(email);
   const renderElement = (isProtected: boolean, element: React.ReactElement) => {
     if (isProtected) {
       return <ProtectedRoute>{element}</ProtectedRoute>;
@@ -43,6 +52,22 @@ function App() {
       return () => clearTimeout(saveUserInfoTimeout);
     }
   }, [user, userInfo]);
+
+  const checkIfUserAccountIsDisabled = async () => {
+    if (isLoggedIn) {
+      if (await disabledUserAccount) {
+        removeItemFromLocalStorage("user-info");
+        await signOut(auth);
+        toast.error(
+          "Your account has been disabled, please contact administrator regarding this."
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkIfUserAccountIsDisabled();
+  }, [disabledUserAccount]);
 
   return (
     <div className="min-h-[100vh] h-full">

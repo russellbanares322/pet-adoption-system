@@ -71,6 +71,7 @@ const Login = () => {
           saveItemInLocalStorage("user-info", userData);
           const isAdmin =
             import.meta.env.VITE_APP_ADMIN_UID === signInResponse?.user?.uid;
+
           if (isAdmin) {
             navigate("/dashboard");
           } else {
