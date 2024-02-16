@@ -24,6 +24,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFetchAdoptionApplication } from "../../api/adoptions/adoptions";
 import { deleteObject, ref } from "firebase/storage";
 import moment from "moment";
+import { formItemLayout } from "../../utils/formItemLayout";
 
 type AdoptPetFormModalProps = {
   openModal: boolean;
@@ -214,11 +215,12 @@ const AdoptPetFormModal = ({
       ]}
     >
       <Form
-        className="my-10 h-96 px-2 overflow-y-scroll"
+        className="my-10 h-96 px-2 overflow-y-scroll w-full"
         name="adopt-pet"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         form={form}
+        {...formItemLayout}
       >
         {/* First Name */}
         <Form.Item
