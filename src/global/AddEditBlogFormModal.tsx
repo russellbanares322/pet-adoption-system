@@ -14,6 +14,7 @@ import useUserInfo from "../hooks/useUserInfo";
 import { useFetchBlog } from "../api/blogs/blogs";
 import { deleteObject, ref } from "firebase/storage";
 import { db, storage } from "../firebase/firebase-config";
+import { formItemLayout } from "../utils/formItemLayout";
 
 type AddEditBlogFormModalProps = {
   open: boolean;
@@ -168,13 +169,15 @@ const AddEditBlogFormModal = ({
       onCancel={closeModal}
       okText={isBlogForUpdate ? "Save" : "Publish"}
       title={isBlogForUpdate ? "Edit Blog" : "Add Blog"}
+      width={600}
     >
       <Form
         onFinish={onFinish}
         form={form}
-        className="mt-7"
+        className="mt-7 w-full"
         name="add-blog"
         initialValues={{ remember: true }}
+        {...formItemLayout}
       >
         <Form.Item<BlogsFormInputFieldsType>
           label="Title"
