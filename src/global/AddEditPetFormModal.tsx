@@ -20,6 +20,7 @@ import { auth, db, storage } from "../firebase/firebase-config";
 import { petColors, petGender, petTypes } from "../data/pet-filter-options";
 import useUploadFileToDb from "../hooks/useUploadFileToDb";
 import { useFetchPet } from "../api/pets/pets";
+import { formItemLayout } from "../utils/formItemLayout";
 
 type FormInputs = {
   petName: string;
@@ -178,7 +179,7 @@ const AddEditPetFormModal = ({
       okButtonProps={{
         className: "primary-btn",
       }}
-      width={500}
+      width={600}
       title={isDataForUpdate ? "EDIT PET" : "ADD PET"}
       open={openModal || openEditModal}
       onCancel={handleCloseModal}
@@ -213,6 +214,7 @@ const AddEditPetFormModal = ({
         onFinish={onFinish}
         form={form}
         className="my-10 h-96 px-2 overflow-y-scroll"
+        {...formItemLayout}
       >
         {/* Pet's Name */}
         <Form.Item
